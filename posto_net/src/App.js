@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'; //importo em toda pagina
+import './bootstrap.min.css'; //estilo css
+import 'toastr/build/toastr.min';
+import 'toastr/build/toastr.css';
+import Navbar from './components/navbar.js';
+import Rotas from './rotas.js';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+//react ou eh classe ou funcao
+// q retorna uma coisa, entao uso objeto para devolver mais
+
+class App extends React.Component{
+  render(){
+    return(
+      <div className='container'>
+        <Rotas />
+        <Navbar />
+      </div>
+    )
+  }
 }
 
 export default App;
