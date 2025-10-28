@@ -11,9 +11,13 @@ import Rotas from './rotas.js';
 class App extends React.Component{
   render(){
     return(
-      <div className='container'>
-        <Rotas />
+      <div className='d-flex'>
         <Navbar />
+        <div className='conteudo-principal'>
+          <div className='container'>
+            <Rotas />
+          </div>
+        </div>
       </div>
     )
   }
