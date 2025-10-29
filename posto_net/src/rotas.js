@@ -1,8 +1,6 @@
 import React from 'react';
 
-import ListagemAdministradores from './views/listagem-administradores';
-import ListagemGerentes from './views/listagem-gerentes';
-import ListagemFuncionarios from './views/listagem-funcionarios';
+import ListagemEmpregados from './views/listagem-empregados';
 
 import CadastroAdministradores from './views/cadastro-administradores';
 import CadastroGerentes from './views/cadastro-gerentes';
@@ -18,9 +16,14 @@ function Rotas({ toggleMenu }){
             <Route path='/cadastro-gerentes/:idParam?' element={<CadastroGerentes />} />
             <Route path='/cadastro-funcionarios/:idParam?' element={<CadastroFuncionarios />} />
 
-            <Route path='/listagem-administradores/:idParam?' element={<ListagemAdministradores toggleMenu={toggleMenu} />} />
-            <Route path='/listagem-gerentes/:idParam?' element={<ListagemGerentes />} />
-            <Route path='/listagem-funcionarios/:idParam?' element={<ListagemFuncionarios />} />
+            <Route path='/empregados' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
+            
+            <Route path='/home' element={<div>Home</div>} />
+            <Route path='/combustiveis' element={<div>Combustíveis</div>} />
+            <Route path='/produtosServicos' element={<div>Produtos e Serviços</div>} />
+            <Route path='/pdv' element={<div>PDV</div>} />
+            
+            <Route path='/' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
         </Routes>
         </BrowserRouter>
     )

@@ -17,7 +17,7 @@ const baseURLAdministradores = `${BASE_URL}/administradores`;
 const baseURLGerentes = `${BASE_URL}/gerentes`;
 const baseURLFuncionarios = `${BASE_URL}/funcionarios`;
 
-function ListagemAdministradores({ toggleMenu }) {
+function ListagemEmpregados({ toggleMenu }) {
     const navigate = useNavigate();
     const [dadosAdministradores, setDadosAdministradores] = React.useState([]);
     const [dadosGerentes, setDadosGerentes] = React.useState([]);
@@ -219,4 +219,4 @@ function ListagemAdministradores({ toggleMenu }) {
     );
 }
 
-export default ListagemAdministradores;
+export default ListagemEmpregados;
