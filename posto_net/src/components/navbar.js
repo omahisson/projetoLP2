@@ -9,9 +9,9 @@ import iconeCombustiveis from '../icones/combustiveis.svg';
 import iconeProdutosServicos from '../icones/produtosServicos.svg';
 import iconePDV from '../icones/pdv.svg';
 
-function Navbar(props) {
+function Navbar({ menuVisivel }) {
   return (
-      <div className='menu-lateral'>
+    <div className={`menu-lateral ${!menuVisivel && 'menu-oculto'}`}>
         <div className='cabecalho-menu'>
           <a href='/' className='navbarzinho-brand'>
           Posto Ipiranga Vila

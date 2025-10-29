@@ -8,15 +8,22 @@ import Rotas from './rotas.js';
 //react ou eh classe ou funcao
 // q retorna uma coisa, entao uso objeto para devolver mais
 
-class App extends React.Component{
-  render(){
-    return(
+class App extends React.Component {
+  state = { menuVisivel: localStorage.getItem('menuVisivel') !== 'false' };
+
+  toggleMenu = () => {
+    const novoEstado = !this.state.menuVisivel;
+    this.setState({ menuVisivel: novoEstado });
+    localStorage.setItem('menuVisivel', novoEstado);
+  }
+
+  render() {
+    const { menuVisivel } = this.state;
+    return (
       <div className='d-flex'>
-        <Navbar />
-        <div className='conteudo-principal'>
-          <div className='container'>
-            <Rotas />
-          </div>
+        <Navbar menuVisivel={menuVisivel} />
+        <div className={`conteudo-principal ${!menuVisivel && 'menu-escondido'}`}>
+          <Rotas toggleMenu={this.toggleMenu} />
         </div>
       </div>
     )
