@@ -225,3 +225,153 @@
   gap: 5px;
   align-items: flex-end;
 }
+
+.card-pdv {
+  min-height: 220px;
+}
+
+.card-pdv-icon img {
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.card-pdv-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;            
+  height: 48px;          
+  background-color: rgb(3, 2, 19);
+  border-radius: 50%;
+}
+
+.card-pdv-title {
+  font-size: 16px;
+  font-family: system-ui;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.card-pdv-subtitle {
+  font-size: 16px;
+  font-family: system-ui;
+  line-height: 24px;
+  color: rgb(113, 113, 130);
+}
+
+.card.card-pdv .card-body {
+  padding: 24px 24px 0 !important;
+}
+
+.pdv-wrapper {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;    
+  justify-content: center;
+  min-height: 100vh;     
+}
+
+.card.card-pdv {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-pdv-body {
+  gap: 12px;
+}
+
+.card-pdv-form {
+  width: 100%;
+}
+
+.card-pdv-label {
+  font-size: 14px;
+  font-family: system-ui;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+.card-pdv-select {
+  padding: 8px 12px !important;
+  font-family: system-ui !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  line-height: 20px !important;
+  color: rgb(113, 113, 130) !important;
+  background-color: rgb(243, 243, 245) !important;
+  border: none !important;
+}
+
+.card-pdv-select--placeholder {
+  color: rgb(113, 113, 130);
+}
+
+.card-pdv-select--value {
+  color: #0f172a;
+}
+
+.card-pdv-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: rgb(243, 243, 245);
+  border-radius: 8px;
+  padding: 0 12px;
+  min-height: 40px;
+}
+
+.card-pdv-input-prefix {
+  margin-right: 8px;
+  color: rgb(113, 113, 130);
+  font-family: system-ui;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.card-pdv-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  font-family: system-ui;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: normal;
+  color: #0f172a;
+}
+
+.card-pdv-input::placeholder {
+  color: rgb(113, 113, 130);
+}
+
+.card-pdv-input:focus {
+  outline: none;
+}
+
+.card-pdv-button {
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(15, 15, 30);
+  color: #fff;
+  font-family: system-ui;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.card-pdv-button:hover {
+  background-color: rgb(30, 30, 60);
+}
+
+.card.card-pdv {
+  border-radius: 16px;
+}

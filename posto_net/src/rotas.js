@@ -1,6 +1,7 @@
 import React from 'react';
 
 import ListagemEmpregados from './views/listagem-empregados';
+import Pdv from './views/pdv';
 
 import CadastroAdministradores from './views/cadastro-administradores';
 import CadastroGerentes from './views/cadastro-gerentes';
@@ -21,7 +22,8 @@ function Rotas({ toggleMenu }){
             <Route path='/home' element={<div>Home</div>} />
             <Route path='/combustiveis' element={<div>Combustíveis</div>} />
             <Route path='/produtosServicos' element={<div>Produtos e Serviços</div>} />
-            <Route path='/pdv' element={<div>PDV</div>} />
+            <Route path='/pdv' element={<Pdv toggleMenu={toggleMenu} />} />
+            <Route path='/pdv-aberto' element={<div>PDV Aberto</div>} />
             
             <Route path='/' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
         </Routes>
