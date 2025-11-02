@@ -375,3 +375,18 @@
 .card.card-pdv {
   border-radius: 16px;
 }
+
+.card-itens-venda .card-header h3.textoDashboard {
+  font-weight: bold !important;
+}
+
+@keyframes slideInRight {
+  from {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}

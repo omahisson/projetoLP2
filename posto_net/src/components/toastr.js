@@ -1,5 +1,3 @@
-/* global toastr */ // Adicionar no topo
-
 export function mostrarMensagem(titulo, mensagem, tipo){
     toastr[tipo](mensagem, titulo);
 }

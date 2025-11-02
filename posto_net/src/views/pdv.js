@@ -5,19 +5,82 @@ import { useNavigate } from 'react-router-dom';
 import iconeColuna from '../icones/coluna.svg';
 import CardPDV, { CardPDVSelect, CardPDVInput } from '../components/card-pdv';
 import iconeRelogio from '../icones/relogio.svg';
-import iconeADM from '../icones/adm.svg';
-import iconeAdd from '../icones/add.svg';
-import iconeGerentes from '../icones/gerentes.svg';
-import iconeFuncionarios from '../icones/funcionarios.svg';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
 function Pdv({ toggleMenu }) {
     const navigate = useNavigate();
+    const [funcionarios, setFuncionarios] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
+    const [operadorSelecionado, setOperadorSelecionado] = React.useState('');
+    const [turnoSelecionado, setTurnoSelecionado] = React.useState('');
+    const [valorInicialCaixa, setValorInicialCaixa] = React.useState('');
+
+    React.useEffect(() => {
+        const fetchFuncionarios = async () => {
+            try {
+                const response = await axios.get(`${BASE_URL}/funcionarios`);
+                const funcionariosFormatados = response.data.map(funcionario => ({
+                    value: funcionario.id,
+                    text: funcionario.nome,
+                    labels: funcionario.labels || []
+                }));
+                setFuncionarios(funcionariosFormatados);
+            } catch (error) {
+                console.error('Erro ao buscar funcionários:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFuncionarios();
+    }, []);
 
     const handleAbrirTurno = () => {
-        navigate('/pdv-aberto');
+        if (!operadorSelecionado || !turnoSelecionado) {
+            alert('Por favor, selecione o operador e o turno antes de abrir o turno.');
+            return;
+        }
+
+        if (!valorInicialCaixa || parseFloat(valorInicialCaixa) <= 0) {
+            alert('Por favor, informe o valor inicial em caixa.');
+            return;
+        }
+
+        const agora = new Date();
+        const dataFormatada = agora.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        const horaFormatada = agora.toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        const horaAbertura = `${dataFormatada}, ${horaFormatada}`;
+
+        const operadorId = typeof operadorSelecionado === 'string' ? parseInt(operadorSelecionado) : operadorSelecionado;
+        const funcionario = funcionarios.find(f => f.value === operadorId || f.value === operadorSelecionado);
+        const nomeOperador = funcionario ? funcionario.text : 'Não informado';
+
+        const turnos = {
+            'matutino': 'matutino',
+            'vespertino': 'vespertino',
+            'noturno': 'noturno'
+        };
+        const nomeTurno = turnos[turnoSelecionado] || turnoSelecionado;
+
+        navigate('/pdv-aberto', {
+            state: {
+                operadorId: operadorSelecionado,
+                operadorNome: nomeOperador,
+                turno: nomeTurno,
+                horaAbertura: horaAbertura,
+                valorInicialCaixa: parseFloat(valorInicialCaixa)
+            }
+        });
     };
 
     return (
@@ -35,11 +98,15 @@ function Pdv({ toggleMenu }) {
                     subtitulo='Informe os dados necessários para iniciar o turno'
                     label='Operador'
                     selectPlaceholder='Selecione o funcionário'
-                    selectOptionLabel={({ text, value }) => `${text} (${value})`}
-                    selectOptions={[
-                        { value: 'Frentista', text: 'Fernanda Rodrigues' },
-                        { value: 'Supervisor', text: 'Paulo Mendez' }
-                    ]}
+                    selectOptionLabel={(option) => {
+                        const cargo = option.labels && option.labels.length > 0 ? option.labels[0] : '';
+                        return cargo ? `${option.text} - ${cargo}` : option.text;
+                    }}
+                    selectOptions={funcionarios}
+                    selectProps={{
+                        value: operadorSelecionado,
+                        onChange: (e) => setOperadorSelecionado(e.target.value)
+                    }}
                 >
                     <div className='mt-0 align-self-stretch'>
                         <CardPDVSelect
@@ -50,6 +117,10 @@ function Pdv({ toggleMenu }) {
                                 { value: 'vespertino', text: 'Vespertino (14:00 - 22:00)' },
                                 { value: 'noturno', text: 'Noturno (22:00 - 06:00)' }
                             ]}
+                            selectProps={{
+                                value: turnoSelecionado,
+                                onChange: (e) => setTurnoSelecionado(e.target.value)
+                            }}
                         />
                     </div>
 
@@ -58,7 +129,11 @@ function Pdv({ toggleMenu }) {
                             label='Valor Inicial em Caixa'
                             prefix='R$'
                             placeholder='0,00'
-                            inputProps={{ inputMode: 'decimal' }}
+                            inputProps={{
+                                inputMode: 'decimal',
+                                value: valorInicialCaixa,
+                                onChange: (e) => setValorInicialCaixa(e.target.value)
+                            }}
                         />
                     </div>
 
@@ -74,4 +149,3 @@ function Pdv({ toggleMenu }) {
 }
 
 export default Pdv;
-
