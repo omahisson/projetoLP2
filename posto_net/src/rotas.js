@@ -9,7 +9,7 @@ import CadastroAdministradores from './views/cadastro-administradores';
 import CadastroGerentes from './views/cadastro-gerentes';
 import CadastroFuncionarios from './views/cadastro-funcionarios';
 
-import WireframeDesktop from './views/teste';
+import Dashboard from './views/dashboard';
 
 import { Route, Routes, BrowserRouter} from 'react-router-dom'
 
@@ -23,13 +23,13 @@ function Rotas({ toggleMenu }){
 
             <Route path='/empregados' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
             
-            <Route path='/home' element={<WireframeDesktop />} />
+            <Route path='/home' element={<Dashboard toggleMenu={toggleMenu}/>} />
             <Route path='/combustiveis' element={<div>Combustíveis</div>} />
             <Route path='/produtosServicos' element={<ListagemServicosProdutos toggleMenu={toggleMenu} />} />
             <Route path='/pdv' element={<Pdv toggleMenu={toggleMenu} />} />
             <Route path='/pdv-aberto' element={<PdvAberto toggleMenu={toggleMenu} />} />
             
-            <Route path='/' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
+            <Route path='/' element={<Dashboard toggleMenu={toggleMenu}/>} />
         </Routes>
         </BrowserRouter>
     )
