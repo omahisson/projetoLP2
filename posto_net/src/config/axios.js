@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://my-json-server.typicode.com/omahisson/jsonfakeADM';
+export const BASE_URL = 'http://localhost:3001';

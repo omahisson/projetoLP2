@@ -1,54 +1,11 @@
 import React from 'react';
-// import axios from 'axios'; 
-// import { BASE_URL } from '../config/axios'; 
+import axios from 'axios'; 
+import { BASE_URL } from '../config/axios'; 
 import { 
   FiDollarSign, FiBarChart2, FiDownload, FiTag, 
   FiArchive, FiCheckSquare, FiClock, FiFileText
 } from 'react-icons/fi';
 import '../index.css';
-
-const financialData = {
-  totalRevenue: 'R$ 125.430,50',
-  averageTicket: 'R$ 87,25',
-  totalSales: '1438',
-  mainPayment: 'Cartão de Crédito (45%)',
-};
-
-const networkRanking = [
-  { id: 1, name: 'Posto Shell Centro', revenue: 'R$ 125.430,50' },
-  { id: 2, name: 'Posto BR Rodovia', revenue: 'R$ 98.750,30' },
-  { id: 3, name: 'Posto Ipiranga Vila', revenue: 'R$ 87.650,20', isCurrent: true },
-  { id: 4, name: 'Posto Texaco Norte', revenue: 'R$ 76.540,10' },
-];
-
-const topProducts = [
-  { name: 'Gasolina Comum', quantity: '15.420', revenue: 'R$ 89.250,30' },
-  { name: 'Diesel S-10', quantity: '8.750', revenue: 'R$ 52.800,40' },
-  { name: 'Etanol', quantity: '6.320', revenue: 'R$ 31.250,80' },
-  { name: 'Água Mineral', quantity: '2.850', revenue: 'R$ 7.125,00' },
-  { name: 'Refrigerante', quantity: '1.960', revenue: 'R$ 8.820,00' },
-];
-
-const priceReportData = [
-    { product: 'Gasolina Comum', responsible: 'João Silva', prevPrice: 'R$ 5,65', newPrice: 'R$ 5,39', date: '19/08/2024', effective: '20/08/2024' },
-    { product: 'Diesel S-10', responsible: 'Maria Santos', prevPrice: 'R$ 5,55', newPrice: 'R$ 5,92', date: '18/08/2024', effective: '19/08/2024' },
-    { product: 'Etanol', responsible: 'Carlos Lima', prevPrice: 'R$ 4,25', newPrice: 'R$ 4,25', date: '17/08/2024', effective: '18/08/2024' },
-];
-
-const stockReportData = [
-    { item: 'Gasolina Aditivada', quantity: 855, minStock: 1000, status: 'Em Alerta', expiry: '14/12/2024' },
-    { item: 'Óleo Lubrificante 1L', quantity: 12, minStock: 20, status: 'Crítico', expiry: '25/10/2024' },
-    { item: 'Chocolate Lata', quantity: 8, minStock: 15, status: 'Crítico', expiry: '24/10/2024' },
-];
-
-const operationalData = {
-    openChecklists: { value: '8/10', label: 'Checklists Abertos' },
-    activeShifts: { value: 3, label: 'Turnos Ativos' },
-    formsToday: { value: 12, label: 'Formulários Hoje' },
-};
-
-
-// --- INÍCIO DAS FUNÇÕES HELPER DE DOWNLOAD ---
 
 /**
  * Converte um array de objetos para uma string CSV.
@@ -62,7 +19,6 @@ const convertArrayToCSV = (data) => {
 
   const headers = Object.keys(data[0]);
   
-  // Função para garantir que valores com vírgula (como "R$ 125,50") fiquem entre aspas
   const formatCell = (val) => {
     let value = val === null || val === undefined ? '' : String(val);
     // Se o valor contiver vírgula, aspas ou quebra de linha, coloque-o entre aspas
@@ -114,17 +70,84 @@ const downloadCSV = (content, fileName, mimeType = 'text/csv;charset=utf-8;') =>
 // --- COMPONENTES ---
 
 const Dashboard = () => {
+
+const [dadosFinanceiros, setDadosFinanceiros] = React.useState(null);
+const [rankingRede, setRankingRede] = React.useState([]);
+const [maisVendidos, setMaisVendidos] = React.useState([]);
+const [relatorioPreco, setRelatorioPreco] = React.useState([]);
+const [relatorioEstoque, setRelatorioEstoque] = React.useState([]);
+const [relatorioOperacional, setRelatorioOperacional] = React.useState(null);
+
+const [loading, setLoading] = React.useState(true); // Um estado de loading único
+  const [error, setError] = React.useState(null); // Para guardar erros
+
+  React.useEffect(() => {
+    // --- MUDANÇA ---
+    // Coloca todas as chamadas em um array de "Promises"
+    const promises = [
+      axios.get(`${BASE_URL}/DadosFinanceiros`),
+      axios.get(`${BASE_URL}/RankingRede`),
+      axios.get(`${BASE_URL}/MaisVendidos`),
+      axios.get(`${BASE_URL}/RelatorioPreco`),
+      axios.get(`${BASE_URL}/RelatorioEstoque`),
+      axios.get(`${BASE_URL}/RelatorioOperacional`)
+    ];
+
+    // Promise.all espera todas terminarem
+    Promise.all(promises)
+      .then((responses) => {
+        // 'responses' é um array com os resultados NA MESMA ORDEM que as chamadas
+        console.log('Dados Financeiros:', responses[0].data);
+        setDadosFinanceiros(responses[0].data);
+
+        console.log('Ranking da Rede:', responses[1].data);
+        setRankingRede(Array.isArray(responses[1].data) ? responses[1].data : []);
+        
+        console.log('Mais Vendidos:', responses[2].data);
+        setMaisVendidos(Array.isArray(responses[2].data) ? responses[2].data : []);
+        
+        console.log('Relatório de Preço:', responses[3].data);
+        setRelatorioPreco(Array.isArray(responses[3].data) ? responses[3].data : []);
+        
+        console.log('Relatório de Estoque:', responses[4].data);
+        setRelatorioEstoque(Array.isArray(responses[4].data) ? responses[4].data : []);
+        
+        console.log('Relatório Operacional:', responses[5].data);
+        setRelatorioOperacional(responses[5].data);
+      })
+      .catch((err) => {
+        // Pega qualquer erro de qualquer chamada
+        console.error("Erro ao buscar dados do dashboard:", err);
+        setError(err.message);
+      })
+      .finally(() => {
+        // Roda no final, com sucesso ou erro
+        setLoading(false); 
+      });
+
+  }, []); // Array vazio, roda só uma vez
+
+  // --- MUDANÇA ---
+  // Verificação de loading e erro centralizada
+  if (loading) {
+    return <div>Carregando dados do dashboard...</div>;
+  }
+
+  if (error) {
+    return <div>Ocorreu um erro: {error}</div>;
+  }
+
   return (
     <div style={styles.appLayout}>
       <main style={styles.mainContent}>
         <Header />
 
         {/* --- Seções do Dashboard --- */}
-        <FinancialReportCard />
-        <NetworkReportCard />
-        <PriceReportCard />
-        <StockReportCard />
-        <OperationalReportCard />
+        <FinancialReportCard financialData = {dadosFinanceiros}/>
+        <NetworkReportCard networkRanking = {rankingRede} topProducts={maisVendidos}/>
+        <PriceReportCard priceReportData = {relatorioPreco}/>
+        <StockReportCard stockReportData = {relatorioEstoque}/>
+        <OperationalReportCard operationalData = {relatorioOperacional}/>
 
       </main>
     </div>
@@ -179,16 +202,16 @@ const KpiCard = ({ title, value }) => (
 
 // --- MODIFICADO ---
 // Adicionada a lógica de download
-const FinancialReportCard = () => {
+const FinancialReportCard = ({financialData}) => {
   
   // --- NOVO ---
   // Função que será chamada pelo botão de download
   const handleDownload = () => {
     // Como os dados são KPIs, é melhor formatá-los manualmente
     const dataToExport = [
-      { Indicador: 'Faturamento Total', Valor: financialData.totalRevenue },
-      { Indicador: 'Ticket Médio', Valor: financialData.averageTicket },
-      { Indicador: 'Total de Vendas', Valor: financialData.totalSales },
+      { Indicador: 'Faturamento Total', Valor: financialData.faturamentoTotal },
+      { Indicador: 'Ticket Médio', Valor: financialData.ticketMedio },
+      { Indicador: 'Total de Vendas', Valor: financialData.totalVendas },
       { Indicador: 'Pagamento Principal', Valor: financialData.mainPayment },
     ];
     
@@ -209,9 +232,9 @@ const FinancialReportCard = () => {
         </CardHeader>
         <p style={styles.cardSubtitle}>Acompanhe faturamento, ticket médio e vendas por período</p>
         <div style={styles.kpiGrid}>
-            <KpiCard title="Faturamento Total" value={financialData.totalRevenue} />
-            <KpiCard title="Ticket Médio" value={financialData.averageTicket} />
-            <KpiCard title="Total de Vendas" value={financialData.totalSales} />
+            <KpiCard title="Faturamento Total" value={financialData.faturamentoTotal} />
+            <KpiCard title="Ticket Médio" value={financialData.ticketMedio} />
+            <KpiCard title="Total de Vendas" value={financialData.totalVendas} />
             <KpiCard title="Pagamento Principal" value={financialData.mainPayment} />
         </div>
     </Card>
@@ -220,7 +243,7 @@ const FinancialReportCard = () => {
 
 // --- MODIFICADO ---
 // Adicionada a lógica de download
-const NetworkReportCard = () => {
+const NetworkReportCard = ({networkRanking, topProducts}) => {
 
   // --- NOVO ---
   // Esta função de download vai combinar as DUAS tabelas em um único CSV
@@ -294,7 +317,7 @@ const NetworkReportCard = () => {
 
 // --- MODIFICADO ---
 // Adicionada a lógica de download
-const PriceReportCard = () => {
+const PriceReportCard = ({priceReportData}) => {
   
   // --- NOVO ---
   const handleDownload = () => {
@@ -347,7 +370,7 @@ const StatusBadge = ({ status }) => {
 }
 
 // --- MODIFICADO ---
-const StockReportCard = () => {
+const StockReportCard = ({stockReportData}) => {
   
   // --- NOVO ---
   const handleDownload = () => {
@@ -403,7 +426,7 @@ const OperationalKpiCard = ({icon, value, label}) => (
 )
 
 // --- MODIFICADO ---
-const OperationalReportCard = () => {
+const OperationalReportCard = ({operationalData}) => {
   
   // --- NOVO ---
   const handleDownload = () => {
