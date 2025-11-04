@@ -7,8 +7,6 @@ import {
 } from 'react-icons/fi';
 import '../index.css';
 
-// --- DADOS MOCKADOS (Simulando uma API) ---
-// (Os dados mockados permanecem os mesmos... vou omiti-los aqui para economizar espaço)
 const financialData = {
   totalRevenue: 'R$ 125.430,50',
   averageTicket: 'R$ 87,25',
@@ -349,7 +347,6 @@ const StatusBadge = ({ status }) => {
 }
 
 // --- MODIFICADO ---
-// Adicionada a lógica de download
 const StockReportCard = () => {
   
   // --- NOVO ---
@@ -364,7 +361,7 @@ const StockReportCard = () => {
         <CardHeader 
           icon={<FiArchive size={20} color="#6c757d" />} 
           title="Relatórios de Estoque"
-          onDownload={handleDownload} // Passa a função de download
+          onDownload={handleDownload} 
         >
             <option>Hoje</option>
         </CardHeader>
@@ -406,12 +403,10 @@ const OperationalKpiCard = ({icon, value, label}) => (
 )
 
 // --- MODIFICADO ---
-// Adicionada a lógica de download
 const OperationalReportCard = () => {
   
   // --- NOVO ---
   const handleDownload = () => {
-    // Transforma o objeto de dados em um array simples para o CSV
     const dataToExport = [
       { Indicador: operationalData.openChecklists.label, Valor: operationalData.openChecklists.value },
       { Indicador: operationalData.activeShifts.label, Valor: operationalData.activeShifts.value },
@@ -442,9 +437,6 @@ const OperationalReportCard = () => {
   );
 };
 
-
-// --- ESTILOS (CSS-in-JS) ---
-// (Os estilos permanecem os mesmos... vou omiti-los aqui)
 const styles = {
   appLayout: {
     display: 'flex',
@@ -518,7 +510,6 @@ const styles = {
   cardActions: { display: 'flex', alignItems: 'center' },
   select: { padding: '8px 12px', borderRadius: '6px', border: '1px solid #ced4da', backgroundColor: '#f8f9fa', marginRight: '16px' },
   // --- MODIFICADO ---
-  // Adiciona 'cursor: pointer' e 'disabled'
   downloadButton: { 
     display: 'flex', 
     alignItems: 'center', 
@@ -530,7 +521,6 @@ const styles = {
     cursor: 'pointer', 
     fontWeight: 'bold',
     // --- NOVO ---
-    // Estilo para quando o botão estiver desabilitado (ex: se onDownload não for passado)
     "&:disabled": {
       backgroundColor: '#6c757d',
       cursor: 'not-allowed',
