@@ -12,6 +12,7 @@ import CadastroFuncionarios from './views/cadastro-funcionarios';
 import Dashboard from './views/dashboard';
 
 import { Route, Routes, BrowserRouter} from 'react-router-dom'
+import ListagemCombustiveis from './views/listagem-combustiveis';
 
 function Rotas({ toggleMenu }){
     return(
@@ -24,7 +25,7 @@ function Rotas({ toggleMenu }){
             <Route path='/empregados' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
             
             <Route path='/home' element={<Dashboard toggleMenu={toggleMenu}/>} />
-            <Route path='/combustiveis' element={<div>Combustíveis</div>} />
+            <Route path='/combustiveis' element={<ListagemCombustiveis toggleMenu={toggleMenu}/>} />
             <Route path='/produtosServicos' element={<ListagemServicosProdutos toggleMenu={toggleMenu} />} />
             <Route path='/pdv' element={<Pdv toggleMenu={toggleMenu} />} />
             <Route path='/pdv-aberto' element={<PdvAberto toggleMenu={toggleMenu} />} />

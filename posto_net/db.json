@@ -118,5 +118,64 @@
     "openChecklists": { "value": "8/10", "label": "Checklists Abertos" },
     "activeShifts": { "value": 3, "label": "Turnos Ativos" },
     "formsToday": { "value": 12, "label": "Formulários Hoje" }
-  }
+  },
+  "TiposCombustivel":[
+      { 
+      "id": 1, 
+      "nome": "Gasolina Comum", 
+      "preco": "R$ 5,49", 
+      "fornecedor": "Petrobrás", 
+      "ultimoAbastecimento": "2024-01-15", 
+      "validade": "2024-03-15", 
+      "estoque": "15.000L", 
+      "status": "Ativo" 
+    },
+    { 
+      "id": 2, 
+      "nome": "Gasolina Aditivada", 
+      "preco": "R$ 5,85", 
+      "fornecedor": "Shell", 
+      "ultimoAbastecimento": "2024-01-14", 
+      "validade": "2024-03-14", 
+      "estoque": "8.500L", 
+      "status": "Ativo" 
+    },
+    { 
+      "id": 3, 
+      "nome": "Etanol", 
+      "preco": "R$ 3,89", 
+      "fornecedor": "Raízen", 
+      "ultimoAbastecimento": "2024-01-16", 
+      "validade": "2024-02-16", 
+      "estoque": "12.000L", 
+      "status": "Ativo" 
+    },
+    { 
+      "id": 4, 
+      "nome": "Diesel S-10", 
+      "preco": "R$ 4,99", 
+      "fornecedor": "Petrobrás", 
+      "ultimoAbastecimento": "2024-01-13", 
+      "validade": "2024-06-13", 
+      "estoque": "20.000L", 
+      "status": "Ativo" 
+    },
+    { 
+      "id": 5, 
+      "nome": "GNV", 
+      "preco": "R$ 4,17", 
+      "fornecedor": "Comgás", 
+      "ultimoAbastecimento": "2024-01-12", 
+      "validade": "-", 
+      "estoque": "5.000m³", 
+      "status": "Ativo" 
+    }
+  ],
+  "DadosBomba":[
+    { "id": 1, "nome": "Bomba 01", "status": "Ativa", "combustiveis": ["Gasolina Comum", "Gasolina Aditivada"] },
+    { "id": 2, "nome": "Bomba 02", "status": "Ativa", "combustiveis": ["Etanol", "Gasolina Comum"] },
+    { "id": 3, "nome": "Bomba 03", "status": "Manutenção", "combustiveis": ["Diesel S-10", "Diesel Comum"] },
+    { "id": 4, "nome": "Bomba 04", "status": "Ativa", "combustiveis": ["Gasolina Aditivada", "Etanol"] },
+    { "id": 5, "nome": "Bomba 05", "status": "Ativa", "combustiveis": ["GNV"] }
+  ]
 }
