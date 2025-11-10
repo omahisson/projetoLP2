@@ -18,7 +18,7 @@ function Rotas({ toggleMenu }){
     return(
         <BrowserRouter>
         <Routes>
-            <Route path='/cadastro-administradores/:idParam?' element={<CadastroAdministradores />} /> 
+            <Route path='/cadastro-administradores/:idParam?' element={<CadastroAdministradores toggleMenu={toggleMenu} />} /> 
             <Route path='/cadastro-gerentes/:idParam?' element={<CadastroGerentes />} />
             <Route path='/cadastro-funcionarios/:idParam?' element={<CadastroFuncionarios />} />
 

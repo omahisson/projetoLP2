@@ -1,3 +1,4 @@
+/* global toastr */
 export function mostrarMensagem(titulo, mensagem, tipo){
     toastr[tipo](mensagem, titulo);
 }

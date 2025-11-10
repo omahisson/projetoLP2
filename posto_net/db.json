@@ -1,181 +1,429 @@
 {
   "administradores": [
-    { "id": 1, "nome": "João Silva", "email": "joao@exemplo.com", "labels": ["postos", "gerentes", "funcionarios"] },
-    { "id": 2, "nome": "Maria Santos", "email": "maria@exemplo.com", "labels": ["postos", "produtos"] }
+    {
+      "id": "1",
+      "nome": "João Silva",
+      "email": "joao@exemplo.com",
+      "labels": [
+        "postos",
+        "gerentes",
+        "funcionarios"
+      ]
+    },
+    {
+      "id": "2",
+      "nome": "Maria Santos",
+      "email": "maria@exemplo.com",
+      "labels": [
+        "postos",
+        "produtos"
+      ]
+    },
+    {
+      "id": "",
+      "nome": "joao ss",
+      "cpf": "111111111111",
+      "email": "1@g.com1",
+      "celular": "11111111111",
+      "senha": "111",
+      "gerenciarTodosPostos": true,
+      "gerenciarGerentes": true,
+      "gerenciarFuncionarios": true,
+      "gerenciarProdutos": true,
+      "postosPermitidos": []
+    },
+    {
+      "id": "",
+      "nome": "joao j",
+      "cpf": "111111111111",
+      "email": "1@g.com1",
+      "celular": "11111111111",
+      "senha": "1111",
+      "gerenciarTodosPostos": true,
+      "gerenciarGerentes": true,
+      "gerenciarFuncionarios": true,
+      "gerenciarProdutos": true,
+      "postosPermitidos": []
+    }
   ],
   "gerentes": [
-    { "id": 1, "nome": "Ana Costa", "email": "ana@exemplo.com", "telefone": "(11) 99999-9999", "labels": ["Posto Shell Centro"] },
-    { "id": 2, "nome": "Carlos Mendes", "email": "carlos@exemplo.com", "telefone": "(11) 88888-8888", "labels": ["Posto Ipiranga Vila", "Posto BR Rodovia"] }
+    {
+      "id": "1",
+      "nome": "Ana Costa",
+      "email": "ana@exemplo.com",
+      "telefone": "(11) 99999-9999",
+      "labels": [
+        "Posto Shell Centro"
+      ]
+    },
+    {
+      "id": "2",
+      "nome": "Carlos Mendes",
+      "email": "carlos@exemplo.com",
+      "telefone": "(11) 88888-8888",
+      "labels": [
+        "Posto Ipiranga Vila",
+        "Posto BR Rodovia"
+      ]
+    }
   ],
   "funcionarios": [
-    { "id": 1, "nome": "Pedro Oliveira", "cpf": "12345678900", "postoDeTrabalho": "Posto Shell Centro", "labels": ["Frentista"], "value": 1, "text": "Pedro Oliveira" },
-    { "id": 2, "nome": "Juliana Souza", "cpf": "98765432100", "postoDeTrabalho": "Posto Ipiranga Vila", "labels": ["Caixa"], "value": 2, "text": "Juliana Souza" },
-    { "id": 3, "nome": "Felipe Torres", "cpf": "11122233344", "postoDeTrabalho": "Posto BR Rodovia", "labels": ["Frentista"], "value": 3, "text": "Felipe Torres" }
+    {
+      "id": "1",
+      "nome": "Pedro Oliveira",
+      "cpf": "12345678900",
+      "postoDeTrabalho": "Posto Shell Centro",
+      "labels": [
+        "Frentista"
+      ],
+      "value": 1,
+      "text": "Pedro Oliveira"
+    },
+    {
+      "id": "2",
+      "nome": "Juliana Souza",
+      "cpf": "98765432100",
+      "postoDeTrabalho": "Posto Ipiranga Vila",
+      "labels": [
+        "Caixa"
+      ],
+      "value": 2,
+      "text": "Juliana Souza"
+    },
+    {
+      "id": "3",
+      "nome": "Felipe Torres",
+      "cpf": "11122233344",
+      "postoDeTrabalho": "Posto BR Rodovia",
+      "labels": [
+        "Frentista"
+      ],
+      "value": 3,
+      "text": "Felipe Torres"
+    }
   ],
   "servicos": [
     {
-      "id": 1,
+      "id": "1",
       "nome": "Lavagem Completa",
       "sku": "SRV001",
-      "valor": 45.90,
-      "labels": ["Lavagem", "Popular"]
+      "valor": 45.9,
+      "labels": [
+        "Lavagem",
+        "Popular"
+      ]
     },
     {
-      "id": 2,
+      "id": "2",
       "nome": "Troca de Óleo",
       "sku": "SRV002",
-      "valor": 89.90,
-      "labels": ["Manutenção", "Essencial"]
+      "valor": 89.9,
+      "labels": [
+        "Manutenção",
+        "Essencial"
+      ]
     }
   ],
   "produtos": [
     {
-      "id": 1,
+      "id": "1",
       "nome": "Óleo Motor 5W30",
-      "preco": 35.90,
+      "preco": 35.9,
       "estoque": 50,
-      "labels": ["Automotivo", "Sintético"]
+      "labels": [
+        "Automotivo",
+        "Sintético"
+      ]
     },
     {
-      "id": 2,
+      "id": "2",
       "nome": "Refrigerante Coca-Cola 350ml",
-      "preco": 4.50,
+      "preco": 4.5,
       "estoque": 120,
-      "labels": ["Bebidas", "Refrigerante"]
+      "labels": [
+        "Bebidas",
+        "Refrigerante"
+      ]
     },
     {
-      "id": 3,
+      "id": "3",
       "nome": "Salgadinho Doritos",
-      "preco": 8.90,
+      "preco": 8.9,
       "estoque": 5,
-      "labels": ["Snacks", "Salgadinho"]
+      "labels": [
+        "Snacks",
+        "Salgadinho"
+      ]
     }
   ],
   "combustiveis": [
     {
-      "id": 1,
+      "id": "1",
       "nome": "Gasolina Comum",
       "preco": 5.49,
       "estoque": 5000,
-      "labels": ["Gasolina"],
+      "labels": [
+        "Gasolina"
+      ],
       "unidade": "L"
     },
     {
-      "id": 2,
+      "id": "2",
       "nome": "Gasolina Aditivada",
       "preco": 5.79,
       "estoque": 3000,
-      "labels": ["Gasolina"],
+      "labels": [
+        "Gasolina"
+      ],
       "unidade": "L"
     },
     {
-      "id": 3,
+      "id": "3",
       "nome": "Etanol",
       "preco": 3.89,
       "estoque": 4500,
-      "labels": ["Etanol"],
+      "labels": [
+        "Etanol"
+      ],
       "unidade": "L"
     },
     {
-      "id": 4,
+      "id": "4",
       "nome": "Diesel S-10",
       "preco": 4.25,
       "estoque": 8000,
-      "labels": ["Diesel"],
+      "labels": [
+        "Diesel"
+      ],
       "unidade": "L"
     }
   ],
-  "DadosFinanceiros":{
+  "DadosFinanceiros": {
     "faturamentoTotal": "R$ 125.430,50",
     "ticketMedio": "R$ 87,25",
     "totalVendas": "1438",
     "mainPayment": "Cartão de Crédito (45%)"
   },
   "RankingRede": [
-    { "id": 1, "name": "Posto Shell Centro", "revenue": "R$ 125.430,50" },
-    { "id": 2, "name": "Posto BR Rodovia", "revenue": "R$ 98.320,75" },
-    { "id": 3, "name": "Posto Ipiranga Vila", "revenue": "R$ 87.650,20", "isCurrent": true },
-    { "id": 4, "name": "Posto Texaco Norte", "revenue": "R$ 76.540,10" }
-  ],
-  "MaisVendidos": [
-    { "name": "Gasolina Comum", "quantity": "15.420", "revenue": "R$ 89.250,30" },
-    { "name": "Etanol", "quantity": "8.760", "revenue": "R$ 34.056,40" },
-    { "name": "Óleo Motor 5W30", "quantity": "320", "revenue": "R$ 11.488,00" },
-    { "name": "Refrigerante Coca-Cola 350ml", "quantity": "2.850", "revenue": "R$ 7.125,00" },
-    { "name": "Salgadinho Doritos", "quantity": "1.960", "revenue": "R$ 8.820,00" }
-  ],
-    "RelatorioPreco": [
-    { "product": "Gasolina Comum", "responsible": "João Silva", "prevPrice": "R$ 5,65", "newPrice": "R$ 5,39", "date": "19/08/2024", "effective": "20/08/2024" },
-    { "product": "Diesel S-10", "responsible": "Maria Santos", "prevPrice": "R$ 5,55", "newPrice": "R$ 5,92", "date": "18/08/2024", "effective": "19/08/2024" },
-    { "product": "Etanol", "responsible": "Carlos Lima", "prevPrice": "R$ 4,25", "newPrice": "R$ 4,25", "date": "17/08/2024", "effective": "18/08/2024" }
-  ],
-  "RelatorioEstoque": [
-    { "item": "Gasolina Aditivada", "quantity": 855, "minStock": 1000, "status": "Em Alerta", "expiry": "14/12/2024" },
-    { "item": "Óleo Lubrificante 1L", "quantity": 12, "minStock": 20, "status": "Crítico", "expiry": "25/10/2024" },
-    { "item": "Chocolate Lata", "quantity": 8, "minStock": 15, "status": "Crítico", "expiry": "24/10/2024" }
-  ],
-  "RelatorioOperacional": {
-    "openChecklists": { "value": "8/10", "label": "Checklists Abertos" },
-    "activeShifts": { "value": 3, "label": "Turnos Ativos" },
-    "formsToday": { "value": 12, "label": "Formulários Hoje" }
-  },
-  "TiposCombustivel":[
-      { 
-      "id": 1, 
-      "nome": "Gasolina Comum", 
-      "preco": "R$ 5,49", 
-      "fornecedor": "Petrobrás", 
-      "ultimoAbastecimento": "2024-01-15", 
-      "validade": "2024-03-15", 
-      "estoque": "15.000L", 
-      "status": "Ativo" 
+    {
+      "id": "1",
+      "name": "Posto Shell Centro",
+      "revenue": "R$ 125.430,50"
     },
-    { 
-      "id": 2, 
-      "nome": "Gasolina Aditivada", 
-      "preco": "R$ 5,85", 
-      "fornecedor": "Shell", 
-      "ultimoAbastecimento": "2024-01-14", 
-      "validade": "2024-03-14", 
-      "estoque": "8.500L", 
-      "status": "Ativo" 
+    {
+      "id": "2",
+      "name": "Posto BR Rodovia",
+      "revenue": "R$ 98.320,75"
     },
-    { 
-      "id": 3, 
-      "nome": "Etanol", 
-      "preco": "R$ 3,89", 
-      "fornecedor": "Raízen", 
-      "ultimoAbastecimento": "2024-01-16", 
-      "validade": "2024-02-16", 
-      "estoque": "12.000L", 
-      "status": "Ativo" 
+    {
+      "id": "3",
+      "name": "Posto Ipiranga Vila",
+      "revenue": "R$ 87.650,20",
+      "isCurrent": true
     },
-    { 
-      "id": 4, 
-      "nome": "Diesel S-10", 
-      "preco": "R$ 4,99", 
-      "fornecedor": "Petrobrás", 
-      "ultimoAbastecimento": "2024-01-13", 
-      "validade": "2024-06-13", 
-      "estoque": "20.000L", 
-      "status": "Ativo" 
-    },
-    { 
-      "id": 5, 
-      "nome": "GNV", 
-      "preco": "R$ 4,17", 
-      "fornecedor": "Comgás", 
-      "ultimoAbastecimento": "2024-01-12", 
-      "validade": "-", 
-      "estoque": "5.000m³", 
-      "status": "Ativo" 
+    {
+      "id": "4",
+      "name": "Posto Texaco Norte",
+      "revenue": "R$ 76.540,10"
     }
   ],
-  "DadosBomba":[
-    { "id": 1, "nome": "Bomba 01", "status": "Ativa", "combustiveis": ["Gasolina Comum", "Gasolina Aditivada"] },
-    { "id": 2, "nome": "Bomba 02", "status": "Ativa", "combustiveis": ["Etanol", "Gasolina Comum"] },
-    { "id": 3, "nome": "Bomba 03", "status": "Manutenção", "combustiveis": ["Diesel S-10", "Diesel Comum"] },
-    { "id": 4, "nome": "Bomba 04", "status": "Ativa", "combustiveis": ["Gasolina Aditivada", "Etanol"] },
-    { "id": 5, "nome": "Bomba 05", "status": "Ativa", "combustiveis": ["GNV"] }
+  "MaisVendidos": [
+    {
+      "name": "Gasolina Comum",
+      "quantity": "15.420",
+      "revenue": "R$ 89.250,30",
+      "id": "83d7"
+    },
+    {
+      "name": "Etanol",
+      "quantity": "8.760",
+      "revenue": "R$ 34.056,40",
+      "id": "fe12"
+    },
+    {
+      "name": "Óleo Motor 5W30",
+      "quantity": "320",
+      "revenue": "R$ 11.488,00",
+      "id": "0f81"
+    },
+    {
+      "name": "Refrigerante Coca-Cola 350ml",
+      "quantity": "2.850",
+      "revenue": "R$ 7.125,00",
+      "id": "698c"
+    },
+    {
+      "name": "Salgadinho Doritos",
+      "quantity": "1.960",
+      "revenue": "R$ 8.820,00",
+      "id": "de09"
+    }
+  ],
+  "RelatorioPreco": [
+    {
+      "product": "Gasolina Comum",
+      "responsible": "João Silva",
+      "prevPrice": "R$ 5,65",
+      "newPrice": "R$ 5,39",
+      "date": "19/08/2024",
+      "effective": "20/08/2024",
+      "id": "dd5c"
+    },
+    {
+      "product": "Diesel S-10",
+      "responsible": "Maria Santos",
+      "prevPrice": "R$ 5,55",
+      "newPrice": "R$ 5,92",
+      "date": "18/08/2024",
+      "effective": "19/08/2024",
+      "id": "2059"
+    },
+    {
+      "product": "Etanol",
+      "responsible": "Carlos Lima",
+      "prevPrice": "R$ 4,25",
+      "newPrice": "R$ 4,25",
+      "date": "17/08/2024",
+      "effective": "18/08/2024",
+      "id": "f6de"
+    }
+  ],
+  "RelatorioEstoque": [
+    {
+      "item": "Gasolina Aditivada",
+      "quantity": 855,
+      "minStock": 1000,
+      "status": "Em Alerta",
+      "expiry": "14/12/2024",
+      "id": "1871"
+    },
+    {
+      "item": "Óleo Lubrificante 1L",
+      "quantity": 12,
+      "minStock": 20,
+      "status": "Crítico",
+      "expiry": "25/10/2024",
+      "id": "3583"
+    },
+    {
+      "item": "Chocolate Lata",
+      "quantity": 8,
+      "minStock": 15,
+      "status": "Crítico",
+      "expiry": "24/10/2024",
+      "id": "0912"
+    }
+  ],
+  "RelatorioOperacional": {
+    "openChecklists": {
+      "value": "8/10",
+      "label": "Checklists Abertos"
+    },
+    "activeShifts": {
+      "value": 3,
+      "label": "Turnos Ativos"
+    },
+    "formsToday": {
+      "value": 12,
+      "label": "Formulários Hoje"
+    }
+  },
+  "TiposCombustivel": [
+    {
+      "id": "1",
+      "nome": "Gasolina Comum",
+      "preco": "R$ 5,49",
+      "fornecedor": "Petrobrás",
+      "ultimoAbastecimento": "2024-01-15",
+      "validade": "2024-03-15",
+      "estoque": "15.000L",
+      "status": "Ativo"
+    },
+    {
+      "id": "2",
+      "nome": "Gasolina Aditivada",
+      "preco": "R$ 5,85",
+      "fornecedor": "Shell",
+      "ultimoAbastecimento": "2024-01-14",
+      "validade": "2024-03-14",
+      "estoque": "8.500L",
+      "status": "Ativo"
+    },
+    {
+      "id": "3",
+      "nome": "Etanol",
+      "preco": "R$ 3,89",
+      "fornecedor": "Raízen",
+      "ultimoAbastecimento": "2024-01-16",
+      "validade": "2024-02-16",
+      "estoque": "12.000L",
+      "status": "Ativo"
+    },
+    {
+      "id": "4",
+      "nome": "Diesel S-10",
+      "preco": "R$ 4,99",
+      "fornecedor": "Petrobrás",
+      "ultimoAbastecimento": "2024-01-13",
+      "validade": "2024-06-13",
+      "estoque": "20.000L",
+      "status": "Ativo"
+    },
+    {
+      "id": "5",
+      "nome": "GNV",
+      "preco": "R$ 4,17",
+      "fornecedor": "Comgás",
+      "ultimoAbastecimento": "2024-01-12",
+      "validade": "-",
+      "estoque": "5.000m³",
+      "status": "Ativo"
+    }
+  ],
+  "DadosBomba": [
+    {
+      "id": "1",
+      "nome": "Bomba 01",
+      "status": "Ativa",
+      "combustiveis": [
+        "Gasolina Comum",
+        "Gasolina Aditivada"
+      ]
+    },
+    {
+      "id": "2",
+      "nome": "Bomba 02",
+      "status": "Ativa",
+      "combustiveis": [
+        "Etanol",
+        "Gasolina Comum"
+      ]
+    },
+    {
+      "id": "3",
+      "nome": "Bomba 03",
+      "status": "Manutenção",
+      "combustiveis": [
+        "Diesel S-10",
+        "Diesel Comum"
+      ]
+    },
+    {
+      "id": "4",
+      "nome": "Bomba 04",
+      "status": "Ativa",
+      "combustiveis": [
+        "Gasolina Aditivada",
+        "Etanol"
+      ]
+    },
+    {
+      "id": "5",
+      "nome": "Bomba 05",
+      "status": "Ativa",
+      "combustiveis": [
+        "GNV"
+      ]
+    }
   ]
 }
