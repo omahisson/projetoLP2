@@ -146,7 +146,7 @@ function CadastroAdministrador({ toggleMenu }) {
         }
     }, [idParam]);
 
-    //if (!dados) return null; //se nao tem dado, retorna null e n renderiza a tela ate receber os dados
+    if (!dados) return null; //se nao tem dado, retorna null e n renderiza a tela ate receber os dados
 
     const formStyles = {
         container: {
