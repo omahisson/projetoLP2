@@ -1,4 +1,4 @@
-/** 
+/*
 @typedef {Object} Funcionario;
 @property {Number} id;
 @property {String} nome;
