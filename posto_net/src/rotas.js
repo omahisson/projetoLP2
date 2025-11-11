@@ -20,7 +20,7 @@ function Rotas({ toggleMenu }){
         <Routes>
             <Route path='/cadastro-administradores/:idParam?' element={<CadastroAdministradores toggleMenu={toggleMenu} />} /> 
             <Route path='/cadastro-gerentes/:idParam?' element={<CadastroGerentes toggleMenu={toggleMenu} />} />
-            <Route path='/cadastro-funcionarios/:idParam?' element={<CadastroFuncionarios />} />
+            <Route path='/cadastro-funcionarios/:idParam?' element={<CadastroFuncionarios toggleMenu={toggleMenu} />} />
 
             <Route path='/empregados' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
             

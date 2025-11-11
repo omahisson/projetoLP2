@@ -33,6 +33,45 @@ function ListagemEmpregados({ toggleMenu }) {
         return cpfLimpo;
     };
 
+    function handleEditar(id, tipo) {
+        if (tipo === 'administradores') {
+            navigate(`/cadastro-administradores/${id}`);
+        } else if (tipo === 'gerentes') {
+            navigate(`/cadastro-gerentes/${id}`);
+        } else if (tipo === 'funcionarios') {
+            navigate(`/cadastro-funcionarios/${id}`);
+        }
+    }
+
+    async function handleExcluir(id, tipo, nome) {
+        if (!window.confirm(`Tem certeza que deseja excluir ${nome}?`)) {
+            return;
+        }
+
+        let url = '';
+        if (tipo === 'administradores') {
+            url = `${baseURLAdministradores}/${id}`;
+        } else if (tipo === 'gerentes') {
+            url = `${baseURLGerentes}/${id}`;
+        } else if (tipo === 'funcionarios') {
+            url = `${baseURLFuncionarios}/${id}`;
+        }
+
+        try {
+            await axios.delete(url);
+            alert(`${nome} excluído com sucesso!`);
+            if (tipo === 'administradores') {
+                setDadosAdministradores(dadosAdministradores.filter(item => item.id !== id));
+            } else if (tipo === 'gerentes') {
+                setDadosGerentes(dadosGerentes.filter(item => item.id !== id));
+            } else if (tipo === 'funcionarios') {
+                setDadosFuncionarios(dadosFuncionarios.filter(item => item.id !== id));
+            }
+        } catch (error) {
+            alert('Erro ao excluir: ' + (error.response?.data || error.message));
+        }
+    }
+
     React.useEffect(() => {
         axios.get(baseURLAdministradores)
             .then(function (response) {
@@ -77,27 +116,82 @@ function ListagemEmpregados({ toggleMenu }) {
                 >
                     <div className='row'>
                         <div className='col-md-12'>
-                            <div className='bs-component'>
-                                <table className='table table-hover'>
+                        <div className='bs-component'>
+                                <table className='table table-hover' style={{ borderCollapse: 'collapse' }}>
                                     <tbody>
                                         {dadosAdministradores.length === 0 ? (
                                             <tr>
-                                                <td colSpan="2">Nenhum administrador encontrado</td>
+                                                <td colSpan="2" style={{ border: 'none', padding: '12px' }}>Nenhum administrador encontrado</td>
                                             </tr>
                                         ) : (
                                             dadosAdministradores.map((dado) => (
-                                                <tr key={dado.id}>
-                                                    <td>
-                                                        <div>
-                                                            <div style={{ fontWeight: 500, marginBottom: '4px' }}>{dado.nome}</div>
-                                                            <div style={{ fontSize: '14px', color: '#666' }}>{dado.email}</div>
+                                                <tr key={dado.id} style={{ border: 'none' }}>
+                                                    <td style={{ border: 'none', padding: '12px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                                                            <span style={{ fontWeight: 500 }}>{dado.nome}</span>
+                                                            <span style={{ fontSize: '14px', color: '#666' }}>{dado.email}</span>
                                                         </div>
                                                     </td>
-                                                    <td className='text-end'>
-                                                        <div className='d-flex justify-content-end gap-2 flex-wrap'>
+                                                    <td className='text-end' style={{ border: 'none', padding: '12px' }}>
+                                                        <div className='d-flex justify-content-end gap-2 flex-wrap align-items-center'>
                                                             {dado.labels && dado.labels.map((label, index) => (
                                                                 <span key={index} className='label-badge'>{label}</span>
                                                             ))}
+                                                            <div style={{ display: 'flex', gap: '8px', marginLeft: '12px' }}>
+                                                                <button
+                                                                    type='button'
+                                                                    onClick={() => handleEditar(dado.id, 'administradores')}
+                                                                    style={{
+                                                                        background: 'none',
+                                                                        border: 'none',
+                                                                        cursor: 'pointer',
+                                                                        padding: '4px',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        borderRadius: '4px',
+                                                                        transition: 'background-color 0.2s'
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(243, 243, 245)'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                                                    title="Editar"
+                                                                >
+                                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                                    </svg>
+                                                                </button>
+                                                                <button
+                                                                    type='button'
+                                                                    onClick={() => handleExcluir(dado.id, 'administradores', dado.nome)}
+                                                                    style={{
+                                                                        background: 'none',
+                                                                        border: 'none',
+                                                                        cursor: 'pointer',
+                                                                        padding: '4px',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        borderRadius: '4px',
+                                                                        transition: 'background-color 0.2s',
+                                                                        color: '#dc2626'
+                                                                    }}
+                                                                    onMouseEnter={(e) => {
+                                                                        e.currentTarget.style.backgroundColor = '#fee2e2';
+                                                                        e.currentTarget.style.color = '#b91c1c';
+                                                                    }}
+                                                                    onMouseLeave={(e) => {
+                                                                        e.currentTarget.style.backgroundColor = 'transparent';
+                                                                        e.currentTarget.style.color = '#dc2626';
+                                                                    }}
+                                                                    title="Excluir"
+                                                                >
+                                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -124,28 +218,91 @@ function ListagemEmpregados({ toggleMenu }) {
                 >
                     <div className='row'>
                         <div className='col-md-12'>
-                            <div className='bs-component'>
-                                <table className='table table-hover'>
+                        <div className='bs-component'>
+                                <table className='table table-hover' style={{ borderCollapse: 'collapse' }}>
                                     <tbody>
-                                        {dadosGerentes.length === 0 ? (
+                                    {dadosGerentes.length === 0 ? (
                                             <tr>
-                                                <td colSpan="2">Nenhum gerente encontrado</td>
+                                                <td colSpan="1" style={{ border: 'none', padding: '12px' }}>Nenhum gerente encontrado</td>
                                             </tr>
                                         ) : (
                                             dadosGerentes.map((dado) => (
-                                                <tr key={dado.id}>
-                                                    <td>
-                                                        <div>
-                                                            <div style={{ fontWeight: 500, marginBottom: '4px' }}>{dado.nome}</div>
-                                                            <div style={{ fontSize: '14px', color: '#666' }}>{dado.email}</div>
-                                                            {dado.telefone && <div style={{ fontSize: '14px', color: '#666' }}>{dado.telefone}</div>}
+                                                <tr key={dado.id} style={{ border: 'none' }}>
+                                                    <td style={{ border: 'none', padding: '12px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                                                            <span style={{ fontWeight: 500 }}>{dado.nome}</span>
+                                                            <span style={{ fontSize: '14px', color: '#666' }}>{dado.email}</span>
+                                                            {dado.telefone && (
+                                                                <>
+                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                                    <span style={{ fontSize: '14px', color: '#666' }}>{dado.telefone}</span>
+                                                                </>
+                                                            )}
+                                                            {dado.labels && dado.labels.length > 0 && (
+                                                                <>
+                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                                    {dado.labels.map((label, index) => (
+                                                                        <span key={index} className='label-badge-gerente'>{label}</span>
+                                                                    ))}
+                                                                </>
+                                                            )}
                                                         </div>
                                                     </td>
-                                                    <td className='text-end td-gerentes-labels'>
-                                                        <div className='d-flex justify-content-end flex-column labels-gerentes'>
-                                                            {dado.labels && dado.labels.map((label, index) => (
-                                                                <span key={index} className='label-badge-gerente'>{label}</span>
-                                                            ))}
+                                                    <td className='text-end' style={{ border: 'none', padding: '12px' }}>
+                                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                                            <button
+                                                                type='button'
+                                                                onClick={() => handleEditar(dado.id, 'gerentes')}
+                                                                style={{
+                                                                    background: 'none',
+                                                                    border: 'none',
+                                                                    cursor: 'pointer',
+                                                                    padding: '4px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    borderRadius: '4px',
+                                                                    transition: 'background-color 0.2s'
+                                                                }}
+                                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(243, 243, 245)'}
+                                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                                                title="Editar"
+                                                            >
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                                </svg>
+                                                            </button>
+                                                            <button
+                                                                type='button'
+                                                                onClick={() => handleExcluir(dado.id, 'gerentes', dado.nome)}
+                                                                style={{
+                                                                    background: 'none',
+                                                                    border: 'none',
+                                                                    cursor: 'pointer',
+                                                                    padding: '4px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    borderRadius: '4px',
+                                                                    transition: 'background-color 0.2s',
+                                                                    color: '#dc2626'
+                                                                }}
+                                                                onMouseEnter={(e) => {
+                                                                    e.currentTarget.style.backgroundColor = '#fee2e2';
+                                                                    e.currentTarget.style.color = '#b91c1c';
+                                                                }}
+                                                                onMouseLeave={(e) => {
+                                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                                    e.currentTarget.style.color = '#dc2626';
+                                                                }}
+                                                                title="Excluir"
+                                                            >
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                                </svg>
+                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -172,34 +329,101 @@ function ListagemEmpregados({ toggleMenu }) {
                 >
                     <div className='row'>
                         <div className='col-md-12'>
-                            <div className='bs-component'>
-                                <table className='table table-hover'>
+                        <div className='bs-component'>
+                                <table className='table table-hover' style={{ borderCollapse: 'collapse' }}>
                                     <tbody>
                                         {dadosFuncionarios.length === 0 ? (
                                             <tr>
-                                                <td colSpan="2">Nenhum funcionário encontrado</td>
+                                                <td colSpan="2" style={{ border: 'none', padding: '12px' }}>Nenhum funcionário encontrado</td>
                                             </tr>
                                         ) : (
                                             dadosFuncionarios.map((dado) => (
-                                                <tr key={dado.id}>
-                                                    <td>
-                                                        <div>
-                                                            <div style={{ fontWeight: 500, marginBottom: '4px' }}>{dado.nome}</div>
+                                                <tr key={dado.id} style={{ border: 'none' }}>
+                                                    <td style={{ border: 'none', padding: '12px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                                                            <span style={{ fontWeight: 500 }}>{dado.nome}</span>
                                                             {dado.cpf ? (
-                                                                <div style={{ fontSize: '14px', color: '#666' }}>CPF: {formatarCPF(dado.cpf)}</div>
+                                                                <>
+                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                                    <span style={{ fontSize: '14px', color: '#666' }}>CPF: {formatarCPF(dado.cpf)}</span>
+                                                                </>
                                                             ) : (
-                                                                <div style={{ fontSize: '14px', color: '#999' }}>CPF não informado</div>
+                                                                <>
+                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                                    <span style={{ fontSize: '14px', color: '#999' }}>CPF não informado</span>
+                                                                </>
                                                             )}
                                                             {dado.postoDeTrabalho && (
-                                                                <div style={{ fontSize: '14px', color: '#666' }}>{dado.postoDeTrabalho}</div>
+                                                                <>
+                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                                    <span style={{ fontSize: '14px', color: '#666' }}>{dado.postoDeTrabalho}</span>
+                                                                </>
+                                                            )}
+                                                            {dado.labels && dado.labels.length > 0 && (
+                                                                <>
+                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                                    {dado.labels.map((label, index) => (
+                                                                        <span key={index} className='label-badge-gerente'>{label}</span>
+                                                                    ))}
+                                                                </>
                                                             )}
                                                         </div>
                                                     </td>
-                                                    <td className='text-end td-gerentes-labels'>
-                                                        <div className='d-flex justify-content-end flex-column labels-gerentes'>
-                                                            {dado.labels && dado.labels.map((label, index) => (
-                                                                <span key={index} className='label-badge-gerente'>{label}</span>
-                                                            ))}
+                                                    <td className='text-end td-gerentes-labels' style={{ border: 'none', padding: '12px' }}>
+                                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                                            <button
+                                                                type='button'
+                                                                onClick={() => handleEditar(dado.id, 'funcionarios')}
+                                                                style={{
+                                                                    background: 'none',
+                                                                    border: 'none',
+                                                                    cursor: 'pointer',
+                                                                    padding: '4px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    borderRadius: '4px',
+                                                                    transition: 'background-color 0.2s'
+                                                                }}
+                                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(243, 243, 245)'}
+                                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                                                title="Editar"
+                                                            >
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                                </svg>
+                                                            </button>
+                                                            <button
+                                                                type='button'
+                                                                onClick={() => handleExcluir(dado.id, 'funcionarios', dado.nome)}
+                                                                style={{
+                                                                    background: 'none',
+                                                                    border: 'none',
+                                                                    cursor: 'pointer',
+                                                                    padding: '4px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    borderRadius: '4px',
+                                                                    transition: 'background-color 0.2s',
+                                                                    color: '#dc2626'
+                                                                }}
+                                                                onMouseEnter={(e) => {
+                                                                    e.currentTarget.style.backgroundColor = '#fee2e2';
+                                                                    e.currentTarget.style.color = '#b91c1c';
+                                                                }}
+                                                                onMouseLeave={(e) => {
+                                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                                    e.currentTarget.style.color = '#dc2626';
+                                                                }}
+                                                                title="Excluir"
+                                                            >
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                                </svg>
+                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
