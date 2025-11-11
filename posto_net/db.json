@@ -65,6 +65,19 @@
         "Posto Ipiranga Vila",
         "Posto BR Rodovia"
       ]
+    },
+    {
+      "id": "",
+      "nome": "luis gerentinho",
+      "email": "1@g.com1",
+      "telefone": "1111111",
+      "senha": "11",
+      "labels": [
+        "Posto Shell Centro",
+        "Posto Ipiranga Vila",
+        "Posto BR Rodovia",
+        "Posto Texaco Norte"
+      ]
     }
   ],
   "funcionarios": [
