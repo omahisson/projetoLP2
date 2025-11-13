@@ -16,6 +16,22 @@ function CadastroAdministrador({ toggleMenu }) {
 
     const baseURL = `${BASE_URL}/administradores`;
 
+    const [postos, setPostos] = useState([]);
+    const [postosSelecionados, setPostosSelecionados] = useState([]);
+
+    useEffect(() => {
+        async function carregarPostos() {
+            try {
+                const resp = await axios.get(`${BASE_URL}/postos`);
+                setPostos(resp.data || []);
+            } catch (e) {
+                console.error('Erro ao carregar postos:', e);
+                setPostos([]);
+            }
+        }
+        carregarPostos();
+    }, []);
+
     //criou um campo para cada campo que ta na tela
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
@@ -27,10 +43,6 @@ function CadastroAdministrador({ toggleMenu }) {
     const [gerenciarGerentes, setGerenciarGerentes] = useState(false);
     const [gerenciarFuncionarios, setGerenciarFuncionarios] = useState(false);
     const [gerenciarProdutos, setGerenciarProdutos] = useState(false);
-    const [postoShellCentro, setPostoShellCentro] = useState(false);
-    const [postoIpirangaVila, setPostoIpirangaVila] = useState(false);
-    const [postoBRRodovia, setPostoBRRodovia] = useState(false);
-    const [postoTexacoNorte, setPostoTexacoNorte] = useState(false);
 
     const [dados, setDados] = React.useState([]); //volta pro dado original
 
@@ -46,10 +58,7 @@ function CadastroAdministrador({ toggleMenu }) {
             setGerenciarGerentes(false);
             setGerenciarFuncionarios(false);
             setGerenciarProdutos(false);
-            setPostoShellCentro(false);
-            setPostoIpirangaVila(false);
-            setPostoBRRodovia(false);
-            setPostoTexacoNorte(false);
+            setPostosSelecionados([]);
         } else {
             setId(dados.id);
             setNome(dados.nome);
@@ -61,26 +70,18 @@ function CadastroAdministrador({ toggleMenu }) {
             setGerenciarGerentes(dados.gerenciarGerentes || false);
             setGerenciarFuncionarios(dados.gerenciarFuncionarios || false);
             setGerenciarProdutos(dados.gerenciarProdutos || false);
-            setPostoShellCentro(dados.postosPermitidos?.includes('Posto Shell Centro') || false);
-            setPostoIpirangaVila(dados.postosPermitidos?.includes('Posto Ipiranga Vila') || false);
-            setPostoBRRodovia(dados.postosPermitidos?.includes('Posto BR Rodovia') || false);
-            setPostoTexacoNorte(dados.postosPermitidos?.includes('Posto Texaco Norte') || false);
         }
     }
 
     async function salvar() {
-        const postosPermitidos = [];
-        if (postoShellCentro) postosPermitidos.push('Posto Shell Centro');
-        if (postoIpirangaVila) postosPermitidos.push('Posto Ipiranga Vila');
-        if (postoBRRodovia) postosPermitidos.push('Posto BR Rodovia');
-        if (postoTexacoNorte) postosPermitidos.push('Posto Texaco Norte');
+        const postosPermitidos = gerenciarTodosPostos ? [] : postosSelecionados;
 
-        let data = { 
-            id, 
-            nome, 
-            cpf, 
-            email, 
-            celular, 
+        let data = {
+            id,
+            nome,
+            cpf,
+            email,
+            celular,
             senha,
             gerenciarTodosPostos,
             gerenciarGerentes,
@@ -118,23 +119,26 @@ function CadastroAdministrador({ toggleMenu }) {
 
     async function buscar() {
         if (idParam != null) {
-            await axios.get(`${baseURL}/${idParam}`).then((response) => { //get para buscar o dado
-                setDados(response.data);
-            });
-            setId(dados.id);
-            setNome(dados.nome);
-            setCpf(dados.cpf);
-            setEmail(dados.email);
-            setCelular(dados.celular);
-            setSenha(dados.senha || '');
-            setGerenciarTodosPostos(dados.gerenciarTodosPostos || false);
-            setGerenciarGerentes(dados.gerenciarGerentes || false);
-            setGerenciarFuncionarios(dados.gerenciarFuncionarios || false);
-            setGerenciarProdutos(dados.gerenciarProdutos || false);
-            setPostoShellCentro(dados.postosPermitidos?.includes('Posto Shell Centro') || false);
-            setPostoIpirangaVila(dados.postosPermitidos?.includes('Posto Ipiranga Vila') || false);
-            setPostoBRRodovia(dados.postosPermitidos?.includes('Posto BR Rodovia') || false);
-            setPostoTexacoNorte(dados.postosPermitidos?.includes('Posto Texaco Norte') || false);
+            try {
+                const response = await axios.get(`${baseURL}/${idParam}`);
+                const dadosResp = response.data;
+
+                setDados(dadosResp);
+                setId(dadosResp.id);
+                setNome(dadosResp.nome || '');
+                setCpf(dadosResp.cpf || '');
+                setEmail(dadosResp.email || '');
+                setCelular(dadosResp.celular || '');
+                setSenha(dadosResp.senha || '');
+                setGerenciarTodosPostos(!!dadosResp.gerenciarTodosPostos);
+                setGerenciarGerentes(!!dadosResp.gerenciarGerentes);
+                setGerenciarFuncionarios(!!dadosResp.gerenciarFuncionarios);
+                setGerenciarProdutos(!!dadosResp.gerenciarProdutos);
+                const permitidos = Array.isArray(dadosResp.postosPermitidos) ? dadosResp.postosPermitidos : [];
+                setPostosSelecionados(permitidos);
+            } catch (error) {
+                console.error('Erro ao buscar administrador:', error);
+            }
         }
     }
 
@@ -318,9 +322,9 @@ function CadastroAdministrador({ toggleMenu }) {
             </div>
 
             <div style={formStyles.titleSection}>
-                <div 
+                <div
                     onClick={() => navigate('/empregados')}
-                    style={{ 
+                    style={{
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -334,14 +338,14 @@ function CadastroAdministrador({ toggleMenu }) {
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     title="Voltar para listagem de empregados"
                 >
-                    <svg 
-                        width="16" 
-                        height="16" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
                         strokeLinejoin="round"
                     >
                         <path d="m12 19-7-7 7-7"></path>
@@ -464,10 +468,7 @@ function CadastroAdministrador({ toggleMenu }) {
                                             onChange={(e) => {
                                                 setGerenciarTodosPostos(e.target.checked);
                                                 if (e.target.checked) {
-                                                    setPostoShellCentro(false);
-                                                    setPostoIpirangaVila(false);
-                                                    setPostoBRRodovia(false);
-                                                    setPostoTexacoNorte(false);
+                                                    setPostosSelecionados([]);
                                                 }
                                             }}
                                             style={formStyles.checkbox}
@@ -519,54 +520,28 @@ function CadastroAdministrador({ toggleMenu }) {
                                 <div style={formStyles.fieldGroup}>
                                     <label style={formStyles.label}>Postos Permitidos</label>
                                     <div style={formStyles.checkboxGrid}>
-                                        <div style={formStyles.checkboxContainer}>
-                                            <input
-                                                type="checkbox"
-                                                id="postoShellCentro"
-                                                checked={postoShellCentro}
-                                                onChange={(e) => setPostoShellCentro(e.target.checked)}
-                                                style={formStyles.checkbox}
-                                            />
-                                            <label htmlFor="postoShellCentro" style={formStyles.checkboxLabel}>
-                                                Posto Shell Centro
-                                            </label>
-                                        </div>
-                                        <div style={formStyles.checkboxContainer}>
-                                            <input
-                                                type="checkbox"
-                                                id="postoIpirangaVila"
-                                                checked={postoIpirangaVila}
-                                                onChange={(e) => setPostoIpirangaVila(e.target.checked)}
-                                                style={formStyles.checkbox}
-                                            />
-                                            <label htmlFor="postoIpirangaVila" style={formStyles.checkboxLabel}>
-                                                Posto Ipiranga Vila
-                                            </label>
-                                        </div>
-                                        <div style={formStyles.checkboxContainer}>
-                                            <input
-                                                type="checkbox"
-                                                id="postoBRRodovia"
-                                                checked={postoBRRodovia}
-                                                onChange={(e) => setPostoBRRodovia(e.target.checked)}
-                                                style={formStyles.checkbox}
-                                            />
-                                            <label htmlFor="postoBRRodovia" style={formStyles.checkboxLabel}>
-                                                Posto BR Rodovia
-                                            </label>
-                                        </div>
-                                        <div style={formStyles.checkboxContainer}>
-                                            <input
-                                                type="checkbox"
-                                                id="postoTexacoNorte"
-                                                checked={postoTexacoNorte}
-                                                onChange={(e) => setPostoTexacoNorte(e.target.checked)}
-                                                style={formStyles.checkbox}
-                                            />
-                                            <label htmlFor="postoTexacoNorte" style={formStyles.checkboxLabel}>
-                                                Posto Texaco Norte
-                                            </label>
-                                        </div>
+                                        {postos.map((p) => {
+                                            const marcado = postosSelecionados.includes(p.nome);
+                                            return (
+                                                <div key={p.id} style={formStyles.checkboxContainer}>
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`posto_${p.id}`}
+                                                        checked={marcado}
+                                                        onChange={(e) => {
+                                                            const novo = e.target.checked
+                                                                ? [...postosSelecionados, p.nome]
+                                                                : postosSelecionados.filter(n => n !== p.nome);
+                                                            setPostosSelecionados(novo);
+                                                        }}
+                                                        style={formStyles.checkbox}
+                                                    />
+                                                    <label htmlFor={`posto_${p.id}`} style={formStyles.checkboxLabel}>
+                                                        {p.nome}
+                                                    </label>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}

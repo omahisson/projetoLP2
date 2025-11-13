@@ -438,5 +438,23 @@
         "GNV"
       ]
     }
+  ],
+  "postos": [
+    {
+      "id": "1",
+      "nome": "Posto Shell Centro1"
+    },
+    {
+      "id": "2",
+      "nome": "Posto Ipiranga Vila1"
+    },
+    {
+      "id": "3",
+      "nome": "Posto BR Rodovia1"
+    },
+    {
+      "id": "4",
+      "nome": "Posto Texaco Norte1"
+    }
   ]
 }
