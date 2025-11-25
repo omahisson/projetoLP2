@@ -2,48 +2,45 @@
   "administradores": [
     {
       "id": "1",
-      "nome": "João Silva",
-      "email": "joao@exemplo.com",
+      "nome": "João Silva2",
+      "cpf": "12345678901",
+      "email": "joao1@exemplo.com",
+      "celular": "33988776655",
+      "senha": "aaa",
+      "gerenciarTodosPostos": false,
+      "gerenciarGerentes": true,
+      "gerenciarFuncionarios": true,
+      "gerenciarProdutos": true,
+      "postosPermitidos": [
+        "Posto Shell Centro1",
+        "Posto Ipiranga Vila1",
+        "Posto BR Rodovia1"
+      ],
       "labels": [
-        "postos",
+        "Posto Shell Centro1",
+        "Posto Ipiranga Vila1",
+        "Posto BR Rodovia1",
         "gerentes",
-        "funcionarios"
+        "funcionarios",
+        "produtos"
       ]
     },
     {
       "id": "2",
       "nome": "Maria Santos",
+      "cpf": "23056098765",
       "email": "maria@exemplo.com",
+      "celular": "33940028922",
+      "senha": "abc",
+      "gerenciarTodosPostos": true,
+      "gerenciarGerentes": false,
+      "gerenciarFuncionarios": true,
+      "gerenciarProdutos": false,
+      "postosPermitidos": [],
       "labels": [
-        "postos",
-        "produtos"
+        "Postos",
+        "funcionarios"
       ]
-    },
-    {
-      "id": "",
-      "nome": "joao ss",
-      "cpf": "111111111111",
-      "email": "1@g.com1",
-      "celular": "11111111111",
-      "senha": "111",
-      "gerenciarTodosPostos": true,
-      "gerenciarGerentes": true,
-      "gerenciarFuncionarios": true,
-      "gerenciarProdutos": true,
-      "postosPermitidos": []
-    },
-    {
-      "id": "",
-      "nome": "joao j",
-      "cpf": "111111111111",
-      "email": "1@g.com1",
-      "celular": "11111111111",
-      "senha": "1111",
-      "gerenciarTodosPostos": true,
-      "gerenciarGerentes": true,
-      "gerenciarFuncionarios": true,
-      "gerenciarProdutos": true,
-      "postosPermitidos": []
     }
   ],
   "gerentes": [
@@ -52,8 +49,10 @@
       "nome": "Ana Costa",
       "email": "ana@exemplo.com",
       "telefone": "(11) 99999-9999",
+      "senha": "aaa",
       "labels": [
-        "Posto Shell Centro"
+        "Posto Shell Centro1",
+        "Posto Ipiranga Vila1"
       ]
     },
     {
@@ -61,22 +60,10 @@
       "nome": "Carlos Mendes",
       "email": "carlos@exemplo.com",
       "telefone": "(11) 88888-8888",
+      "senha": "bbb",
       "labels": [
-        "Posto Ipiranga Vila",
-        "Posto BR Rodovia"
-      ]
-    },
-    {
-      "id": "",
-      "nome": "luis gerentinho",
-      "email": "1@g.com1",
-      "telefone": "1111111",
-      "senha": "11",
-      "labels": [
-        "Posto Shell Centro",
-        "Posto Ipiranga Vila",
-        "Posto BR Rodovia",
-        "Posto Texaco Norte"
+        "Posto Ipiranga Vila1",
+        "Posto BR Rodovia1"
       ]
     }
   ],
@@ -85,34 +72,45 @@
       "id": "1",
       "nome": "Pedro Oliveira",
       "cpf": "12345678900",
-      "postoDeTrabalho": "Posto Shell Centro",
+      "postoDeTrabalho": "Posto BR Rodovia1",
       "labels": [
-        "Frentista"
+        "Mecânico"
       ],
-      "value": 1,
+      "value": "1",
       "text": "Pedro Oliveira"
     },
     {
       "id": "2",
       "nome": "Juliana Souza",
       "cpf": "98765432100",
-      "postoDeTrabalho": "Posto Ipiranga Vila",
+      "postoDeTrabalho": "Posto Ipiranga Vila1",
       "labels": [
         "Caixa"
       ],
-      "value": 2,
+      "value": "2",
       "text": "Juliana Souza"
     },
     {
       "id": "3",
       "nome": "Felipe Torres",
       "cpf": "11122233344",
-      "postoDeTrabalho": "Posto BR Rodovia",
+      "postoDeTrabalho": "Posto Texaco Norte1",
       "labels": [
         "Frentista"
       ],
-      "value": 3,
+      "value": "3",
       "text": "Felipe Torres"
+    },
+    {
+      "id": "4",
+      "nome": "Jose Jose",
+      "cpf": "11111133344",
+      "postoDeTrabalho": "Posto Shell Centro1",
+      "labels": [
+        "Vendedor"
+      ],
+      "value": 1764031377266,
+      "text": "Jose Jose"
     }
   ],
   "servicos": [

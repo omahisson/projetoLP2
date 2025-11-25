@@ -21,6 +21,7 @@ function PdvAberto({ toggleMenu }) {
     const [categoriaSelecionada, setCategoriaSelecionada] = React.useState('combustiveis');
     const [produtos, setProdutos] = React.useState([]);
     const [servicos, setServicos] = React.useState([]);
+    const [combustiveis, setCombustiveis] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
 
     const { operadorNome, turno, horaAbertura, valorInicialCaixa } = location.state || {};
@@ -40,12 +41,14 @@ function PdvAberto({ toggleMenu }) {
     React.useEffect(() => {
         const fetchDados = async () => {
             try {
-                const [responseProdutos, responseServicos] = await Promise.all([
+                const [responseProdutos, responseServicos, responseCombustiveis] = await Promise.all([
                     axios.get(`${BASE_URL}/produtos`),
-                    axios.get(`${BASE_URL}/servicos`)
+                    axios.get(`${BASE_URL}/servicos`),
+                    axios.get(`${BASE_URL}/combustiveis`)
                 ]);
                 setProdutos(responseProdutos.data || []);
                 setServicos(responseServicos.data || []);
+                setCombustiveis(responseCombustiveis.data || []);
             } catch (error) {
                 console.error('Erro ao buscar dados:', error);
             } finally {
@@ -189,23 +192,16 @@ function PdvAberto({ toggleMenu }) {
                 situacao: 'Disponível'
             }));
         } else if (categoriaSelecionada === 'combustiveis') {
-            itens = produtos
-                .filter(produto =>
-                    produto.labels &&
-                    produto.labels.some(label => label.toLowerCase() === 'combustível')
-                )
-                .map(produto => ({
-                    id: produto.id,
-                    titulo: produto.nome,
-                    label: produto.labels && produto.labels.length > 0
-                        ? produto.labels.find(l => l.toLowerCase() !== 'combustível') || produto.labels[0]
-                        : '',
-                    valor: formatarPreco(produto.preco),
-                    precoPorUnidade: produto.preco,
-                    unidade: produto.unidade || 'L',
-                    quantidade: produto.estoque,
-                    tipoExibicao: 'estoque'
-                }));
+            itens = combustiveis.map(combustivel => ({
+                id: combustivel.id,
+                titulo: combustivel.nome,
+                label: combustivel.labels && combustivel.labels.length > 0 ? combustivel.labels[0] : '',
+                valor: formatarPreco(combustivel.preco),
+                precoPorUnidade: combustivel.preco,
+                unidade: combustivel.unidade || 'L',
+                quantidade: combustivel.estoque,
+                tipoExibicao: 'estoque'
+            }));
         } else if (categoriaSelecionada === 'conveniencia') {
             itens = produtos
                 .filter(produto =>
@@ -232,7 +228,7 @@ function PdvAberto({ toggleMenu }) {
         }
 
         return itens;
-    }, [categoriaSelecionada, termoPesquisa, produtos, servicos]);
+    }, [categoriaSelecionada, termoPesquisa, produtos, servicos, combustiveis]);
 
     const turnoFormatado = formatarTurno(turno);
     const nomeOperador = operadorNome || 'Não informado';

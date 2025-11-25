@@ -21,8 +21,22 @@ function CadastroFuncionario({ toggleMenu }) {
     const [cpf, setCpf] = useState('');
     const [cargo, setCargo] = useState('');
     const [postoDeTrabalho, setPostoDeTrabalho] = useState('');
+    const [postos, setPostos] = useState([]);
 
     const [dados, setDados] = React.useState([]); //volta pro dado original
+
+    useEffect(() => {
+        async function carregarPostos() {
+            try {
+                const resp = await axios.get(`${BASE_URL}/postos`);
+                setPostos(resp.data || []);
+            } catch (e) {
+                console.error('Erro ao carregar postos:', e);
+                setPostos([]);
+            }
+        }
+        carregarPostos();
+    }, []);
 
     function inicializar() {
         if (idParam == null) { //se nulo pq estou incluindo
@@ -278,13 +292,6 @@ function CadastroFuncionario({ toggleMenu }) {
         'Supervisor'
     ];
 
-    const postos = [
-        { value: 'Posto Shell Centro', label: 'Posto Shell Centro' },
-        { value: 'Posto Ipiranga Vila', label: 'Posto Ipiranga Vila' },
-        { value: 'Posto BR Rodovia', label: 'Posto BR Rodovia' },
-        { value: 'Posto Texaco Norte', label: 'Posto Texaco Norte' }
-    ];
-
     return (
         <div style={formStyles.container}>
             <div style={formStyles.headerSection}>
@@ -435,8 +442,8 @@ function CadastroFuncionario({ toggleMenu }) {
                                     >
                                         <option value="">Selecione o posto</option>
                                         {postos.map((posto) => (
-                                            <option key={posto.value} value={posto.value}>
-                                                {posto.label}
+                                            <option key={posto.id} value={posto.nome}>
+                                                {posto.nome}
                                             </option>
                                         ))}
                                     </select>

@@ -20,12 +20,23 @@ function CadastroGerente({ toggleMenu }) {
     const [email, setEmail] = useState('');
     const [telefone, setTelefone] = useState('');
     const [senha, setSenha] = useState('');
-    const [postoShellCentro, setPostoShellCentro] = useState(false);
-    const [postoIpirangaVila, setPostoIpirangaVila] = useState(false);
-    const [postoBRRodovia, setPostoBRRodovia] = useState(false);
-    const [postoTexacoNorte, setPostoTexacoNorte] = useState(false);
+    const [postos, setPostos] = useState([]);
+    const [postosSelecionados, setPostosSelecionados] = useState([]);
 
     const [dados, setDados] = React.useState([]); //volta pro dado original
+
+    useEffect(() => {
+        async function carregarPostos() {
+            try {
+                const resp = await axios.get(`${BASE_URL}/postos`);
+                setPostos(resp.data || []);
+            } catch (e) {
+                console.error('Erro ao carregar postos:', e);
+                setPostos([]);
+            }
+        }
+        carregarPostos();
+    }, []);
 
     function inicializar() {
         if (idParam == null) { //se nulo pq estou incluindo
@@ -34,37 +45,26 @@ function CadastroGerente({ toggleMenu }) {
             setEmail('');
             setTelefone('');
             setSenha('');
-            setPostoShellCentro(false);
-            setPostoIpirangaVila(false);
-            setPostoBRRodovia(false);
-            setPostoTexacoNorte(false);
+            setPostosSelecionados([]);
         } else {
             setId(dados.id);
             setNome(dados.nome);
             setEmail(dados.email);
             setTelefone(dados.telefone || '');
             setSenha(dados.senha || '');
-            setPostoShellCentro(dados.labels?.includes('Posto Shell Centro') || false);
-            setPostoIpirangaVila(dados.labels?.includes('Posto Ipiranga Vila') || false);
-            setPostoBRRodovia(dados.labels?.includes('Posto BR Rodovia') || false);
-            setPostoTexacoNorte(dados.labels?.includes('Posto Texaco Norte') || false);
+            const postosVinculados = Array.isArray(dados.labels) ? dados.labels : [];
+            setPostosSelecionados(postosVinculados);
         }
     }
 
     async function salvar() {
-        const postosVinculados = [];
-        if (postoShellCentro) postosVinculados.push('Posto Shell Centro');
-        if (postoIpirangaVila) postosVinculados.push('Posto Ipiranga Vila');
-        if (postoBRRodovia) postosVinculados.push('Posto BR Rodovia');
-        if (postoTexacoNorte) postosVinculados.push('Posto Texaco Norte');
-
         let data = { 
             id, 
             nome, 
             email, 
             telefone, 
             senha,
-            labels: postosVinculados
+            labels: postosSelecionados
         };
         data = JSON.stringify(data); //formata para mandar pro backend
         if (idParam == null) { //se nulo pq estou incluindo e uso post
@@ -104,10 +104,8 @@ function CadastroGerente({ toggleMenu }) {
                 setEmail(response.data.email || '');
                 setTelefone(response.data.telefone || '');
                 setSenha(response.data.senha || '');
-                setPostoShellCentro(response.data.labels?.includes('Posto Shell Centro') || false);
-                setPostoIpirangaVila(response.data.labels?.includes('Posto Ipiranga Vila') || false);
-                setPostoBRRodovia(response.data.labels?.includes('Posto BR Rodovia') || false);
-                setPostoTexacoNorte(response.data.labels?.includes('Posto Texaco Norte') || false);
+                const postosVinculados = Array.isArray(response.data.labels) ? response.data.labels : [];
+                setPostosSelecionados(postosVinculados);
             } catch (error) {
                 console.error('Erro ao buscar gerente:', error);
             }
@@ -294,9 +292,9 @@ function CadastroGerente({ toggleMenu }) {
             </div>
 
             <div style={formStyles.titleSection}>
-                <div 
+                <div
                     onClick={() => navigate('/empregados')}
-                    style={{ 
+                    style={{
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -310,14 +308,14 @@ function CadastroGerente({ toggleMenu }) {
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     title="Voltar para listagem de empregados"
                 >
-                    <svg 
-                        width="16" 
-                        height="16" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
                         strokeLinejoin="round"
                     >
                         <path d="m12 19-7-7 7-7"></path>
@@ -418,78 +416,40 @@ function CadastroGerente({ toggleMenu }) {
                                 <label style={formStyles.label}>Postos Vinculados</label>
                                 <p style={formStyles.description}>Selecione os postos que este gerente supervisionará</p>
                                 <div style={formStyles.postoCheckboxGrid}>
-                                    <div 
-                                        style={formStyles.postoCheckboxContainer}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                                        onClick={() => setPostoShellCentro(!postoShellCentro)}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            id="postoShellCentro"
-                                            checked={postoShellCentro}
-                                            onChange={(e) => setPostoShellCentro(e.target.checked)}
-                                            onClick={(e) => e.stopPropagation()}
-                                            style={formStyles.checkbox}
-                                        />
-                                        <label htmlFor="postoShellCentro" style={formStyles.postoCheckboxLabel}>
-                                            Posto Shell Centro
-                                        </label>
-                                    </div>
-                                    <div 
-                                        style={formStyles.postoCheckboxContainer}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                                        onClick={() => setPostoIpirangaVila(!postoIpirangaVila)}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            id="postoIpirangaVila"
-                                            checked={postoIpirangaVila}
-                                            onChange={(e) => setPostoIpirangaVila(e.target.checked)}
-                                            onClick={(e) => e.stopPropagation()}
-                                            style={formStyles.checkbox}
-                                        />
-                                        <label htmlFor="postoIpirangaVila" style={formStyles.postoCheckboxLabel}>
-                                            Posto Ipiranga Vila
-                                        </label>
-                                    </div>
-                                    <div 
-                                        style={formStyles.postoCheckboxContainer}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                                        onClick={() => setPostoBRRodovia(!postoBRRodovia)}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            id="postoBRRodovia"
-                                            checked={postoBRRodovia}
-                                            onChange={(e) => setPostoBRRodovia(e.target.checked)}
-                                            onClick={(e) => e.stopPropagation()}
-                                            style={formStyles.checkbox}
-                                        />
-                                        <label htmlFor="postoBRRodovia" style={formStyles.postoCheckboxLabel}>
-                                            Posto BR Rodovia
-                                        </label>
-                                    </div>
-                                    <div 
-                                        style={formStyles.postoCheckboxContainer}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                                        onClick={() => setPostoTexacoNorte(!postoTexacoNorte)}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            id="postoTexacoNorte"
-                                            checked={postoTexacoNorte}
-                                            onChange={(e) => setPostoTexacoNorte(e.target.checked)}
-                                            onClick={(e) => e.stopPropagation()}
-                                            style={formStyles.checkbox}
-                                        />
-                                        <label htmlFor="postoTexacoNorte" style={formStyles.postoCheckboxLabel}>
-                                            Posto Texaco Norte
-                                        </label>
-                                    </div>
+                                    {postos.map((p) => {
+                                        const marcado = postosSelecionados.includes(p.nome);
+                                        return (
+                                            <div 
+                                                key={p.id} 
+                                                style={formStyles.postoCheckboxContainer}
+                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                                onClick={() => {
+                                                    const novo = marcado
+                                                        ? postosSelecionados.filter(n => n !== p.nome)
+                                                        : [...postosSelecionados, p.nome];
+                                                    setPostosSelecionados(novo);
+                                                }}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    id={`posto_${p.id}`}
+                                                    checked={marcado}
+                                                    onChange={(e) => {
+                                                        const novo = e.target.checked
+                                                            ? [...postosSelecionados, p.nome]
+                                                            : postosSelecionados.filter(n => n !== p.nome);
+                                                        setPostosSelecionados(novo);
+                                                    }}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    style={formStyles.checkbox}
+                                                />
+                                                <label htmlFor={`posto_${p.id}`} style={formStyles.postoCheckboxLabel}>
+                                                    {p.nome}
+                                                </label>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>

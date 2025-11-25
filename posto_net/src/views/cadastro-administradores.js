@@ -76,6 +76,26 @@ function CadastroAdministrador({ toggleMenu }) {
     async function salvar() {
         const postosPermitidos = gerenciarTodosPostos ? [] : postosSelecionados;
 
+        const labels = [];
+        
+        if (gerenciarTodosPostos) {
+            labels.push('Postos');
+        } else if (postosPermitidos.length > 0) {
+            postosPermitidos.forEach(nomePosto => {
+                labels.push(nomePosto);
+            });
+        }
+        
+        if (gerenciarGerentes) {
+            labels.push('gerentes');
+        }
+        if (gerenciarFuncionarios) {
+            labels.push('funcionarios');
+        }
+        if (gerenciarProdutos) {
+            labels.push('produtos');
+        }
+
         let data = {
             id,
             nome,
@@ -87,7 +107,8 @@ function CadastroAdministrador({ toggleMenu }) {
             gerenciarGerentes,
             gerenciarFuncionarios,
             gerenciarProdutos,
-            postosPermitidos
+            postosPermitidos,
+            labels 
         };
         data = JSON.stringify(data); //formata para mandar pro backend
         if (idParam == null) { //se nulo pq estou incluindo e uso post
