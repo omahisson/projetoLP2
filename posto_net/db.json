@@ -411,15 +411,6 @@
       ]
     },
     {
-      "id": "3",
-      "nome": "Bomba 03",
-      "status": "Manutenção",
-      "combustiveis": [
-        "Diesel S-10",
-        "Diesel Comum"
-      ]
-    },
-    {
       "id": "4",
       "nome": "Bomba 04",
       "status": "Ativa",
@@ -435,6 +426,16 @@
       "combustiveis": [
         "GNV"
       ]
+    },
+    {
+      "id": "2767",
+      "nome": "BombaTeste1",
+      "combustiveis": [
+        "Gasolina Comum",
+        "Etanol",
+        "GNV"
+      ],
+      "status": "Ativa"
     }
   ],
   "postos": [

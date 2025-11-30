@@ -1,57 +1,88 @@
 import React from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
-import { 
-  FiPlus, 
-  FiTag, 
-  FiClock, 
-  FiTrendingUp, 
+import {
+  FiPlus,
+  FiTag,
+  FiClock,
+  FiTrendingUp,
   FiFilter // Ícone para "Bomba", parece um filtro/funil
 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 // --- COMPONENTE PRINCIPAL ---
 
 const ListagemCombustiveis = () => {
-
+  const navigate = useNavigate();
   const [tiposCombustivel, setTiposCombustivel] = React.useState([]);
   const [dadosBomba, setDadosBomba] = React.useState([]);
-
   const [loading, setLoading] = React.useState(true); 
   const [error, setError] = React.useState(null); 
 
+  function handleEditar(id) {
+    navigate(`/cadastro-bombas/${id}`);
+  }
+
+  async function handleExcluir(id, nome) {
+    if (!window.confirm(`Tem certeza que deseja excluir a bomba ${nome}?`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${BASE_URL}/DadosBomba/${id}`);
+      alert(`Bomba ${nome} excluída com sucesso!`);
+      setDadosBomba(dadosBomba.filter(item => item.id !== id));
+    } catch (error) {
+      alert('Erro ao excluir: ' + (error.response?.data || error.message));
+    }
+  }
+
+  async function handleInativar(id, nome, statusAtual) {
+    const novoStatus = statusAtual === 'Ativa' ? 'Inativa' : 'Ativa';
+    const mensagem = novoStatus === 'Ativa' ? 'ativar' : 'inativar';
+    
+    if (!window.confirm(`Tem certeza que deseja ${mensagem} a bomba ${nome}?`)) {
+      return;
+    }
+
+    try {
+      const bomba = dadosBomba.find(b => b.id === id);
+      await axios.put(`${BASE_URL}/DadosBomba/${id}`, {
+        ...bomba,
+        status: novoStatus
+      });
+      alert(`Bomba ${nome} ${mensagem === 'ativar' ? 'ativada' : 'inativada'} com sucesso!`);
+      setDadosBomba(dadosBomba.map(item => 
+        item.id === id ? { ...item, status: novoStatus } : item
+      ));
+    } catch (error) {
+      alert('Erro ao alterar status: ' + (error.response?.data || error.message));
+    }
+  }
+
   React.useEffect(() => {
-    // --- MUDANÇA ---
-    // Coloca todas as chamadas em um array de "Promises"
     const promises = [
       axios.get(`${BASE_URL}/TiposCombustivel`),
       axios.get(`${BASE_URL}/DadosBomba`),
     ];
 
-    // Promise.all espera todas terminarem
     Promise.all(promises)
       .then((responses) => {
-        // 'responses' é um array com os resultados NA MESMA ORDEM que as chamadas
         console.log('Tipos de combustíveis:', responses[0].data);
         setTiposCombustivel(responses[0].data);
 
         console.log('Dados das bombas:', responses[1].data);
         setDadosBomba(Array.isArray(responses[1].data) ? responses[1].data : []);
-        
       })
       .catch((err) => {
-        // Pega qualquer erro de qualquer chamada
         console.error("Erro ao buscar dados do dashboard:", err);
         setError(err.message);
       })
       .finally(() => {
-        // Roda no final, com sucesso ou erro
         setLoading(false); 
       });
+  }, []);
 
-  }, []); // Array vazio, roda só uma vez
-
-  // --- MUDANÇA ---
-  // Verificação de loading e erro centralizada
   if (loading) {
     return <div>Carregando dados do dashboard...</div>;
   }
@@ -62,14 +93,14 @@ const ListagemCombustiveis = () => {
 
   return (
     <main style={styles.mainContent}>
-      {/* 1. Cabeçalho da Página */}
       <Header />
-      
-      {/* 2. Seção Tipos de Combustível */}
-      <SectionTiposCombustivel tiposCombustivelData = {tiposCombustivel}/>
-
-      {/* 3. Seção Bombas de Combustível */}
-      <SectionBombasCombustivel bombasCombustivelData = {dadosBomba}/>
+      <SectionTiposCombustivel tiposCombustivelData={tiposCombustivel} />
+      <SectionBombasCombustivel 
+        bombasCombustivelData={dadosBomba}
+        onEditar={handleEditar}
+        onExcluir={handleExcluir}
+        onInativar={handleInativar}
+      />
     </main>
   );
 };
@@ -89,23 +120,23 @@ const Header = () => (
   </header>
 );
 
-const SectionHeader = ({ icon, title, buttonText }) => (
+const SectionHeader = ({ icon, title, buttonText, onButtonClick }) => (
   <div style={styles.sectionHeader}>
     <div style={styles.sectionTitleContainer}>
       {icon}
       <h2 style={styles.sectionTitle}>{title}</h2>
     </div>
-    <button style={styles.secondaryButton}>
+    <button style={styles.secondaryButton} onClick={onButtonClick}>
       <FiPlus size={16} style={{ marginRight: '8px' }} />
       {buttonText}
     </button>
   </div>
 );
 
-const SectionTiposCombustivel = ({tiposCombustivelData}) => (
+const SectionTiposCombustivel = ({ tiposCombustivelData }) => (
   <section>
-    <SectionHeader 
-      icon={<FiTag size={20} style={{ marginRight: '12px' }} />} 
+    <SectionHeader
+      icon={<FiTag size={20} style={{ marginRight: '12px' }} />}
       title="Tipos de Combustível"
       buttonText="Novo Tipo"
     />
@@ -147,27 +178,38 @@ const InfoItem = ({ label, value }) => (
   </div>
 );
 
-const SectionBombasCombustivel = ({bombasCombustivelData}) => (
-  <section style={{ marginTop: '40px' }}>
-    <SectionHeader 
-      icon={<FiFilter size={20} style={{ marginRight: '12px' }} />} 
-      title="Bombas de Combustível"
-      buttonText="Nova Bomba"
-    />
-    <div style={styles.gridContainer}>
-      {bombasCombustivelData.map(bomba => (
-        <BombaCombustivelCard key={bomba.id} bomba={bomba} />
-      ))}
-    </div>
-  </section>
-);
+const SectionBombasCombustivel = ({ bombasCombustivelData, onEditar, onExcluir, onInativar }) => {
+  const navigate = useNavigate();
+  return (
+    <section style={{ marginTop: '40px' }}>
+      <SectionHeader
+        icon={<FiFilter size={20} style={{ marginRight: '12px' }} />}
+        title="Bombas de Combustível"
+        buttonText="Nova Bomba"
+        onButtonClick={() => navigate('/cadastro-bombas')}
+      />
+      <div style={styles.gridContainer}>
+        {bombasCombustivelData.map(bomba => (
+          <BombaCombustivelCard 
+            key={bomba.id} 
+            bomba={bomba}
+            onEditar={onEditar}
+            onExcluir={onExcluir}
+            onInativar={onInativar}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
 
-const BombaCombustivelCard = ({ bomba }) => {
+const BombaCombustivelCard = ({ bomba, onEditar, onExcluir, onInativar }) => {
   const isAtiva = bomba.status === 'Ativa';
   
   let badgeType = 'default';
   if (bomba.status === 'Ativa') badgeType = 'ativa';
   if (bomba.status === 'Manutenção') badgeType = 'manutencao';
+  if (bomba.status === 'Inativa') badgeType = 'inativa';
 
   return (
     <div style={styles.bombaCard}>
@@ -178,15 +220,29 @@ const BombaCombustivelCard = ({ bomba }) => {
       <div style={styles.bombaCardContent}>
         <p style={styles.bombaCardSubtitle}>Combustíveis:</p>
         <div style={styles.tagContainer}>
-          {bomba.combustiveis.map(comb => (
+          {bomba.combustiveis && bomba.combustiveis.map(comb => (
             <Tag key={comb} text={comb} />
           ))}
         </div>
       </div>
       <div style={styles.bombaCardFooter}>
-        <button style={styles.secondaryButton}>Editar</button>
-        <button style={styles.secondaryButton}>
+        <button 
+          style={styles.secondaryButton}
+          onClick={() => onEditar(bomba.id)}
+        >
+          Editar
+        </button>
+        <button 
+          style={styles.secondaryButton}
+          onClick={() => onInativar(bomba.id, bomba.nome, bomba.status)}
+        >
           {isAtiva ? 'Inativar' : 'Ativar'}
+        </button>
+        <button 
+          style={styles.dangerButton}
+          onClick={() => onExcluir(bomba.id, bomba.nome)}
+        >
+          Remover
         </button>
       </div>
     </div>
@@ -197,6 +253,7 @@ const Badge = ({ text, type }) => {
   let style = styles.badgeDefault;
   if (type === 'ativa') style = { ...style, ...styles.badgeAtiva };
   if (type === 'manutencao') style = { ...style, ...styles.badgeManutencao };
+  if (type === 'inativa') style = { ...style, ...styles.badgeInativa };
 
   return (
     <span style={style}>{text}</span>
@@ -389,6 +446,23 @@ const styles = {
   badgeManutencao: {
     backgroundColor: '#fff3cd', // Amarelo
     color: '#856404',
+  },
+  badgeInativa: {
+    backgroundColor: '#f8d7da', // Vermelho claro
+    color: '#721c24',
+  },
+  dangerButton: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '8px 14px',
+    borderRadius: '6px',
+    border: '1px solid #dc3545',
+    backgroundColor: '#ffffff',
+    color: '#dc3545',
+    cursor: 'pointer',
+    fontWeight: '500',
+    fontSize: '14px',
+    transition: 'all 0.2s',
   },
   bombaCardContent: {
     flex: 1,

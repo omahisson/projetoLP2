@@ -1,0 +1,240 @@
+.form-page-container {
+    padding: 24px;
+  }
+  
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .form-title-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .form-back-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+  }
+  
+  .form-back-button:hover {
+    background-color: rgb(243, 243, 245);
+  }
+  
+  .form-title-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    font-family: system-ui;
+  }
+  
+  .form-subtitle {
+    font-size: 14px;
+    color: rgb(113, 113, 130);
+    margin: 4px 0 0 0;
+    font-family: system-ui;
+  }
+.form-card-container {
+    max-width: 672px;
+    width: 100%;
+}
+
+.form-structured-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    font-family: system-ui;
+    color: #212529;
+}
+
+.form-input-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: rgb(243, 243, 245);
+    border-radius: 8px;
+    padding: 0 12px;
+    min-height: 40px;
+}
+
+.form-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 0;
+    font-family: system-ui;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: normal;
+    color: #0f172a;
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: rgb(113, 113, 130);
+}
+
+.form-grid-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.form-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.form-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #000000;
+}
+
+.form-checkbox-label {
+    font-size: 14px;
+    font-family: system-ui;
+    font-weight: 500;
+    cursor: pointer;
+    margin: 0;
+}
+
+.form-button-group {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.form-button-primary,
+.form-button-secondary {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: system-ui;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.form-button-primary {
+    border: none;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.form-button-primary:hover {
+    background-color: #333333;
+}
+
+.form-button-secondary {
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #212529;
+}
+
+.form-button-secondary:hover {
+    background-color: #f9fafb;
+}
+
+.form-card-description {
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgb(113, 113, 130);
+}
+
+.form-helper-text {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.form-fuel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.form-fuel-card {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.form-fuel-card--checked {
+  border-color: #000000;
+  background-color: #111827;
+  color: #ffffff;
+}
+
+.form-info-card {
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.form-info-card h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-info-card ul {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 0;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.form-info-card li + li {
+  margin-top: 4px;
+}
