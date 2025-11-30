@@ -8,6 +8,8 @@ import ListagemServicosProdutos from './views/listagem-produtosServicos';
 import CadastroAdministradores from './views/cadastro-administradores';
 import CadastroGerentes from './views/cadastro-gerentes';
 import CadastroFuncionarios from './views/cadastro-funcionarios';
+import CadastroServicos from './views/cadastro-servicos';
+import CadastroProdutos from './views/cadastro-produtos';
 
 import Dashboard from './views/dashboard';
 
@@ -23,6 +25,8 @@ function Rotas({ toggleMenu }){
             <Route path='/cadastro-gerentes/:idParam?' element={<CadastroGerentes toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-funcionarios/:idParam?' element={<CadastroFuncionarios toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-combustiveis/:idParam?' element={<CadastroCombustiveis toggleMenu={toggleMenu} />} />
+            <Route path='/cadastro-servicos/:idParam?' element={<CadastroServicos toggleMenu={toggleMenu} />} />
+            <Route path='/cadastro-produtos/:idParam?' element={<CadastroProdutos toggleMenu={toggleMenu} />} />
 
             <Route path='/empregados' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
             
