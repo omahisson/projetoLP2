@@ -389,6 +389,16 @@
       "validade": "-",
       "estoque": "5.000m³",
       "status": "Ativo"
+    },
+    {
+      "id": "f1f4",
+      "nome": "Pedro1",
+      "preco": "1",
+      "unidade": "litro",
+      "fornecedor": "petrobras",
+      "estoque": "10",
+      "validade": "2002-11-25",
+      "status": "Ativo"
     }
   ],
   "DadosBomba": [
@@ -413,7 +423,7 @@
     {
       "id": "4",
       "nome": "Bomba 04",
-      "status": "Ativa",
+      "status": "Inativa",
       "combustiveis": [
         "Gasolina Aditivada",
         "Etanol"

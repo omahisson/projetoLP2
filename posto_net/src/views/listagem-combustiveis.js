@@ -133,20 +133,24 @@ const SectionHeader = ({ icon, title, buttonText, onButtonClick }) => (
   </div>
 );
 
-const SectionTiposCombustivel = ({ tiposCombustivelData }) => (
-  <section>
-    <SectionHeader
-      icon={<FiTag size={20} style={{ marginRight: '12px' }} />}
-      title="Tipos de Combustível"
-      buttonText="Novo Tipo"
-    />
-    <div style={styles.listContainer}>
-      {tiposCombustivelData.map(tipo => (
-        <TipoCombustivelCard key={tipo.id} tipo={tipo} />
-      ))}
-    </div>
-  </section>
-);
+const SectionTiposCombustivel = ({ tiposCombustivelData }) => {
+  const navigate = useNavigate();
+  return (
+    <section>
+      <SectionHeader
+        icon={<FiTag size={20} style={{ marginRight: '12px' }} />}
+        title="Tipos de Combustível"
+        buttonText="Novo Tipo"
+        onButtonClick={() => navigate('/cadastro-tipoCombustivel')}
+      />
+      <div style={styles.listContainer}>
+        {tiposCombustivelData.map(tipo => (
+          <TipoCombustivelCard key={tipo.id} tipo={tipo} />
+        ))}
+      </div>
+    </section>
+  );
+};
 
 const TipoCombustivelCard = ({ tipo }) => (
   <div style={styles.tipoCard}>
