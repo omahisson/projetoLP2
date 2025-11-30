@@ -399,6 +399,16 @@
       "estoque": "10",
       "validade": "2002-11-25",
       "status": "Ativo"
+    },
+    {
+      "id": "bc2e",
+      "nome": "gasss",
+      "preco": "1",
+      "unidade": "m³",
+      "fornecedor": "petrobras",
+      "estoque": "1",
+      "validade": "2002-11-25",
+      "status": "Ativo"
     }
   ],
   "DadosBomba": [
@@ -464,6 +474,20 @@
     {
       "id": "4",
       "nome": "Posto Texaco Norte1"
+    }
+  ],
+  "abastecimentos": [
+    {
+      "id": "8b9d",
+      "tipoCombustivel": "gasss",
+      "fornecedor": "petrobras",
+      "quantidade": 10,
+      "unidade": "m³",
+      "numeroNota": "6",
+      "dataEntrega": "2002-11-25",
+      "dataValidade": "2002-11-25",
+      "precoUnitario": "10",
+      "valorTotal": "R$ 100,00"
     }
   ]
 }

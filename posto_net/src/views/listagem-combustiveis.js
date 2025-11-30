@@ -107,18 +107,25 @@ const ListagemCombustiveis = () => {
 
 // --- COMPONENTES MENORES ---
 
-const Header = () => (
-  <header style={styles.header}>
-    <div>
-      <h1 style={styles.headerTitle}>Gerenciamento de Combustíveis</h1>
-      <p style={styles.headerSubtitle}>Gerencie abastecimentos, bombas e tipos de combustível</p>
-    </div>
-    <button style={styles.primaryButton} Route to="/cadastro-combustiveis">
-      <FiPlus size={16} style={{ marginRight: '8px' }} />
-      Cadastrar Abastecimento
-    </button>
-  </header>
-);
+// Substituir o componente Header (linhas 110-121):
+const Header = () => {
+  const navigate = useNavigate();
+  return (
+    <header style={styles.header}>
+      <div>
+        <h1 style={styles.headerTitle}>Gerenciamento de Combustíveis</h1>
+        <p style={styles.headerSubtitle}>Gerencie abastecimentos, bombas e tipos de combustível</p>
+      </div>
+      <button 
+        style={styles.primaryButton} 
+        onClick={() => navigate('/cadastro-abastecimento')}
+      >
+        <FiPlus size={16} style={{ marginRight: '8px' }} />
+        Cadastrar Abastecimento
+      </button>
+    </header>
+  );
+};
 
 const SectionHeader = ({ icon, title, buttonText, onButtonClick }) => (
   <div style={styles.sectionHeader}>
