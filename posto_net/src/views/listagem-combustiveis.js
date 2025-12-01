@@ -159,28 +159,66 @@ const SectionTiposCombustivel = ({ tiposCombustivelData }) => {
   );
 };
 
-const TipoCombustivelCard = ({ tipo }) => (
-  <div style={styles.tipoCard}>
-    <div style={styles.tipoCardInfo}>
-      <div style={styles.tipoCardHeader}>
-        <h3 style={styles.tipoCardTitle}>{tipo.nome}</h3>
-        <span style={styles.priceBadge}>{tipo.preco}</span>
+const formatarPreco = (valor) => {
+  if (!valor) return '';
+  if (typeof valor === 'string' && valor.includes('R$')) return valor;
+  const num = typeof valor === 'string' ? parseFloat(valor.replace(',', '.')) : valor;
+  if (isNaN(num)) return valor;
+  return `R$ ${num.toFixed(2).replace('.', ',')}`;
+};
+
+const formatarEstoque = (estoque, unidade) => {
+  if (!estoque) return '';
+  
+  const estoqueStr = String(estoque);
+  
+  if (estoqueStr.includes('L') || estoqueStr.includes('m³') || estoqueStr.includes('l')) {
+      return estoqueStr;
+  }
+  
+  if (unidade) {
+      if (unidade === 'Litro' || unidade === 'L') {
+          return `${estoqueStr}L`;
+      } else if (unidade === 'm³' || unidade === 'm3') {
+          return `${estoqueStr}m³`;
+      }
+      return `${estoqueStr}${unidade}`;
+  }
+  
+  return estoqueStr;
+};
+
+const TipoCombustivelCard = ({ tipo }) => {
+  const navigate = useNavigate();
+  
+  return (
+    <div style={styles.tipoCard}>
+      <div style={styles.tipoCardInfo}>
+        <div style={styles.tipoCardHeader}>
+          <h3 style={styles.tipoCardTitle}>{tipo.nome}</h3>
+          <span style={styles.priceBadge}>{formatarPreco(tipo.preco)}</span>
+        </div>
+        <div style={styles.infoGrid}>
+          <InfoItem label="Fornecedor" value={tipo.fornecedor} />
+          <InfoItem label="Último Abastecimento" value={tipo.ultimoAbastecimento} />
+          <InfoItem label="Validade" value={tipo.validade} />
+          <InfoItem label="Estoque" value={formatarEstoque(tipo.estoque, tipo.unidade)} />
+          <InfoItem label="Status" value={tipo.status} />
+        </div>
       </div>
-      <div style={styles.infoGrid}>
-        <InfoItem label="Fornecedor" value={tipo.fornecedor} />
-        <InfoItem label="Último Abastecimento" value={tipo.ultimoAbastecimento} />
-        <InfoItem label="Validade" value={tipo.validade} />
-        <InfoItem label="Estoque" value={tipo.estoque} />
-        <InfoItem label="Status" value={tipo.status} />
+      <div style={styles.tipoCardActions}>
+        <button 
+          style={styles.priceButton}
+          onClick={() => navigate(`/cadastro-novoPreco/${tipo.id}`)}
+        >
+          Preço
+        </button>
+        <button style={styles.iconButton}><FiClock size={18} /></button>
+        <button style={styles.iconButton}><FiTrendingUp size={18} /></button>
       </div>
     </div>
-    <div style={styles.tipoCardActions}>
-      <button style={styles.priceButton}>Preço</button>
-      <button style={styles.iconButton}><FiClock size={18} /></button>
-      <button style={styles.iconButton}><FiTrendingUp size={18} /></button>
-    </div>
-  </div>
-);
+  );
+};
 
 const InfoItem = ({ label, value }) => (
   <div>

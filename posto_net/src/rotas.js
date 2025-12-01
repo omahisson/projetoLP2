@@ -13,6 +13,7 @@ import CadastroProdutos from './views/cadastro-produtos';
 import CadastroBombas from './views/cadastro-bombas';
 import CadastroTipoCombustivel from './views/cadastro-tipoCombustivel';
 import CadastroAbastecimento from './views/cadastro-abastecimento';
+import CadastroNovoPreco from './views/cadastro-novoPreco';
 
 import Dashboard from './views/dashboard';
 
@@ -33,6 +34,7 @@ function Rotas({ toggleMenu }){
             <Route path='/cadastro-bombas/:idParam?' element={<CadastroBombas toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-tipoCombustivel/:idParam?' element={<CadastroTipoCombustivel toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-abastecimento/:idParam?' element={<CadastroAbastecimento toggleMenu={toggleMenu} />} />
+            <Route path='/cadastro-novoPreco/:idParam?' element={<CadastroNovoPreco toggleMenu={toggleMenu} />} />
             
             <Route path='/empregados' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
             

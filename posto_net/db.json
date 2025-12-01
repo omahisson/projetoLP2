@@ -341,19 +341,9 @@
   },
   "TiposCombustivel": [
     {
-      "id": "1",
-      "nome": "Gasolina Comum",
-      "preco": "R$ 5,49",
-      "fornecedor": "Petrobrás",
-      "ultimoAbastecimento": "2024-01-15",
-      "validade": "2024-03-15",
-      "estoque": "15.000L",
-      "status": "Ativo"
-    },
-    {
       "id": "2",
       "nome": "Gasolina Aditivada",
-      "preco": "R$ 5,85",
+      "preco": 3.01,
       "fornecedor": "Shell",
       "ultimoAbastecimento": "2024-01-14",
       "validade": "2024-03-14",
@@ -408,6 +398,16 @@
       "fornecedor": "petrobras",
       "estoque": "1",
       "validade": "2002-11-25",
+      "status": "Ativo"
+    },
+    {
+      "id": "cbf0",
+      "nome": "PinhoSol",
+      "preco": 1,
+      "unidade": "Litro",
+      "fornecedor": "Bras",
+      "estoque": "100",
+      "validade": "2025-12-12",
       "status": "Ativo"
     }
   ],
@@ -488,6 +488,53 @@
       "dataValidade": "2002-11-25",
       "precoUnitario": "10",
       "valorTotal": "R$ 100,00"
+    },
+    {
+      "id": "8f9b",
+      "tipoCombustivel": "PinhoSol",
+      "fornecedor": "petrobras",
+      "quantidade": 1000,
+      "unidade": "Litro",
+      "numeroNota": "6a",
+      "dataEntrega": "2025-12-01",
+      "dataValidade": "2026-01-01",
+      "precoUnitario": "1,00",
+      "valorTotal": "R$ 1000,00"
+    }
+  ],
+  "HistoricoCombustivel": [
+    {
+      "id": "eb28",
+      "tipoCombustivelId": "2",
+      "tipoCombustivel": "Gasolina Aditivada",
+      "precoAnterior": "R$ 5,85",
+      "novoPreco": "1,01",
+      "dataVigencia": "2025-12-12",
+      "responsavel": "Allan",
+      "motivo": "Teste1",
+      "dataAlteracao": "2025-12-01"
+    },
+    {
+      "id": "6b5a",
+      "tipoCombustivelId": "cbf0",
+      "tipoCombustivel": "PinhoSol",
+      "precoAnterior": 2,
+      "novoPreco": 1,
+      "dataVigencia": "2026-01-01",
+      "responsavel": "Allan",
+      "motivo": "Teste2",
+      "dataAlteracao": "2025-12-01"
+    },
+    {
+      "id": "69ba",
+      "tipoCombustivelId": "2",
+      "tipoCombustivel": "Gasolina Aditivada",
+      "precoAnterior": 1.01,
+      "novoPreco": 3.01,
+      "dataVigencia": "2011-11-11",
+      "responsavel": "Pedro Oliveira",
+      "motivo": "Teste44",
+      "dataAlteracao": "2025-12-01"
     }
   ]
 }
