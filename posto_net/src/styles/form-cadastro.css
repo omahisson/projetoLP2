@@ -238,3 +238,12 @@
 .form-info-card li + li {
   margin-top: 4px;
 }
+
+.form-card-container {
+  max-width: 672px;
+  width: 100%;
+}
+
+.form-card-container-centered {
+  margin: 0 auto;
+}

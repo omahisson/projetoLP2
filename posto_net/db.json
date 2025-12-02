@@ -474,6 +474,38 @@
     {
       "id": "4",
       "nome": "Posto Texaco Norte1"
+    },
+    {
+      "id": "6e89",
+      "razaoSocial": "bananas ME",
+      "cnpj": "11111111111111",
+      "nomeFantasia": "bananas",
+      "rua": "rua x",
+      "numero": "1",
+      "complemento": "sala 1",
+      "bairro": "centro",
+      "cidade": "jundiai",
+      "estado": "SP",
+      "cep": "33000000",
+      "telefone": "11111111111",
+      "email": "1@g.com1",
+      "horarioFuncionamento": "isso"
+    },
+    {
+      "id": "3a5f",
+      "razaoSocial": "bananas ME1",
+      "cnpj": "11111111111112",
+      "nomeFantasia": "bananass",
+      "rua": "rua x",
+      "numero": "1",
+      "complemento": "sala 11",
+      "bairro": "centro",
+      "cidade": "sao paulo",
+      "estado": "SP",
+      "cep": "11111111",
+      "telefone": "11999999999",
+      "email": "1@g.com1",
+      "horarioFuncionamento": "isso"
     }
   ],
   "abastecimentos": [

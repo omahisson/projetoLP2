@@ -19,10 +19,13 @@ class App extends React.Component {
 
   render() {
     const { menuVisivel } = this.state;
+    const currentPath = window.location.pathname;
+    const mostrarNavbar = !currentPath.includes('/cadastro-posto');
+    
     return (
       <div className='d-flex'>
-        <Navbar menuVisivel={menuVisivel} />
-        <div className={`conteudo-principal ${!menuVisivel && 'menu-escondido'}`}>
+        {mostrarNavbar && <Navbar menuVisivel={menuVisivel} />}
+        <div className={`conteudo-principal ${!menuVisivel && 'menu-escondido'} ${!mostrarNavbar && 'menu-escondido'}`}>
           <Rotas toggleMenu={this.toggleMenu} />
         </div>
       </div>
