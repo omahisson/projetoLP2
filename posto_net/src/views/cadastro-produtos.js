@@ -9,7 +9,7 @@ import { BASE_URL } from '../config/axios';
 function CadastroProdutos({ toggleMenu }) {
     const { idParam } = useParams();
     const navigate = useNavigate();
-    const baseURL = `${BASE_URL}/produtos`;
+    const baseURL = `${BASE_URL}/produtosServicos`;
 
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
@@ -54,7 +54,7 @@ function CadastroProdutos({ toggleMenu }) {
                 await axios.put(`${baseURL}/${idParam}`, data);
                 alert(`Produto ${nome} alterado com sucesso!`);
             }
-            navigate('/produtos');
+            navigate('/produtosServicos');
         } catch (error) {
             alert('Erro ao salvar produto: ' + error.message);
         }
@@ -253,7 +253,7 @@ function CadastroProdutos({ toggleMenu }) {
 
             <div style={formStyles.titleSection}>
                 <div
-                    onClick={() => navigate('/produtos')}
+                    onClick={() => navigate('/produtosServicos')}
                     style={{
                         cursor: 'pointer',
                         display: 'flex',
@@ -426,7 +426,7 @@ function CadastroProdutos({ toggleMenu }) {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => navigate('/produtos')}
+                                onClick={() => navigate('/produtosServicos')}
                                 style={formStyles.buttonSecondary}
                                 onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                                 onMouseLeave={(e) => e.target.style.backgroundColor = '#ffffff'}
