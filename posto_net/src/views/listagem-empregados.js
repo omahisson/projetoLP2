@@ -73,7 +73,11 @@ function ListagemEmpregados({ toggleMenu }) {
     }
 
     React.useEffect(() => {
-        axios.get(baseURLAdministradores)
+        const postoId = localStorage.getItem('postoSelecionadoId');
+        
+        const queryParam = `?id_posto=${postoId}`;
+        
+        axios.get(`${baseURLAdministradores}${queryParam}`)
             .then(function (response) {
                 console.log('Administradores:', response.data);
                 setDadosAdministradores(Array.isArray(response.data) ? response.data : []);
@@ -82,7 +86,7 @@ function ListagemEmpregados({ toggleMenu }) {
                 console.error('Erro ao buscar administradores:', error);
             });
 
-        axios.get(baseURLGerentes)
+        axios.get(`${baseURLGerentes}${queryParam}`)
             .then(function (response) {
                 console.log('Gerentes:', response.data);
                 setDadosGerentes(Array.isArray(response.data) ? response.data : []);
@@ -91,7 +95,7 @@ function ListagemEmpregados({ toggleMenu }) {
                 console.error('Erro ao buscar gerentes:', error);
             });
 
-        axios.get(baseURLFuncionarios)
+        axios.get(`${baseURLFuncionarios}${queryParam}`)
             .then(function (response) {
                 console.log('Funcionários:', response.data);
                 setDadosFuncionarios(Array.isArray(response.data) ? response.data : []);
@@ -445,7 +449,7 @@ function ListagemEmpregados({ toggleMenu }) {
                 <div className='container-icone-coluna' onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
+                <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
             </div>
             <h1 className='textoTitulo'>Gerenciamento de Empregados</h1>
             <h1 className='textoSubtitulo'>Gerencie administradores, gerentes e funcionários</h1>

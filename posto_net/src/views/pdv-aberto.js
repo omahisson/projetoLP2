@@ -24,7 +24,8 @@ function PdvAberto({ toggleMenu }) {
     const [combustiveis, setCombustiveis] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
 
-    const { operadorNome, turno, horaAbertura, valorInicialCaixa } = location.state || {};
+    const [turnoId, setTurnoId] = React.useState(null);
+    const { operadorNome, turno, horaAbertura, valorInicialCaixa, operadorId } = location.state || {};
 
     const [tipoVenda, setTipoVenda] = React.useState('quantidade');
     const [quantidade, setQuantidade] = React.useState(1);
@@ -39,12 +40,60 @@ function PdvAberto({ toggleMenu }) {
     const [vendasFinalizadas, setVendasFinalizadas] = React.useState([]);
 
     React.useEffect(() => {
+        const recuperarTurno = async () => {
+            try {
+                if (location.state?.turnoId) {
+                    setTurnoId(location.state.turnoId);
+                    await buscarVendasDoTurno(location.state.turnoId);
+                    return;
+                }
+
+                const turnoIdSalvo = localStorage.getItem('turnoAbertoId');
+                if (turnoIdSalvo) {
+                    const response = await axios.get(`${BASE_URL}/turnosAbertos/${turnoIdSalvo}`);
+                    const turnoData = response.data;
+                    
+                    if (turnoData && turnoData.status === 'aberto') {
+                        setTurnoId(turnoData.id);
+                        await buscarVendasDoTurno(turnoData.id);
+                    } else {
+                        localStorage.removeItem('turnoAbertoId');
+                        navigate('/pdv');
+                    }
+                } else {
+                    navigate('/pdv');
+                }
+            } catch (error) {
+                console.error('Erro ao recuperar turno:', error);
+                localStorage.removeItem('turnoAbertoId');
+                navigate('/pdv');
+            }
+        };
+
+        recuperarTurno();
+    }, []);
+
+    const buscarVendasDoTurno = async (idTurno) => {
+        try {
+            const postoId = localStorage.getItem('postoSelecionadoId');
+            const response = await axios.get(`${BASE_URL}/vendas?id_posto=${postoId}&id_turno=${idTurno}`);
+            const vendas = Array.isArray(response.data) ? response.data : [];
+            setVendasFinalizadas(vendas);
+        } catch (error) {
+            console.error('Erro ao buscar vendas do turno:', error);
+        }
+    };
+
+    React.useEffect(() => {
         const fetchDados = async () => {
             try {
+                const postoId = localStorage.getItem('postoSelecionadoId');
+                const queryParam = `?id_posto=${postoId}`;
+                
                 const [responseProdutos, responseServicos, responseCombustiveis] = await Promise.all([
-                    axios.get(`${BASE_URL}/produtos`),
-                    axios.get(`${BASE_URL}/servicos`),
-                    axios.get(`${BASE_URL}/combustiveis`)
+                    axios.get(`${BASE_URL}/produtos${queryParam}`),
+                    axios.get(`${BASE_URL}/servicos${queryParam}`),
+                    axios.get(`${BASE_URL}/combustiveis${queryParam}`)
                 ]);
                 setProdutos(responseProdutos.data || []);
                 setServicos(responseServicos.data || []);
@@ -80,10 +129,53 @@ function PdvAberto({ toggleMenu }) {
         setMostrarModalFecharTurno(true);
     };
 
-    const handleConfirmarFecharTurno = (dados) => {
-        console.log('Dados do fechamento:', dados);
-        setMostrarModalFecharTurno(false);
-        navigate('/pdv');
+    const handleConfirmarFecharTurno = async (dados) => {
+        try {
+            if (!turnoId) {
+                alert('Erro: Turno não identificado.');
+                return;
+            }
+
+            const postoId = localStorage.getItem('postoSelecionadoId');
+            const totais = calcularTotaisVendas();
+            
+            const turnoAtual = await axios.get(`${BASE_URL}/turnosAbertos/${turnoId}`);
+            await axios.put(`${BASE_URL}/turnosAbertos/${turnoId}`, {
+                ...turnoAtual.data,
+                status: 'fechado',
+                horaFechamento: new Date().toISOString()
+            });
+
+            const fechamentoTurno = {
+                id: Date.now(),
+                id_posto: postoId,
+                id_turno: turnoId,
+                operadorNome: operadorNome,
+                operadorId: operadorId,
+                turno: turno,
+                horaAbertura: horaAbertura,
+                horaFechamento: new Date().toISOString(),
+                valorInicialCaixa: valorInicialCaixa || 0,
+                valorFinalCaixa: dados.valorFinalCaixa,
+                valorEsperado: dados.valorEsperado,
+                diferenca: dados.diferenca,
+                totalVendas: totais.total,
+                totalTransacoes: totais.transacoes,
+                totalCartao: totais.cartao,
+                totalDinheiro: totais.dinheiro
+            };
+
+            await axios.post(`${BASE_URL}/fechamentoTurnos`, fechamentoTurno);
+            
+            localStorage.removeItem('turnoAbertoId');
+            
+            console.log('Turno fechado e salvo:', fechamentoTurno);
+            setMostrarModalFecharTurno(false);
+            navigate('/pdv');
+        } catch (error) {
+            console.error('Erro ao salvar fechamento de turno:', error);
+            alert('Erro ao salvar fechamento de turno. Tente novamente.');
+        }
     };
 
     const calcularTotaisVendas = () => {
@@ -104,27 +196,43 @@ function PdvAberto({ toggleMenu }) {
         };
     };
 
-    const handleFinalizarVenda = () => {
+    const handleFinalizarVenda = async () => {
         if (itensVenda.length === 0) {
             return;
         }
 
+        if (!turnoId) {
+            alert('Erro: Turno não identificado. Por favor, abra o turno novamente.');
+            navigate('/pdv');
+            return;
+        }
+
+        const postoId = localStorage.getItem('postoSelecionadoId');
         const totalVenda = calcularTotal();
         const novaVenda = {
             id: Date.now(),
+            id_posto: postoId,
+            id_turno: turnoId,
             itens: [...itensVenda],
             total: totalVenda,
             formaPagamento: formaPagamento,
-            data: new Date()
+            data: new Date().toISOString()
         };
 
-        setVendasFinalizadas([...vendasFinalizadas, novaVenda]);
-        setItensVenda([]);
-        setMostrarToast(true);
+        try {
+            await axios.post(`${BASE_URL}/vendas`, novaVenda);
+            
+            setVendasFinalizadas([...vendasFinalizadas, novaVenda]);
+            setItensVenda([]);
+            setMostrarToast(true);
 
-        setTimeout(() => {
-            setMostrarToast(false);
-        }, 3000);
+            setTimeout(() => {
+                setMostrarToast(false);
+            }, 3000);
+        } catch (error) {
+            console.error('Erro ao salvar venda:', error);
+            alert('Erro ao salvar venda. Tente novamente.');
+        }
     };
 
     const formatarPreco = (valor) => {
@@ -301,8 +409,8 @@ function PdvAberto({ toggleMenu }) {
                     <div className='container-icone-coluna' onClick={toggleMenu}>
                         <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                     </div>
-                    <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
-                </div>
+                    <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                    </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                     <div style={{ flex: 1 }}>
                         <h1 className='textoTitulo'>PDV - Ponto de Venda</h1>

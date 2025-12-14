@@ -9,7 +9,10 @@ import Rotas from './rotas.js';
 // q retorna uma coisa, entao uso objeto para devolver mais
 
 class App extends React.Component {
-  state = { menuVisivel: localStorage.getItem('menuVisivel') !== 'false' };
+  state = { 
+    menuVisivel: localStorage.getItem('menuVisivel') !== 'false',
+    currentPath: window.location.pathname
+  };
 
   toggleMenu = () => {
     const novoEstado = !this.state.menuVisivel;
@@ -17,10 +20,34 @@ class App extends React.Component {
     localStorage.setItem('menuVisivel', novoEstado);
   }
 
+  componentDidMount() {
+    this.pathnameListener = () => {
+      this.setState({ currentPath: window.location.pathname });
+    };
+    
+    window.addEventListener('popstate', this.pathnameListener);
+    
+    this.pathCheckInterval = setInterval(() => {
+      const newPath = window.location.pathname;
+      if (newPath !== this.state.currentPath) {
+        this.setState({ currentPath: newPath });
+      }
+    }, 100);
+  }
+
+  componentWillUnmount() {
+    if (this.pathnameListener) {
+      window.removeEventListener('popstate', this.pathnameListener);
+    }
+    if (this.pathCheckInterval) {
+      clearInterval(this.pathCheckInterval);
+    }
+  }
+
   render() {
     const { menuVisivel } = this.state;
     const currentPath = window.location.pathname;
-    const mostrarNavbar = !currentPath.includes('/cadastro-posto');
+    const mostrarNavbar = !currentPath.includes('/cadastro-posto') && !currentPath.includes('/postos');
     
     return (
       <div className='d-flex'>

@@ -20,7 +20,16 @@ function Pdv({ toggleMenu }) {
     React.useEffect(() => {
         const fetchFuncionarios = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/funcionarios`);
+                const postoId = localStorage.getItem('postoSelecionadoId');
+                
+                if (!postoId) {
+                    setFuncionarios([]);
+                    setLoading(false);
+                    return;
+                }
+                
+                const queryParam = `?id_posto=${postoId}`;
+                const response = await axios.get(`${BASE_URL}/funcionarios${queryParam}`);
                 const funcionariosFormatados = response.data.map(funcionario => ({
                     value: funcionario.id,
                     text: funcionario.nome,
@@ -37,7 +46,7 @@ function Pdv({ toggleMenu }) {
         fetchFuncionarios();
     }, []);
 
-    const handleAbrirTurno = () => {
+    const handleAbrirTurno = async () => {
         if (!operadorSelecionado || !turnoSelecionado) {
             alert('Por favor, selecione o operador e o turno antes de abrir o turno.');
             return;
@@ -45,6 +54,12 @@ function Pdv({ toggleMenu }) {
 
         if (!valorInicialCaixa || parseFloat(valorInicialCaixa) <= 0) {
             alert('Por favor, informe o valor inicial em caixa.');
+            return;
+        }
+
+        const postoId = localStorage.getItem('postoSelecionadoId');
+        if (!postoId) {
+            alert('Nenhum posto selecionado. Por favor, selecione um posto primeiro.');
             return;
         }
 
@@ -72,15 +87,38 @@ function Pdv({ toggleMenu }) {
         };
         const nomeTurno = turnos[turnoSelecionado] || turnoSelecionado;
 
-        navigate('/pdv-aberto', {
-            state: {
+        try {
+            const turnoAberto = {
+                id: Date.now().toString(),
+                id_posto: postoId,
                 operadorId: operadorSelecionado,
                 operadorNome: nomeOperador,
                 turno: nomeTurno,
                 horaAbertura: horaAbertura,
-                valorInicialCaixa: parseFloat(valorInicialCaixa)
-            }
-        });
+                horaAberturaISO: agora.toISOString(),
+                valorInicialCaixa: parseFloat(valorInicialCaixa),
+                status: 'aberto'
+            };
+
+            const response = await axios.post(`${BASE_URL}/turnosAbertos`, turnoAberto);
+            const turnoId = response.data.id || turnoAberto.id;
+
+            localStorage.setItem('turnoAbertoId', turnoId);
+
+            navigate('/pdv-aberto', {
+                state: {
+                    turnoId: turnoId,
+                    operadorId: operadorSelecionado,
+                    operadorNome: nomeOperador,
+                    turno: nomeTurno,
+                    horaAbertura: horaAbertura,
+                    valorInicialCaixa: parseFloat(valorInicialCaixa)
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao abrir turno:', error);
+            alert('Erro ao abrir turno. Tente novamente.');
+        }
     };
 
     return (
@@ -89,8 +127,8 @@ function Pdv({ toggleMenu }) {
                 <div className='container-icone-coluna' onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
             <div className='pdv-wrapper'>
                 <CardPDV
                     icone={iconeRelogio}

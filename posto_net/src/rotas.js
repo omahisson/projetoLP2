@@ -15,6 +15,7 @@ import CadastroTipoCombustivel from './views/cadastro-tipoCombustivel';
 import CadastroAbastecimento from './views/cadastro-abastecimento';
 import CadastroNovoPreco from './views/cadastro-novoPreco';
 import CadastroPosto from './views/cadastro-posto';
+import Postos from './views/postos';
 
 import Dashboard from './views/dashboard';
 
@@ -45,6 +46,7 @@ function Rotas({ toggleMenu }){
             <Route path='/produtosServicos' element={<ListagemServicosProdutos toggleMenu={toggleMenu} />} />
             <Route path='/pdv' element={<Pdv toggleMenu={toggleMenu} />} />
             <Route path='/pdv-aberto' element={<PdvAberto toggleMenu={toggleMenu} />} />
+            <Route path='/postos' element={<Postos />} />
             
             <Route path='/' element={<Dashboard toggleMenu={toggleMenu}/>} />
         </Routes>

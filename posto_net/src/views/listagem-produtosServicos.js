@@ -59,7 +59,10 @@ function ListagemServicosProdutos({ toggleMenu }) {
     }
 
     React.useEffect(() => {
-        axios.get(baseURLServicos)
+        const postoId = localStorage.getItem('postoSelecionadoId');
+        const queryParam = `?id_posto=${postoId}`;
+        
+        axios.get(`${baseURLServicos}${queryParam}`)
             .then(function (response) {
                 console.log('Serviços:', response.data);
                 setDadosServicos(Array.isArray(response.data) ? response.data : []);
@@ -68,7 +71,7 @@ function ListagemServicosProdutos({ toggleMenu }) {
                 console.error('Erro ao buscar serviços:', error);
             });
 
-        axios.get(baseURLProdutos)
+        axios.get(`${baseURLProdutos}${queryParam}`)
             .then(function (response) {
                 console.log('Produtos:', response.data);
                 setDadosProdutos(Array.isArray(response.data) ? response.data : []);
@@ -326,8 +329,8 @@ function ListagemServicosProdutos({ toggleMenu }) {
                 <div className='container-icone-coluna' onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
             <h1 className='textoTitulo'>Gerenciamento de Serviços e Produtos</h1>
             <h1 className='textoSubtitulo'>Gerencie serviços e produtos oferecidos</h1>
 

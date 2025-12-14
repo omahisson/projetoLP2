@@ -61,8 +61,10 @@ function CadastroTipoCombustivel({ toggleMenu }) {
 
     async function salvar(e) {
         e.preventDefault();
+        const postoId = localStorage.getItem('postoSelecionadoId');
 
         const payload = {
+            id_posto: postoId,
             nome,
             preco,
             unidade,
@@ -101,8 +103,8 @@ function CadastroTipoCombustivel({ toggleMenu }) {
                 <div className="container-icone-coluna" onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className="textoDashboard">Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className="textoDashboard">Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
 
             <div className="form-title-section">
                 <div

@@ -58,8 +58,10 @@ function CadastroGerente({ toggleMenu }) {
     }
 
     async function salvar() {
+        const postoId = localStorage.getItem('postoSelecionadoId');
         let data = { 
             id, 
+            id_posto: postoId,
             nome, 
             email, 
             telefone, 
@@ -288,8 +290,8 @@ function CadastroGerente({ toggleMenu }) {
                 <div className='container-icone-coluna' onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
 
             <div style={formStyles.titleSection}>
                 <div

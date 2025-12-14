@@ -44,7 +44,8 @@ function CadastroAdministrador({ toggleMenu }) {
     const [gerenciarFuncionarios, setGerenciarFuncionarios] = useState(false);
     const [gerenciarProdutos, setGerenciarProdutos] = useState(false);
 
-    const [dados, setDados] = React.useState([]); //volta pro dado original
+    const [dados, setDados] = React.useState(null); //volta pro dado original
+    const [carregando, setCarregando] = React.useState(!!idParam); // Adiciona estado de loading
 
     function inicializar() {
         if (idParam == null) { //se nulo pq estou incluindo
@@ -59,6 +60,7 @@ function CadastroAdministrador({ toggleMenu }) {
             setGerenciarFuncionarios(false);
             setGerenciarProdutos(false);
             setPostosSelecionados([]);
+            setDados({}); // Inicializa com objeto vazio para permitir renderização
         } else {
             setId(dados.id);
             setNome(dados.nome);
@@ -73,7 +75,44 @@ function CadastroAdministrador({ toggleMenu }) {
         }
     }
 
+    async function buscar() {
+        if (idParam != null) {
+            setCarregando(true);
+            try {
+                const response = await axios.get(`${baseURL}/${idParam}`);
+                const dadosResp = response.data;
+
+                if (!dadosResp) {
+                    alert('Administrador não encontrado');
+                    navigate('/empregados');
+                    return;
+                }
+
+                setDados(dadosResp);
+                setId(dadosResp.id);
+                setNome(dadosResp.nome || '');
+                setCpf(dadosResp.cpf || '');
+                setEmail(dadosResp.email || '');
+                setCelular(dadosResp.celular || '');
+                setSenha(dadosResp.senha || '');
+                setGerenciarTodosPostos(!!dadosResp.gerenciarTodosPostos);
+                setGerenciarGerentes(!!dadosResp.gerenciarGerentes);
+                setGerenciarFuncionarios(!!dadosResp.gerenciarFuncionarios);
+                setGerenciarProdutos(!!dadosResp.gerenciarProdutos);
+                const permitidos = Array.isArray(dadosResp.postosPermitidos) ? dadosResp.postosPermitidos : [];
+                setPostosSelecionados(permitidos);
+            } catch (error) {
+                console.error('Erro ao buscar administrador:', error);
+                alert('Erro ao buscar administrador: ' + (error.response?.data || error.message));
+                navigate('/empregados');
+            } finally {
+                setCarregando(false);
+            }
+        }
+    }
+
     async function salvar() {
+        const postoId = localStorage.getItem('postoSelecionadoId');
         const postosPermitidos = gerenciarTodosPostos ? [] : postosSelecionados;
 
         const labels = [];
@@ -98,6 +137,7 @@ function CadastroAdministrador({ toggleMenu }) {
 
         let data = {
             id,
+            id_posto: postoId,
             nome,
             cpf,
             email,
@@ -110,20 +150,20 @@ function CadastroAdministrador({ toggleMenu }) {
             postosPermitidos,
             labels 
         };
-        data = JSON.stringify(data); //formata para mandar pro backend
-        if (idParam == null) { //se nulo pq estou incluindo e uso post
+        data = JSON.stringify(data);
+        if (idParam == null) {
             await axios
                 .post(baseURL, data, {
                     headers: { 'Content-Type': 'application/json' },
                 })
-                .then(function (response) { //se 200, manda mensagem de sucesso e redireciona para a lista de administradores
+                .then(function (response) {
                     alert(`Administrador ${nome} cadastrado com sucesso!`);
                     navigate(`/empregados`);
                 })
-                .catch(function (error) { //se 400, manda mensagem de erro
+                .catch(function (error) {
                     alert('Erro ao cadastrar administrador: ' + (error.response?.data || error.message));
                 });
-        } else { //se nao esta nulo pq estou editando e uso put
+        } else {
             await axios
                 .put(`${baseURL}/${idParam}`, data, {
                     headers: { 'Content-Type': 'application/json' },
@@ -138,31 +178,6 @@ function CadastroAdministrador({ toggleMenu }) {
         }
     }
 
-    async function buscar() {
-        if (idParam != null) {
-            try {
-                const response = await axios.get(`${baseURL}/${idParam}`);
-                const dadosResp = response.data;
-
-                setDados(dadosResp);
-                setId(dadosResp.id);
-                setNome(dadosResp.nome || '');
-                setCpf(dadosResp.cpf || '');
-                setEmail(dadosResp.email || '');
-                setCelular(dadosResp.celular || '');
-                setSenha(dadosResp.senha || '');
-                setGerenciarTodosPostos(!!dadosResp.gerenciarTodosPostos);
-                setGerenciarGerentes(!!dadosResp.gerenciarGerentes);
-                setGerenciarFuncionarios(!!dadosResp.gerenciarFuncionarios);
-                setGerenciarProdutos(!!dadosResp.gerenciarProdutos);
-                const permitidos = Array.isArray(dadosResp.postosPermitidos) ? dadosResp.postosPermitidos : [];
-                setPostosSelecionados(permitidos);
-            } catch (error) {
-                console.error('Erro ao buscar administrador:', error);
-            }
-        }
-    }
-
     useEffect(() => {
         if (idParam) {
             buscar();
@@ -171,7 +186,7 @@ function CadastroAdministrador({ toggleMenu }) {
         }
     }, [idParam]);
 
-    if (!dados) return null; //se nao tem dado, retorna null e n renderiza a tela ate receber os dados
+    if (carregando) return null; // Só bloqueia renderização se estiver carregando
 
     const formStyles = {
         container: {
@@ -339,8 +354,8 @@ function CadastroAdministrador({ toggleMenu }) {
                 <div className='container-icone-coluna' onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
 
             <div style={formStyles.titleSection}>
                 <div

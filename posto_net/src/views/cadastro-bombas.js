@@ -41,8 +41,15 @@ function CadastroBombas({ toggleMenu }) {
 
     useEffect(() => {
         async function carregarTiposCombustivel() {
+            const postoId = localStorage.getItem('postoSelecionadoId');
+            
+            if (!postoId) {
+                setTiposCombustivel([]);
+                return;
+            }
+
             try {
-                const response = await axios.get(`${BASE_URL}/TiposCombustivel`);
+                const response = await axios.get(`${BASE_URL}/TiposCombustivel?id_posto=${postoId}`);
                 const tipos = Array.isArray(response.data)
                     ? response.data.map(item => item.nome)
                     : [];
@@ -63,6 +70,7 @@ function CadastroBombas({ toggleMenu }) {
 
     async function salvar(e) {
         e.preventDefault();
+        const postoId = localStorage.getItem('postoSelecionadoId');
 
         if (!combustiveisSelecionados.length) {
             alert('Selecione pelo menos um tipo de combustível');
@@ -70,6 +78,7 @@ function CadastroBombas({ toggleMenu }) {
         }
 
         const payload = {
+            id_posto: postoId,
             nome: nomeBomba,
             combustiveis: combustiveisSelecionados,
             status: 'Ativa'
@@ -104,8 +113,8 @@ function CadastroBombas({ toggleMenu }) {
                 <div className="container-icone-coluna" onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className="textoDashboard">Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className="textoDashboard">Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
 
             <div className="form-title-section">
                 <div

@@ -57,11 +57,13 @@ function CadastroFuncionario({ toggleMenu }) {
     }
 
     async function salvar() {
+        const postoId = localStorage.getItem('postoSelecionadoId');
         const nomeCompleto = `${nome} ${sobrenome}`.trim();
         const labels = cargo ? [cargo] : [];
 
         let data = { 
             id, 
+            id_posto: postoId,
             nome: nomeCompleto,
             cpf,
             postoDeTrabalho,
@@ -69,20 +71,20 @@ function CadastroFuncionario({ toggleMenu }) {
             value: id || Date.now(),
             text: nomeCompleto
         };
-        data = JSON.stringify(data); //formata para mandar pro backend
-        if (idParam == null) { //se nulo pq estou incluindo e uso post
+        data = JSON.stringify(data);
+        if (idParam == null) {
             await axios
                 .post(baseURL, data, {
                     headers: { 'Content-Type': 'application/json' },
                 })
-                .then(function (response) { //se 200, redireciona para a lista de funcionarios
+                .then(function (response) {
                     alert(`Funcionário ${nomeCompleto} cadastrado com sucesso!`);
                     navigate(`/empregados`);
                 })
-                .catch(function (error) { //se 400, mostra erro
+                .catch(function (error) {
                     alert('Erro ao cadastrar funcionário: ' + (error.response?.data || error.message));
                 });
-        } else { //se nao esta nulo pq estou editando e uso put
+        } else {
             await axios
                 .put(`${baseURL}/${idParam}`, data, {
                     headers: { 'Content-Type': 'application/json' },
@@ -298,8 +300,8 @@ function CadastroFuncionario({ toggleMenu }) {
                 <div className='container-icone-coluna' onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
 
             <div style={formStyles.titleSection}>
                 <div 

@@ -8,13 +8,16 @@ import iconeEmpregados from '../icones/empregados.svg';
 import iconeCombustiveis from '../icones/combustiveis.svg';
 import iconeProdutosServicos from '../icones/produtosServicos.svg';
 import iconePDV from '../icones/pdv.svg';
+import iconeTrocarPosto from '../icones/fecharTurno.svg';
 
 function Navbar({ menuVisivel }) {
+  const nomePosto = localStorage.getItem('postoSelecionado');
+
   return (
     <div className={`menu-lateral ${!menuVisivel && 'menu-oculto'}`}>
         <div className='cabecalho-menu'>
           <a href='/' className='navbarzinho-brand'>
-          Posto Ipiranga Vila
+          {nomePosto}
           </a>
         </div>
         <div className='navbar-nav flex-column navIteem'>
@@ -47,6 +50,12 @@ function Navbar({ menuVisivel }) {
             href='/pdv'
             label='PDV'
             icone={iconePDV}
+          />
+          <NavbarItem
+            render='true'
+            href='/postos'
+            label='Trocar posto'
+            icone={iconeTrocarPosto}
           />
         </div>
     </div>

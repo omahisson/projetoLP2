@@ -9,7 +9,7 @@ import { BASE_URL } from '../config/axios';
 function CadastroProdutos({ toggleMenu }) {
     const { idParam } = useParams();
     const navigate = useNavigate();
-    const baseURL = `${BASE_URL}/produtosServicos`;
+    const baseURL = `${BASE_URL}/produtos`;
 
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
@@ -30,10 +30,12 @@ function CadastroProdutos({ toggleMenu }) {
     }
 
     async function salvar() {
+        const postoId = localStorage.getItem('postoSelecionadoId');
         const labelsArray = labels ? labels.split(',').map(label => label.trim()).filter(label => label !== '') : [];
 
         let data = {
             id,
+            id_posto: postoId,
             nome,
             preco: parseFloat(preco),
             estoque: parseInt(estoque),
@@ -248,8 +250,8 @@ function CadastroProdutos({ toggleMenu }) {
                 <div className='container-icone-coluna' onClick={toggleMenu}>
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
-                <span className='textoDashboard'>Dashboard - Posto Ipiranga Vila</span>
-            </div>
+                <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+                </div>
 
             <div style={formStyles.titleSection}>
                 <div

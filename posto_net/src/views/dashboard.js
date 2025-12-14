@@ -82,23 +82,32 @@ const [loading, setLoading] = React.useState(true); // Um estado de loading úni
   const [error, setError] = React.useState(null); // Para guardar erros
 
   React.useEffect(() => {
-    // --- MUDANÇA ---
-    // Coloca todas as chamadas em um array de "Promises"
-    const promises = [
-      axios.get(`${BASE_URL}/DadosFinanceiros`),
-      axios.get(`${BASE_URL}/RankingRede`),
-      axios.get(`${BASE_URL}/MaisVendidos`),
-      axios.get(`${BASE_URL}/RelatorioPreco`),
-      axios.get(`${BASE_URL}/RelatorioEstoque`),
-      axios.get(`${BASE_URL}/RelatorioOperacional`)
-    ];
+    const fetchData = async () => {
+      try {
+        const postoId = localStorage.getItem('postoSelecionadoId');
+        const queryParam = postoId ? `?id_posto=${postoId}` : '';
+        
+        // --- MUDANÇA ---
+        // Coloca todas as chamadas em um array de "Promises"
+        const promises = [
+          axios.get(`${BASE_URL}/DadosFinanceiros${queryParam}`),
+          axios.get(`${BASE_URL}/RankingRede${queryParam}`),
+          axios.get(`${BASE_URL}/MaisVendidos${queryParam}`),
+          axios.get(`${BASE_URL}/RelatorioPreco${queryParam}`),
+          axios.get(`${BASE_URL}/RelatorioEstoque${queryParam}`),
+          axios.get(`${BASE_URL}/RelatorioOperacional${queryParam}`)
+        ];
 
-    // Promise.all espera todas terminarem
-    Promise.all(promises)
-      .then((responses) => {
+        // Promise.all espera todas terminarem
+        const responses = await Promise.all(promises);
+        
         // 'responses' é um array com os resultados NA MESMA ORDEM que as chamadas
         console.log('Dados Financeiros:', responses[0].data);
-        setDadosFinanceiros(responses[0].data);
+        // DadosFinanceiros agora é um array, pega o primeiro item ou o objeto único
+        const dadosFinanceiros = Array.isArray(responses[0].data) 
+          ? (responses[0].data[0] || responses[0].data) 
+          : responses[0].data;
+        setDadosFinanceiros(dadosFinanceiros);
 
         console.log('Ranking da Rede:', responses[1].data);
         setRankingRede(Array.isArray(responses[1].data) ? responses[1].data : []);
@@ -113,18 +122,22 @@ const [loading, setLoading] = React.useState(true); // Um estado de loading úni
         setRelatorioEstoque(Array.isArray(responses[4].data) ? responses[4].data : []);
         
         console.log('Relatório Operacional:', responses[5].data);
-        setRelatorioOperacional(responses[5].data);
-      })
-      .catch((err) => {
+        // RelatorioOperacional agora é um array, pega o primeiro item
+        const relatorioOperacional = Array.isArray(responses[5].data) 
+          ? (responses[5].data[0] || null)
+          : responses[5].data;
+        setRelatorioOperacional(relatorioOperacional);
+      } catch (err) {
         // Pega qualquer erro de qualquer chamada
         console.error("Erro ao buscar dados do dashboard:", err);
         setError(err.message);
-      })
-      .finally(() => {
+      } finally {
         // Roda no final, com sucesso ou erro
         setLoading(false); 
-      });
+      }
+    };
 
+    fetchData();
   }, []); // Array vazio, roda só uma vez
 
   // --- MUDANÇA ---
@@ -156,12 +169,16 @@ const [loading, setLoading] = React.useState(true); // Um estado de loading úni
 
 // Componentes menores para organizar o código
 
-const Header = () => (
-    <header style={styles.header}>
-        <h1>Relatórios - Posto Ipiranga Vila</h1>
-        <p style={styles.subtitle}>Análise o desempenho e acompanhe indicadores importantes do seu posto</p>
-    </header>
-);
+const Header = () => {
+  const nomePosto = localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila';
+  
+  return (
+      <header style={styles.header}>
+          <h1>Relatórios - {nomePosto}</h1>
+          <p style={styles.subtitle}>Análise o desempenho e acompanhe indicadores importantes do seu posto</p>
+      </header>
+  );
+};
 
 const Card = ({ children, style }) => (
     <div style={{...styles.card, ...style}}>
@@ -426,7 +443,23 @@ const OperationalKpiCard = ({icon, value, label}) => (
 )
 
 // --- MODIFICADO ---
+// --- MODIFICADO ---
 const OperationalReportCard = ({operationalData}) => {
+  
+  // Verifica se os dados existem antes de acessar
+  if (!operationalData) {
+    return (
+      <Card>
+        <CardHeader 
+          icon={<FiCheckSquare size={20} color="#6c757d" />} 
+          title="Relatórios Operacionais"
+        >
+            <option>Diário</option>
+        </CardHeader>
+        <p style={styles.cardSubtitle}>Carregando dados...</p>
+      </Card>
+    );
+  }
   
   // --- NOVO ---
   const handleDownload = () => {

@@ -61,15 +61,19 @@ const ListagemCombustiveis = () => {
   }
 
   React.useEffect(() => {
+    const postoId = localStorage.getItem('postoSelecionadoId');
+    
+    const queryParam = `?id_posto=${postoId}`;
+    
     const promises = [
-      axios.get(`${BASE_URL}/TiposCombustivel`),
-      axios.get(`${BASE_URL}/DadosBomba`),
+      axios.get(`${BASE_URL}/TiposCombustivel${queryParam}`),
+      axios.get(`${BASE_URL}/DadosBomba${queryParam}`),
     ];
 
     Promise.all(promises)
       .then((responses) => {
         console.log('Tipos de combustíveis:', responses[0].data);
-        setTiposCombustivel(responses[0].data);
+        setTiposCombustivel(Array.isArray(responses[0].data) ? responses[0].data : []);
 
         console.log('Dados das bombas:', responses[1].data);
         setDadosBomba(Array.isArray(responses[1].data) ? responses[1].data : []);
