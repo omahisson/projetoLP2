@@ -23,6 +23,18 @@ function CadastroNovoPreco({ toggleMenu }) {
     const [motivo, setMotivo] = useState('');
     const [funcionarios, setFuncionarios] = useState([]);
 
+    const [editandoNome, setEditandoNome] = useState(false);
+    const [editandoFornecedor, setEditandoFornecedor] = useState(false);
+    const [editandoEstoque, setEditandoEstoque] = useState(false);
+    const [mostrarDica, setMostrarDica] = useState(true);
+
+    useEffect(() => {
+        const dicaVista = localStorage.getItem('dicaNovoPrecoVista');
+        if (dicaVista === 'true') {
+            setMostrarDica(false);
+        }
+    }, []);
+
     useEffect(() => {
         if (!idParam) {
             navigate('/combustiveis');
@@ -81,13 +93,20 @@ function CadastroNovoPreco({ toggleMenu }) {
                 return;
             }
 
-            await axios.put(`${BASE_URL}/TiposCombustivel/${idParam}`, {
+            const payloadAtualizado = {
                 ...dadosAtuais,
+                id: dadosAtuais.id || idParam,
+                nome: nomeTipoCombustivel,
+                fornecedor: fornecedorAtual,
+                estoque: estoqueAtual,
                 preco: numero
-            });
+            };
 
-            const precoAnteriorNumerico = precoAtual.replace(/[^\d,.-]/g, '').replace(',', '.');
-            const precoAnterior = parseFloat(precoAnteriorNumerico) || precoAtual;
+            await axios.put(`${BASE_URL}/TiposCombustivel/${idParam}`, payloadAtualizado);
+
+            const precoAtualStr = String(precoAtual || '');
+            const precoAnteriorNumerico = precoAtualStr.replace(/[^\d,.-]/g, '').replace(',', '.');
+            const precoAnterior = parseFloat(precoAnteriorNumerico) || (typeof precoAtual === 'number' ? precoAtual : 0);
 
             const historicoPayload = {
                 id_posto: localStorage.getItem('postoSelecionadoId'),
@@ -102,11 +121,12 @@ function CadastroNovoPreco({ toggleMenu }) {
             };
 
             await axios.post(`${BASE_URL}/HistoricoCombustivel`, historicoPayload);
-
+            localStorage.setItem('dicaNovoPrecoVista', 'true');
             alert('Preço alterado com sucesso');
             navigate('/combustiveis');
         } catch (error) {
-            alert(error.response?.data || 'Erro ao salvar alteração de preço');
+            console.error('Erro completo:', error);
+            alert(error.response?.data || error.message || 'Erro ao salvar alteração de preço');
         }
     }
 
@@ -121,7 +141,7 @@ function CadastroNovoPreco({ toggleMenu }) {
                     <img src={iconeColuna} alt="Coluna" width="16" height="16" />
                 </div>
                 <span className="textoDashboard">Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
-                </div>
+            </div>
 
             <div className="form-title-section">
                 <div
@@ -162,7 +182,33 @@ function CadastroNovoPreco({ toggleMenu }) {
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '5px', marginTop: '12px', fontSize: '14px' }}>
                                 <div>
                                     <span style={{ fontWeight: '500', marginRight: '8px' }}>Combustível:</span>
-                                    <span>{nomeTipoCombustivel || '-'}</span>
+                                    {editandoNome ? (
+                                        <input
+                                            type="text"
+                                            value={nomeTipoCombustivel}
+                                            onChange={(e) => setNomeTipoCombustivel(e.target.value)}
+                                            onBlur={() => setEditandoNome(false)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') setEditandoNome(false);
+                                            }}
+                                            autoFocus
+                                            style={{
+                                                border: '1px solid #3b82f6',
+                                                borderRadius: '4px',
+                                                padding: '2px 6px',
+                                                fontSize: '14px',
+                                                width: '150px'
+                                            }}
+                                        />
+                                    ) : (
+                                        <span
+                                            onDoubleClick={() => setEditandoNome(true)}
+                                            style={{ cursor: 'pointer', padding: '2px 4px', borderRadius: '4px' }}
+                                            title="Duplo clique para editar"
+                                        >
+                                            {nomeTipoCombustivel || '-'}
+                                        </span>
+                                    )}
                                 </div>
                                 <div>
                                     <span style={{ fontWeight: '500', marginRight: '8px' }}>Preço Atual:</span>
@@ -170,14 +216,75 @@ function CadastroNovoPreco({ toggleMenu }) {
                                 </div>
                                 <div>
                                     <span style={{ fontWeight: '500', marginRight: '8px' }}>Fornecedor:</span>
-                                    <span>{fornecedorAtual || '-'}</span>
+                                    {editandoFornecedor ? (
+                                        <input
+                                            type="text"
+                                            value={fornecedorAtual}
+                                            onChange={(e) => setFornecedorAtual(e.target.value)}
+                                            onBlur={() => setEditandoFornecedor(false)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') setEditandoFornecedor(false);
+                                            }}
+                                            autoFocus
+                                            style={{
+                                                border: '1px solid #3b82f6',
+                                                borderRadius: '4px',
+                                                padding: '2px 6px',
+                                                fontSize: '14px',
+                                                width: '150px'
+                                            }}
+                                        />
+                                    ) : (
+                                        <span
+                                            onDoubleClick={() => setEditandoFornecedor(true)}
+                                            style={{ cursor: 'pointer', padding: '2px 4px', borderRadius: '4px' }}
+                                            title="Duplo clique para editar"
+                                        >
+                                            {fornecedorAtual || '-'}
+                                        </span>
+                                    )}
                                 </div>
                                 <div>
                                     <span style={{ fontWeight: '500', marginRight: '8px' }}>Estoque:</span>
-                                    <span>{estoqueAtual || '-'}</span>
+                                    {editandoEstoque ? (
+                                        <input
+                                            type="text"
+                                            value={estoqueAtual}
+                                            onChange={(e) => setEstoqueAtual(e.target.value)}
+                                            onBlur={() => setEditandoEstoque(false)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') setEditandoEstoque(false);
+                                            }}
+                                            autoFocus
+                                            style={{
+                                                border: '1px solid #3b82f6',
+                                                borderRadius: '4px',
+                                                padding: '2px 6px',
+                                                fontSize: '14px',
+                                                width: '150px'
+                                            }}
+                                        />
+                                    ) : (
+                                        <span
+                                            onDoubleClick={() => setEditandoEstoque(true)}
+                                            style={{ cursor: 'pointer', padding: '2px 4px', borderRadius: '4px' }}
+                                            title="Duplo clique para editar"
+                                        >
+                                            {estoqueAtual || '-'}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </div>
+
+                        {mostrarDica && (
+                            <div className="form-info-card" style={{ backgroundColor: '#fef3c7', border: '1px solid #fbbf24', borderRadius: '8px', marginTop: '-15px' }}>
+                                <h4 style={{ color: '#92400e', marginBottom: '8px' }}>Dica</h4>
+                                <p style={{ color: '#78350f', fontSize: '13px', margin: 0 }}>
+                                    Dê um <strong>duplo clique</strong> nos campos de Combustível, Fornecedor ou Estoque para editá-los. As alterações serão salvas ao confirmar a alteração de preço.
+                                </p>
+                            </div>
+                        )}
 
                         <div className="form-grid-row">
                             <div className="form-field-group">

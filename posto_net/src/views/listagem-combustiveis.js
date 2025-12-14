@@ -6,7 +6,8 @@ import {
   FiTag,
   FiClock,
   FiTrendingUp,
-  FiFilter // Ícone para "Bomba", parece um filtro/funil
+  FiFilter,
+  FiTrash2
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,6 +33,20 @@ const ListagemCombustiveis = () => {
       await axios.delete(`${BASE_URL}/DadosBomba/${id}`);
       alert(`Bomba ${nome} excluída com sucesso!`);
       setDadosBomba(dadosBomba.filter(item => item.id !== id));
+    } catch (error) {
+      alert('Erro ao excluir: ' + (error.response?.data || error.message));
+    }
+  }
+
+  async function handleExcluirTipoCombustivel(id, nome) {
+    if (!window.confirm(`Tem certeza que deseja excluir o tipo de combustível ${nome}?`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${BASE_URL}/TiposCombustivel/${id}`);
+      alert(`Tipo de combustível ${nome} excluído com sucesso!`);
+      setTiposCombustivel(tiposCombustivel.filter(item => item.id !== id));
     } catch (error) {
       alert('Erro ao excluir: ' + (error.response?.data || error.message));
     }
@@ -98,7 +113,10 @@ const ListagemCombustiveis = () => {
   return (
     <main style={styles.mainContent}>
       <Header />
-      <SectionTiposCombustivel tiposCombustivelData={tiposCombustivel} />
+      <SectionTiposCombustivel 
+        tiposCombustivelData={tiposCombustivel}
+        onExcluir={handleExcluirTipoCombustivel}
+      />
       <SectionBombasCombustivel 
         bombasCombustivelData={dadosBomba}
         onEditar={handleEditar}
@@ -144,7 +162,7 @@ const SectionHeader = ({ icon, title, buttonText, onButtonClick }) => (
   </div>
 );
 
-const SectionTiposCombustivel = ({ tiposCombustivelData }) => {
+const SectionTiposCombustivel = ({ tiposCombustivelData, onExcluir }) => {
   const navigate = useNavigate();
   return (
     <section>
@@ -156,7 +174,11 @@ const SectionTiposCombustivel = ({ tiposCombustivelData }) => {
       />
       <div style={styles.listContainer}>
         {tiposCombustivelData.map(tipo => (
-          <TipoCombustivelCard key={tipo.id} tipo={tipo} />
+          <TipoCombustivelCard 
+            key={tipo.id} 
+            tipo={tipo}
+            onExcluir={onExcluir}
+          />
         ))}
       </div>
     </section>
@@ -192,7 +214,7 @@ const formatarEstoque = (estoque, unidade) => {
   return estoqueStr;
 };
 
-const TipoCombustivelCard = ({ tipo }) => {
+const TipoCombustivelCard = ({ tipo, onExcluir }) => {
   const navigate = useNavigate();
   
   return (
@@ -215,7 +237,14 @@ const TipoCombustivelCard = ({ tipo }) => {
           style={styles.priceButton}
           onClick={() => navigate(`/cadastro-novoPreco/${tipo.id}`)}
         >
-          Preço
+          Editar
+        </button>
+        <button 
+          style={{...styles.iconButton, color: '#dc3545'}}
+          onClick={() => onExcluir(tipo.id, tipo.nome)}
+          title="Excluir tipo de combustível"
+        >
+          <FiTrash2 size={18} />
         </button>
         <button style={styles.iconButton}><FiClock size={18} /></button>
         <button style={styles.iconButton}><FiTrendingUp size={18} /></button>

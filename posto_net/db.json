@@ -269,52 +269,6 @@
       ]
     }
   ],
-  "combustiveis": [
-    {
-      "id": "1",
-      "id_posto": "1",
-      "nome": "Gasolina Comum",
-      "preco": 5.49,
-      "estoque": 5000,
-      "labels": [
-        "Gasolina"
-      ],
-      "unidade": "L"
-    },
-    {
-      "id": "2",
-      "id_posto": "1",
-      "nome": "Gasolina Aditivada",
-      "preco": 5.79,
-      "estoque": 3000,
-      "labels": [
-        "Gasolina"
-      ],
-      "unidade": "L"
-    },
-    {
-      "id": "3",
-      "id_posto": "2",
-      "nome": "Etanol",
-      "preco": 3.89,
-      "estoque": 4500,
-      "labels": [
-        "Etanol"
-      ],
-      "unidade": "L"
-    },
-    {
-      "id": "4",
-      "id_posto": "2",
-      "nome": "Diesel S-10",
-      "preco": 4.25,
-      "estoque": 8000,
-      "labels": [
-        "Diesel"
-      ],
-      "unidade": "L"
-    }
-  ],
   "DadosFinanceiros": [
     {
       "id_posto": "1",
@@ -471,8 +425,8 @@
     {
       "id": "2",
       "id_posto": "1",
-      "nome": "Gasolina Aditivada",
-      "preco": 3.01,
+      "nome": "Gasolina Aditivada1",
+      "preco": 10,
       "fornecedor": "Shell",
       "ultimoAbastecimento": "2024-01-14",
       "validade": "2024-03-14",
@@ -513,14 +467,14 @@
       "status": "Ativo"
     },
     {
-      "id": "9a75",
+      "id": "880e",
       "id_posto": "1",
-      "nome": "jo6",
+      "nome": "Jo11",
       "preco": "1",
-      "unidade": "m³",
-      "fornecedor": "petrobras",
-      "estoque": "100",
-      "validade": "2025-12-13",
+      "unidade": "Litro",
+      "fornecedor": "Joao",
+      "estoque": "10",
+      "validade": "2011-10-10",
       "status": "Ativo"
     }
   ],
@@ -639,6 +593,30 @@
       "responsavel": "Carlos",
       "motivo": "Ajuste de preço",
       "dataAlteracao": "2025-12-01"
+    },
+    {
+      "id": "72dc",
+      "id_posto": "1",
+      "tipoCombustivelId": "2",
+      "tipoCombustivel": "Gasolina Aditivada",
+      "precoAnterior": 10,
+      "novoPreco": 10,
+      "dataVigencia": "2025-12-14",
+      "responsavel": "Pedro Oliveira",
+      "motivo": "jo10",
+      "dataAlteracao": "2025-12-14"
+    },
+    {
+      "id": "f325",
+      "id_posto": "1",
+      "tipoCombustivelId": "2",
+      "tipoCombustivel": "Gasolina Aditivada1",
+      "precoAnterior": 10,
+      "novoPreco": 10,
+      "dataVigencia": "2025-12-14",
+      "responsavel": "Pedro Oliveira",
+      "motivo": "Teste",
+      "dataAlteracao": "2025-12-14"
     }
   ],
   "turnosAbertos": [
@@ -689,6 +667,61 @@
       "valorInicialCaixa": 10,
       "status": "fechado",
       "horaFechamento": "2025-12-14T18:26:58.778Z"
+    },
+    {
+      "id": "1765737445787",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "14/12/2025, 15:37:25",
+      "horaAberturaISO": "2025-12-14T18:37:25.787Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765738834177",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "14/12/2025, 16:00:34",
+      "horaAberturaISO": "2025-12-14T19:00:34.177Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765738880673",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "vespertino",
+      "horaAbertura": "14/12/2025, 16:01:20",
+      "horaAberturaISO": "2025-12-14T19:01:20.673Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765738983964",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "14/12/2025, 16:03:03",
+      "horaAberturaISO": "2025-12-14T19:03:03.963Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765739437146",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "14/12/2025, 16:10:37",
+      "horaAberturaISO": "2025-12-14T19:10:37.146Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
     }
   ],
   "vendas": [

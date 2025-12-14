@@ -93,7 +93,7 @@ function PdvAberto({ toggleMenu }) {
                 const [responseProdutos, responseServicos, responseCombustiveis] = await Promise.all([
                     axios.get(`${BASE_URL}/produtos${queryParam}`),
                     axios.get(`${BASE_URL}/servicos${queryParam}`),
-                    axios.get(`${BASE_URL}/combustiveis${queryParam}`)
+                    axios.get(`${BASE_URL}/TiposCombustivel${queryParam}`)
                 ]);
                 setProdutos(responseProdutos.data || []);
                 setServicos(responseServicos.data || []);
@@ -307,16 +307,29 @@ function PdvAberto({ toggleMenu }) {
                 situacao: 'Disponível'
             }));
         } else if (categoriaSelecionada === 'combustiveis') {
-            itens = combustiveis.map(combustivel => ({
-                id: combustivel.id,
-                titulo: combustivel.nome,
-                label: combustivel.labels && combustivel.labels.length > 0 ? combustivel.labels[0] : '',
-                valor: formatarPreco(combustivel.preco),
-                precoPorUnidade: combustivel.preco,
-                unidade: combustivel.unidade || 'L',
-                quantidade: combustivel.estoque,
-                tipoExibicao: 'estoque'
-            }));
+            itens = combustiveis.map(combustivel => {
+                const nomeCompleto = combustivel.nome || '';
+                const primeiroNome = nomeCompleto.split(' ')[0] || '';
+                
+                let precoNumerico = combustivel.preco;
+                if (typeof precoNumerico === 'string') {
+                    precoNumerico = parseFloat(precoNumerico.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+                }
+                if (isNaN(precoNumerico) || precoNumerico === null || precoNumerico === undefined) {
+                    precoNumerico = 0;
+                }
+                
+                return {
+                    id: combustivel.id,
+                    titulo: combustivel.nome,
+                    label: primeiroNome,
+                    valor: formatarPreco(precoNumerico),
+                    precoPorUnidade: precoNumerico,
+                    unidade: combustivel.unidade || 'L',
+                    quantidade: combustivel.estoque,
+                    tipoExibicao: 'estoque'
+                };
+            });
         } else if (categoriaSelecionada === 'conveniencia') {
             itens = produtos
                 .filter(produto =>
