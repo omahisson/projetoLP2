@@ -59,6 +59,13 @@ function PdvAberto({ toggleMenu }) {
         fetchDados();
     }, []);
 
+    React.useEffect(() => {
+        setItemSelecionado(null);
+        setQuantidade(1);
+        setValor(0);
+        setTipoVenda('quantidade');
+    }, [categoriaSelecionada]);
+
     const formatarTurno = (turno) => {
         if (!turno) return '';
         const turnos = {
@@ -486,6 +493,7 @@ function PdvAberto({ toggleMenu }) {
                                         unidade={itemSelecionado.unidade || 'L'}
                                         mostrarRadioButtons={categoriaSelecionada === 'combustiveis'}
                                         precoPorUnidade={itemSelecionado.precoPorUnidade || parseFloat(itemSelecionado.valor?.replace('R$', '').replace('.', '').replace(',', '.') || 0)}
+                                        permiteFracao={categoriaSelecionada === 'combustiveis'}
                                     />
                                 </div>
                             )}

@@ -10,21 +10,28 @@ function Quantidade({
     onAdicionar,
     unidade = 'L',
     mostrarRadioButtons = true,
-    precoPorUnidade = 0 
+    precoPorUnidade = 0,
+    permiteFracao = false
 }) {
+    const incremento = permiteFracao ? 0.1 : 1;
+    const minQuantidade = permiteFracao ? 0.1 : 1;
+    
     const handleDiminuir = () => {
-        if (quantidade > 0.1) {
-            onQuantidadeChange(parseFloat((quantidade - 0.1).toFixed(1)));
+        const novaQuantidade = quantidade - incremento;
+        if (novaQuantidade >= minQuantidade) {
+            onQuantidadeChange(permiteFracao ? parseFloat(novaQuantidade.toFixed(1)) : Math.max(1, Math.floor(novaQuantidade)));
         }
     };
 
     const handleAumentar = () => {
-        onQuantidadeChange(parseFloat((quantidade + 0.1).toFixed(1)));
+        const novaQuantidade = quantidade + incremento;
+        onQuantidadeChange(permiteFracao ? parseFloat(novaQuantidade.toFixed(1)) : Math.floor(novaQuantidade));
     };
 
     const handleQuantidadeInputChange = (e) => {
         const value = parseFloat(e.target.value) || 0;
-        onQuantidadeChange(value >= 0.1 ? value : 0.1);
+        const minValue = permiteFracao ? 0.1 : 1;
+        onQuantidadeChange(value >= minValue ? (permiteFracao ? value : Math.max(1, Math.floor(value))) : minValue);
     };
 
     const handleValorInputChange = (e) => {
@@ -143,8 +150,8 @@ function Quantidade({
                             <input
                                 type="number"
                                 id="quantidade-input"
-                                step="0.1"
-                                min="0.1"
+                                step={permiteFracao ? "0.1" : "1"}
+                                min={minQuantidade}
                                 value={quantidade}
                                 onChange={handleQuantidadeInputChange}
                                 style={{
