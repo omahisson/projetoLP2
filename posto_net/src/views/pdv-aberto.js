@@ -9,6 +9,7 @@ import CardItemPDV from '../components/card-item-pdv';
 import Quantidade from '../components/quantidade';
 
 import ModalFecharTurno from '../components/modal-fechar-turno';
+import ModalVendas from '../components/modal-vendas';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
@@ -38,6 +39,7 @@ function PdvAberto({ toggleMenu }) {
     const [mostrarModalFecharTurno, setMostrarModalFecharTurno] = React.useState(false);
     const [formaPagamento, setFormaPagamento] = React.useState('dinheiro');
     const [vendasFinalizadas, setVendasFinalizadas] = React.useState([]);
+    const [mostrarModalVendas, setMostrarModalVendas] = React.useState(false);
 
     React.useEffect(() => {
         const recuperarTurno = async () => {
@@ -52,7 +54,7 @@ function PdvAberto({ toggleMenu }) {
                 if (turnoIdSalvo) {
                     const response = await axios.get(`${BASE_URL}/turnosAbertos/${turnoIdSalvo}`);
                     const turnoData = response.data;
-                    
+
                     if (turnoData && turnoData.status === 'aberto') {
                         setTurnoId(turnoData.id);
                         await buscarVendasDoTurno(turnoData.id);
@@ -89,7 +91,7 @@ function PdvAberto({ toggleMenu }) {
             try {
                 const postoId = localStorage.getItem('postoSelecionadoId');
                 const queryParam = `?id_posto=${postoId}`;
-                
+
                 const [responseProdutos, responseServicos, responseCombustiveis] = await Promise.all([
                     axios.get(`${BASE_URL}/produtos${queryParam}`),
                     axios.get(`${BASE_URL}/servicos${queryParam}`),
@@ -138,7 +140,7 @@ function PdvAberto({ toggleMenu }) {
 
             const postoId = localStorage.getItem('postoSelecionadoId');
             const totais = calcularTotaisVendas();
-            
+
             const turnoAtual = await axios.get(`${BASE_URL}/turnosAbertos/${turnoId}`);
             await axios.put(`${BASE_URL}/turnosAbertos/${turnoId}`, {
                 ...turnoAtual.data,
@@ -166,9 +168,9 @@ function PdvAberto({ toggleMenu }) {
             };
 
             await axios.post(`${BASE_URL}/fechamentoTurnos`, fechamentoTurno);
-            
+
             localStorage.removeItem('turnoAbertoId');
-            
+
             console.log('Turno fechado e salvo:', fechamentoTurno);
             setMostrarModalFecharTurno(false);
             navigate('/pdv');
@@ -178,15 +180,28 @@ function PdvAberto({ toggleMenu }) {
         }
     };
 
+    const handleVendaCancelada = async (vendaId) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/vendas/${vendaId}`);
+            const vendaAtualizada = response.data;
+
+            setVendasFinalizadas(prevVendas =>
+                prevVendas.map(v => v.id === vendaId ? vendaAtualizada : v)
+            );
+        } catch (error) {
+            console.error('Erro ao atualizar venda cancelada:', error);
+        }
+    };
+
     const calcularTotaisVendas = () => {
-        const todasVendas = [...vendasFinalizadas];
-        const totalVendas = todasVendas.reduce((sum, venda) => sum + venda.total, 0);
+        const todasVendas = vendasFinalizadas.filter(venda => !venda.cancelada);
+        const totalVendas = todasVendas.reduce((sum, venda) => sum + (venda.total || 0), 0);
         const totalCartao = todasVendas
             .filter(venda => venda.formaPagamento === 'cartao')
-            .reduce((sum, venda) => sum + venda.total, 0);
+            .reduce((sum, venda) => sum + (venda.total || 0), 0);
         const totalDinheiro = todasVendas
             .filter(venda => venda.formaPagamento === 'dinheiro')
-            .reduce((sum, venda) => sum + venda.total, 0);
+            .reduce((sum, venda) => sum + (venda.total || 0), 0);
 
         return {
             total: totalVendas,
@@ -216,12 +231,13 @@ function PdvAberto({ toggleMenu }) {
             itens: [...itensVenda],
             total: totalVenda,
             formaPagamento: formaPagamento,
-            data: new Date().toISOString()
+            data: new Date().toISOString(),
+            cancelada: false
         };
 
         try {
             await axios.post(`${BASE_URL}/vendas`, novaVenda);
-            
+
             setVendasFinalizadas([...vendasFinalizadas, novaVenda]);
             setItensVenda([]);
             setMostrarToast(true);
@@ -310,7 +326,7 @@ function PdvAberto({ toggleMenu }) {
             itens = combustiveis.map(combustivel => {
                 const nomeCompleto = combustivel.nome || '';
                 const primeiroNome = nomeCompleto.split(' ')[0] || '';
-                
+
                 let precoNumerico = combustivel.preco;
                 if (typeof precoNumerico === 'string') {
                     precoNumerico = parseFloat(precoNumerico.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
@@ -318,7 +334,7 @@ function PdvAberto({ toggleMenu }) {
                 if (isNaN(precoNumerico) || precoNumerico === null || precoNumerico === undefined) {
                     precoNumerico = 0;
                 }
-                
+
                 return {
                     id: combustivel.id,
                     titulo: combustivel.nome,
@@ -417,13 +433,15 @@ function PdvAberto({ toggleMenu }) {
                 />
             )}
 
+            {mostrarModalVendas && (
+                <ModalVendas
+                    vendas={vendasFinalizadas}
+                    onClose={() => setMostrarModalVendas(false)}
+                    onVendaCancelada={handleVendaCancelada}
+                />
+            )}
+
             <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '20px' }}>
-                    <div className='container-icone-coluna' onClick={toggleMenu}>
-                        <img src={iconeColuna} alt="Coluna" width="16" height="16" />
-                    </div>
-                    <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
-                    </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                     <div style={{ flex: 1 }}>
                         <h1 className='textoTitulo'>PDV - Ponto de Venda</h1>
@@ -431,22 +449,114 @@ function PdvAberto({ toggleMenu }) {
                             {turnoFormatado ? `Turno ${turnoFormatado}` : 'Turno não selecionado'} • Operador: {nomeOperador} • Aberto às: {horaExibicao}
                         </h1>
                     </div>
-                    <button
-                        type='button'
-                        className='label-badge-gerente d-flex align-items-center'
-                        onClick={handleFecharTurno}
-                        style={{
-                            cursor: 'pointer',
-                            marginLeft: '16px',
-                            gap: '4px',
-                            padding: '8px 12px',
-                            fontSize: '14px',
-                            lineHeight: '20px'
-                        }}
-                    >
-                        <img src={iconeFecharTurno} alt="" width="16" height="16" />
-                        Fechar Turno
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <button
+                            type='button'
+                            onClick={() => {
+                                setMostrarModalVendas(true);
+                            }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                padding: '8px 16px',
+                                height: '36px',
+                                fontSize: '14px',
+                                fontWeight: '500',
+                                border: '1px solid #e9ecef',
+                                backgroundColor: '#ffffff',
+                                color: '#212529',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                fontFamily: 'system-ui'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#f8f9fa';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = '#ffffff';
+                            }}
+                        >
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path>
+                                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                                <path d="M12 17.5v-11"></path>
+                            </svg>
+                            Vendas
+                            {vendasFinalizadas.filter(v => !v.cancelada).length > 0 && (
+                                <span style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '2px 8px',
+                                    borderRadius: '6px',
+                                    fontSize: '12px',
+                                    fontWeight: '500',
+                                    backgroundColor: '#e9ecef',
+                                    color: '#495057',
+                                    marginLeft: '4px',
+                                    minWidth: '20px',
+                                    height: '20px'
+                                }}>
+                                    {vendasFinalizadas.filter(v => !v.cancelada).length}
+                                </span>
+                            )}
+                        </button>
+                        <button
+                            type='button'
+                            className='label-badge-gerente d-flex align-items-center'
+                            onClick={handleFecharTurno}
+                            style={{
+                                cursor: 'pointer',
+                                gap: '4px',
+                                padding: '8px 12px',
+                                fontSize: '14px',
+                                lineHeight: '20px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                border: '1px solid #e9ecef',
+                                backgroundColor: '#ffffff',
+                                color: '#212529',
+                                borderRadius: '6px',
+                                transition: 'all 0.2s',
+                                fontFamily: 'system-ui'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#f8f9fa';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = '#ffffff';
+                            }}
+                        >
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="m16 17 5-5-5-5"></path>
+                                <path d="M21 12H9"></path>
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            </svg>
+                            Fechar Turno
+                        </button>
+                    </div>
                 </div>
                 <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                     <div className="card-itens-venda" style={{ width: '65%', flex: '0 0 65%' }}>

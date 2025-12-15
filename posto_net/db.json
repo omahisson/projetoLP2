@@ -1093,6 +1093,105 @@
       "horaAberturaISO": "2025-12-15T00:01:33.740Z",
       "valorInicialCaixa": 1,
       "status": "aberto"
+    },
+    {
+      "id": "1765810138424",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "vespertino",
+      "horaAbertura": "15/12/2025, 11:48:58",
+      "horaAberturaISO": "2025-12-15T14:48:58.424Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814121965",
+      "id_posto": "2",
+      "operadorId": "3",
+      "operadorNome": "Felipe Torres",
+      "turno": "matutino",
+      "horaAbertura": "15/12/2025, 12:55:21",
+      "horaAberturaISO": "2025-12-15T15:55:21.964Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814304943",
+      "id_posto": "2",
+      "operadorId": "3",
+      "operadorNome": "Felipe Torres",
+      "turno": "matutino",
+      "horaAbertura": "15/12/2025, 12:58:24",
+      "horaAberturaISO": "2025-12-15T15:58:24.942Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814510632",
+      "id_posto": "2",
+      "operadorId": "3",
+      "operadorNome": "Felipe Torres",
+      "turno": "matutino",
+      "horaAbertura": "15/12/2025, 13:01:50",
+      "horaAberturaISO": "2025-12-15T16:01:50.631Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814668341",
+      "id_posto": "2",
+      "operadorId": "3",
+      "operadorNome": "Felipe Torres",
+      "turno": "matutino",
+      "horaAbertura": "15/12/2025, 13:04:28",
+      "horaAberturaISO": "2025-12-15T16:04:28.340Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814704724",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "15/12/2025, 13:05:04",
+      "horaAberturaISO": "2025-12-15T16:05:04.714Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814816144",
+      "id_posto": "2",
+      "operadorId": "4",
+      "operadorNome": "Jose Jose",
+      "turno": "matutino",
+      "horaAbertura": "15/12/2025, 13:06:56",
+      "horaAberturaISO": "2025-12-15T16:06:56.143Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814882171",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "vespertino",
+      "horaAbertura": "15/12/2025, 13:08:02",
+      "horaAberturaISO": "2025-12-15T16:08:02.170Z",
+      "valorInicialCaixa": 2,
+      "status": "aberto"
+    },
+    {
+      "id": "1765814981088",
+      "id_posto": "2",
+      "operadorId": "3",
+      "operadorNome": "Felipe Torres",
+      "turno": "vespertino",
+      "horaAbertura": "15/12/2025, 13:09:41",
+      "horaAberturaISO": "2025-12-15T16:09:41.088Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
     }
   ],
   "vendas": [
@@ -1207,6 +1306,204 @@
       "total": 255,
       "formaPagamento": "dinheiro",
       "data": "2025-12-14T18:26:44.400Z"
+    },
+    {
+      "id": 1765810144966,
+      "id_posto": "1",
+      "id_turno": "1765810138424",
+      "itens": [
+        {
+          "id": 1765810141865,
+          "produtoId": "2",
+          "titulo": "Troca de Óleo",
+          "quantidade": 1,
+          "precoUnitario": 89.9,
+          "valorTotal": 89.9,
+          "unidade": "serviço"
+        }
+      ],
+      "total": 89.9,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T14:49:04.966Z"
+    },
+    {
+      "id": 1765810760849,
+      "id_posto": "1",
+      "id_turno": "1765810138424",
+      "itens": [
+        {
+          "id": 1765810758022,
+          "produtoId": "2",
+          "titulo": "Refrigerante Coca-Cola 350ml",
+          "quantidade": 1,
+          "precoUnitario": 4.5,
+          "valorTotal": 4.5,
+          "unidade": "unidade"
+        }
+      ],
+      "total": 4.5,
+      "formaPagamento": "cartao",
+      "data": "2025-12-15T14:59:20.849Z"
+    },
+    {
+      "id": 1765814125402,
+      "id_posto": "2",
+      "id_turno": "1765814121965",
+      "itens": [
+        {
+          "id": 1765814124012,
+          "produtoId": "5",
+          "titulo": "Diesel S-10",
+          "quantidade": 1,
+          "precoUnitario": 4.25,
+          "valorTotal": 4.25,
+          "unidade": "L"
+        }
+      ],
+      "total": 4.25,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T15:55:25.402Z",
+      "cancelada": false
+    },
+    {
+      "id": 1765814308516,
+      "id_posto": "2",
+      "id_turno": "1765814304943",
+      "itens": [
+        {
+          "id": 1765814307409,
+          "produtoId": "5",
+          "titulo": "Diesel S-10",
+          "quantidade": 1,
+          "precoUnitario": 4.25,
+          "valorTotal": 4.25,
+          "unidade": "L"
+        }
+      ],
+      "total": 4.25,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T15:58:28.516Z",
+      "cancelada": false
+    },
+    {
+      "id": 1765814513308,
+      "id_posto": "2",
+      "id_turno": "1765814510632",
+      "itens": [
+        {
+          "id": 1765814512387,
+          "produtoId": "4",
+          "titulo": "Etanol",
+          "quantidade": 1,
+          "precoUnitario": 3.89,
+          "valorTotal": 3.89,
+          "unidade": "L"
+        }
+      ],
+      "total": 3.89,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T16:01:53.308Z",
+      "cancelada": false
+    },
+    {
+      "id": 1765814673077,
+      "id_posto": "2",
+      "id_turno": "1765814668341",
+      "itens": [
+        {
+          "id": 1765814670582,
+          "produtoId": "4",
+          "titulo": "Etanol",
+          "quantidade": 1.1,
+          "precoUnitario": 3.89,
+          "valorTotal": 4.279000000000001,
+          "unidade": "L"
+        }
+      ],
+      "total": 4.279000000000001,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T16:04:33.077Z",
+      "cancelada": false
+    },
+    {
+      "id": 1765814721082,
+      "id_posto": "1",
+      "id_turno": "1765814704724",
+      "itens": [
+        {
+          "id": 1765814708296,
+          "produtoId": "2",
+          "titulo": "Gasolina Aditivada1",
+          "quantidade": 1,
+          "precoUnitario": 10,
+          "valorTotal": 10,
+          "unidade": "L"
+        }
+      ],
+      "total": 10,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T16:05:21.082Z",
+      "cancelada": false
+    },
+    {
+      "id": 1765814818359,
+      "id_posto": "2",
+      "id_turno": "1765814816144",
+      "itens": [
+        {
+          "id": 1765814817502,
+          "produtoId": "5",
+          "titulo": "Diesel S-10",
+          "quantidade": 1,
+          "precoUnitario": 4.25,
+          "valorTotal": 4.25,
+          "unidade": "L"
+        }
+      ],
+      "total": 4.25,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T16:06:58.359Z",
+      "cancelada": false
+    },
+    {
+      "id": 1765814884843,
+      "id_posto": "1",
+      "id_turno": "1765814882171",
+      "itens": [
+        {
+          "id": 1765814884125,
+          "produtoId": "3",
+          "titulo": "Gasolina Comum",
+          "quantidade": 1,
+          "precoUnitario": 5.49,
+          "valorTotal": 5.49,
+          "unidade": "L"
+        }
+      ],
+      "total": 5.49,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T16:08:04.843Z",
+      "cancelada": false
+    },
+    {
+      "id": 1765814990320,
+      "id_posto": "2",
+      "id_turno": "1765814981088",
+      "itens": [
+        {
+          "id": 1765814982430,
+          "produtoId": "4",
+          "titulo": "Etanol",
+          "quantidade": 1,
+          "precoUnitario": 3.89,
+          "valorTotal": 3.89,
+          "unidade": "L"
+        }
+      ],
+      "total": 3.89,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-15T16:09:50.320Z",
+      "cancelada": false
     }
   ],
   "fechamentoTurnos": [

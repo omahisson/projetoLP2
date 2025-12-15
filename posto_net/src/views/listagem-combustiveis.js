@@ -246,7 +246,13 @@ const TipoCombustivelCard = ({ tipo, onExcluir }) => {
         >
           <FiTrash2 size={18} />
         </button>
-        <button style={styles.iconButton}><FiClock size={18} /></button>
+        <button 
+          style={styles.iconButton}
+          onClick={() => navigate(`/historico/${tipo.id}`)}
+          title="Ver histórico"
+        >
+          <FiClock size={18} />
+        </button>
         <button 
           style={styles.iconButton}
           onClick={() => navigate(`/listagem-estatisticas/${tipo.id}`)}

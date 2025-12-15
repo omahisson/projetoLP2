@@ -17,6 +17,7 @@ import CadastroNovoPreco from './views/cadastro-novoPreco';
 import CadastroPosto from './views/cadastro-posto';
 import Postos from './views/postos';
 import ListagemEstatisticas from './views/listagem-estatisticas';
+import ListagemHistorico from './views/listagem-historico';
 
 import Dashboard from './views/dashboard';
 
@@ -40,6 +41,7 @@ function Rotas({ toggleMenu }){
             <Route path='/cadastro-novoPreco/:idParam?' element={<CadastroNovoPreco toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-posto/:idParam?' element={<CadastroPosto toggleMenu={toggleMenu}/>} />
             <Route path='/listagem-estatisticas/:idParam?' element={<ListagemEstatisticas toggleMenu={toggleMenu}/>} />
+            <Route path='/historico/:idParam?' element={<ListagemHistorico toggleMenu={toggleMenu}/>} />
             
             <Route path='/empregados' element={<ListagemEmpregados toggleMenu={toggleMenu} />} />
             
