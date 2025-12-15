@@ -247,7 +247,13 @@ const TipoCombustivelCard = ({ tipo, onExcluir }) => {
           <FiTrash2 size={18} />
         </button>
         <button style={styles.iconButton}><FiClock size={18} /></button>
-        <button style={styles.iconButton}><FiTrendingUp size={18} /></button>
+        <button 
+          style={styles.iconButton}
+          onClick={() => navigate(`/listagem-estatisticas/${tipo.id}`)}
+          title="Ver estatísticas"
+        >
+          <FiTrendingUp size={18} />
+        </button>
       </div>
     </div>
   );
