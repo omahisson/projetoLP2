@@ -10,10 +10,11 @@ import {
   FiTrash2
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import iconeColuna from '../icones/coluna.svg';
 
 // --- COMPONENTE PRINCIPAL ---
 
-const ListagemCombustiveis = () => {
+const ListagemCombustiveis = ({toggleMenu}) => {
   const navigate = useNavigate();
   const [tiposCombustivel, setTiposCombustivel] = React.useState([]);
   const [dadosBomba, setDadosBomba] = React.useState([]);
@@ -112,6 +113,12 @@ const ListagemCombustiveis = () => {
 
   return (
     <main style={styles.mainContent}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '20px' }}>
+        <div className='container-icone-coluna' onClick={toggleMenu}>
+          <img src={iconeColuna} alt="Coluna" width="16" height="16" />
+        </div>
+        <span className='textoDashboard'>Dashboard - {localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila'}</span>
+      </div>
       <Header />
       <SectionTiposCombustivel 
         tiposCombustivelData={tiposCombustivel}
@@ -363,7 +370,6 @@ const Tag = ({ text }) => (
 const styles = {
   mainContent: {
     flex: 1,
-    padding: '32px',
     backgroundColor: '#ffffff', // Fundo cinza claro
     fontFamily: '"Inter", Arial, sans-serif',
   },
@@ -374,10 +380,11 @@ const styles = {
     marginBottom: '32px',
   },
   headerTitle: {
-    fontSize: '24px',
-    fontWeight: '600',
+    fontSize: '20px',
+    fontWeight: '500',
     margin: 0,
     color: '#212529',
+    fontFamily: 'system-ui'
   },
   headerSubtitle: {
     fontSize: '16px',
