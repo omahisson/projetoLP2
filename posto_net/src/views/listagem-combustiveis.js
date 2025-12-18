@@ -364,7 +364,7 @@ const styles = {
   mainContent: {
     flex: 1,
     padding: '32px',
-    backgroundColor: '#f8f9fa', // Fundo cinza claro
+    backgroundColor: '#ffffff', // Fundo cinza claro
     fontFamily: '"Inter", Arial, sans-serif',
   },
   header: {
@@ -383,6 +383,7 @@ const styles = {
     fontSize: '16px',
     color: '#6c757d',
     margin: '4px 0 0 0',
+    fontFamily: 'system-ui'
   },
   primaryButton: {
     display: 'flex',
@@ -412,9 +413,8 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: '16px',
-    borderBottom: '1px solid #e9ecef',
-    marginBottom: '24px',
+    paddingBottom: '0px',
+    marginBottom: '16px',
   },
   sectionTitleContainer: {
     display: 'flex',
@@ -465,19 +465,21 @@ const styles = {
   infoGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-    gap: '16px',
+    gap: '16px'
   },
   infoLabel: {
     fontSize: '12px',
     color: '#6c757d',
     margin: 0,
     textTransform: 'uppercase',
+    fontFamily: 'system-ui'
   },
   infoValue: {
     fontSize: '14px',
     color: '#212529',
     fontWeight: '500',
     margin: '4px 0 0 0',
+    fontFamily: 'system-ui'
   },
   tipoCardActions: {
     display: 'flex',
@@ -565,6 +567,7 @@ const styles = {
     fontSize: '14px',
     color: '#6c757d',
     margin: 0,
+    fontFamily: 'system-ui'
   },
   tagContainer: {
     display: 'flex',

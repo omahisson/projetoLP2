@@ -1207,6 +1207,29 @@
       "horaAberturaISO": "2025-12-17T23:13:13.500Z",
       "valorInicialCaixa": 1,
       "status": "aberto"
+    },
+    {
+      "id": "1766019160951",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "17/12/2025, 21:52:40",
+      "horaAberturaISO": "2025-12-18T00:52:40.947Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
+    },
+    {
+      "id": "1766019985116",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "17/12/2025, 22:06:25",
+      "horaAberturaISO": "2025-12-18T01:06:25.114Z",
+      "valorInicialCaixa": 10,
+      "status": "fechado",
+      "horaFechamento": "2025-12-18T01:07:58.339Z"
     }
   ],
   "vendas": [
@@ -1519,6 +1542,66 @@
       "formaPagamento": "dinheiro",
       "data": "2025-12-15T16:09:50.320Z",
       "cancelada": false
+    },
+    {
+      "id": 1766019168441,
+      "id_posto": "1",
+      "id_turno": "1766019160951",
+      "itens": [
+        {
+          "id": 1766019166504,
+          "produtoId": "2",
+          "titulo": "Troca de Óleo",
+          "quantidade": 1,
+          "precoUnitario": 89.9,
+          "valorTotal": 89.9,
+          "unidade": "serviço"
+        }
+      ],
+      "total": 89.9,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-18T00:52:48.441Z",
+      "cancelada": false
+    },
+    {
+      "id": 1766020012843,
+      "id_posto": "1",
+      "id_turno": "1766019985116",
+      "itens": [
+        {
+          "id": 1766020002894,
+          "produtoId": "2",
+          "titulo": "Gasolina Aditivada1",
+          "quantidade": 10,
+          "precoUnitario": 10,
+          "valorTotal": 100,
+          "unidade": "L"
+        }
+      ],
+      "total": 100,
+      "formaPagamento": "dinheiro",
+      "data": "2025-12-18T01:06:52.843Z",
+      "cancelada": false
+    },
+    {
+      "id": 1766020032993,
+      "id_posto": "1",
+      "id_turno": "1766019985116",
+      "itens": [
+        {
+          "id": 1766020029130,
+          "produtoId": "1",
+          "titulo": "Lavagem Completa",
+          "quantidade": 2,
+          "precoUnitario": 45.9,
+          "valorTotal": 91.8,
+          "unidade": "serviço"
+        }
+      ],
+      "total": 91.8,
+      "formaPagamento": "cartao",
+      "data": "2025-12-18T01:07:12.993Z",
+      "cancelada": false
     }
   ],
   "fechamentoTurnos": [
@@ -1593,6 +1676,24 @@
       "totalTransacoes": 1,
       "totalCartao": 0,
       "totalDinheiro": 255
+    },
+    {
+      "id": 1766020078345,
+      "id_posto": "1",
+      "id_turno": "1766019985116",
+      "operadorNome": "Pedro Oliveira",
+      "operadorId": "1",
+      "turno": "matutino",
+      "horaAbertura": "17/12/2025, 22:06:25",
+      "horaFechamento": "2025-12-18T01:07:58.345Z",
+      "valorInicialCaixa": 10,
+      "valorFinalCaixa": 50,
+      "valorEsperado": 110,
+      "diferenca": 60,
+      "totalVendas": 191.8,
+      "totalTransacoes": 2,
+      "totalCartao": 91.8,
+      "totalDinheiro": 100
     }
   ]
 }

@@ -136,7 +136,6 @@ function Dashboard({ toggleMenu }) {
         <NetworkReportCard networkRanking={rankingRede} topProducts={maisVendidos} />
         <PriceReportCard priceReportData={relatorioPreco} />
         <StockReportCard stockReportData={relatorioEstoque} />
-        <OperationalReportCard operationalData={relatorioOperacional} />
       </div>
     </div>
   );
@@ -457,89 +456,5 @@ const OperationalKpiCard = ({ icon, value, label }) => (
     </div>
   </div>
 );
-
-const OperationalReportCard = ({ operationalData }) => {
-  const handleDownload = () => {
-    if (!operationalData) return;
-    const dataToExport = [
-      { Indicador: operationalData.openChecklists?.label || 'Checklists Abertos', Valor: operationalData.openChecklists?.value || 0 },
-      { Indicador: operationalData.activeShifts?.label || 'Turnos Ativos', Valor: operationalData.activeShifts?.value || 0 },
-      { Indicador: operationalData.formsToday?.label || 'Relatórios Hoje', Valor: operationalData.formsToday?.value || 0 },
-    ];
-    const csvContent = convertArrayToCSV(dataToExport);
-    downloadCSV(csvContent, 'relatorio-operacional.csv');
-  };
-
-  if (!operationalData) {
-    return (
-      <Card
-        title="Relatórios Operacionais"
-        iconeTitle={config1}
-        botaoHeader={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
-              <option>Diário</option>
-            </select>
-            <button
-              type='button'
-              className='btn btn-secondary d-flex align-items-center'
-              onClick={handleDownload}
-              disabled
-            >
-              <FiDownload style={{ marginRight: '8px' }} />
-              Baixar
-            </button>
-          </div>
-        }
-      >
-        <p style={{ color: '#6c757d', marginBottom: '24px', fontSize: '14px' }}>Carregando dados...</p>
-      </Card>
-    );
-  }
-
-  return (
-    <Card
-      title="Relatórios Operacionais"
-      iconeTitle={config1}
-      botaoHeader={
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
-            <option>Diário</option>
-          </select>
-          <button
-            type='button'
-            className='btn btn-secondary d-flex align-items-center'
-            onClick={handleDownload}
-            style={{ backgroundColor: '#ffffff', color: '#000000'}}
-          >
-            <FiDownload style={{ marginRight: '8px' }} />
-            Baixar
-          </button>
-        </div>
-      }
-    >
-      <p style={{ color: '#6c757d', marginBottom: '24px', fontSize: '16px', fontFamily: 'system-ui' }}>
-        Análises por bomba, combustível e turno de trabalho
-      </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
-        <OperationalKpiCard
-          icon={<FiCheckSquare />}
-          value={operationalData.openChecklists?.value || 0}
-          label={operationalData.openChecklists?.label || 'Bombas Ativas'}
-        />
-        <OperationalKpiCard
-          icon={<FiClock />}
-          value={operationalData.activeShifts?.value || 0}
-          label={operationalData.activeShifts?.label || 'Turnos Ativos'}
-        />
-        <OperationalKpiCard
-          icon={<FiFileText />}
-          value={operationalData.formsToday?.value || 0}
-          label={operationalData.formsToday?.label || 'Relatórios Hoje'}
-        />
-      </div>
-    </Card>
-  );
-};
 
 export default Dashboard;
