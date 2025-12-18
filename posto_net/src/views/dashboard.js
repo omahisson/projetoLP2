@@ -1,16 +1,21 @@
 import React from 'react';
-import axios from 'axios'; 
-import { BASE_URL } from '../config/axios'; 
-import { 
-  FiDollarSign, FiBarChart2, FiDownload, FiTag, 
+import axios from 'axios';
+import { BASE_URL } from '../config/axios';
+import {
+  FiDollarSign, FiBarChart2, FiDownload, FiTag,
   FiArchive, FiCheckSquare, FiClock, FiFileText
 } from 'react-icons/fi';
 import '../index.css';
+import iconeColuna from '../icones/coluna.svg';
+import Card from '../components/card';
+import iconeCifrao from '../icones/cifrao.svg';
+import rede from '../icones/rede.svg';
+import aumento from '../icones/aumento.svg';
+import cubo from '../icones/cubo.svg';
+import config1 from '../icones/config.svg';
 
 /**
  * Converte um array de objetos para uma string CSV.
- * @param {Array<Object>} data - O array de dados.
- * @returns {string} - A string formatada em CSV.
  */
 const convertArrayToCSV = (data) => {
   if (!data || data.length === 0) {
@@ -18,18 +23,17 @@ const convertArrayToCSV = (data) => {
   }
 
   const headers = Object.keys(data[0]);
-  
+
   const formatCell = (val) => {
     let value = val === null || val === undefined ? '' : String(val);
-    // Se o valor contiver vírgula, aspas ou quebra de linha, coloque-o entre aspas
     if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-      value = `"${value.replace(/"/g, '""')}"`; // Escapa aspas duplas
+      value = `"${value.replace(/"/g, '""')}"`;
     }
     return value;
   };
 
   const headerRow = headers.map(formatCell).join(',');
-  const dataRows = data.map(row => 
+  const dataRows = data.map(row =>
     headers.map(header => formatCell(row[header])).join(',')
   );
 
@@ -37,58 +41,36 @@ const convertArrayToCSV = (data) => {
 };
 
 /**
- * Inicia o download de um arquivo de texto (como CSV) no navegador.
- * @param {string} content - O conteúdo do arquivo.
- * @param {string} fileName - O nome do arquivo (ex: "relatorio.csv").
- * @param {string} mimeType - O tipo do arquivo (ex: "text/csv;charset=utf-8;").
+ * Inicia o download de um arquivo CSV.
  */
 const downloadCSV = (content, fileName, mimeType = 'text/csv;charset=utf-8;') => {
-  // Cria um "Blob", que é um objeto de arquivo
   const blob = new Blob([content], { type: mimeType });
-
-  // Cria um link <a> temporário na memória
   const link = document.createElement('a');
-  
-  // Cria uma URL para o nosso blob
   link.href = URL.createObjectURL(blob);
   link.download = fileName;
-  
-  // Adiciona o link ao corpo do documento (necessário para alguns navegadores)
   document.body.appendChild(link);
-  
-  // Simula o clique no link para iniciar o download
   link.click();
-  
-  // Remove o link da página e libera a URL da memória
   document.body.removeChild(link);
   URL.revokeObjectURL(link.href);
 };
 
-// --- FIM DAS FUNÇÕES HELPER DE DOWNLOAD ---
+function Dashboard({ toggleMenu }) {
+  const [dadosFinanceiros, setDadosFinanceiros] = React.useState(null);
+  const [rankingRede, setRankingRede] = React.useState([]);
+  const [maisVendidos, setMaisVendidos] = React.useState([]);
+  const [relatorioPreco, setRelatorioPreco] = React.useState([]);
+  const [relatorioEstoque, setRelatorioEstoque] = React.useState([]);
+  const [relatorioOperacional, setRelatorioOperacional] = React.useState(null);
 
-
-// --- COMPONENTES ---
-
-const Dashboard = () => {
-
-const [dadosFinanceiros, setDadosFinanceiros] = React.useState(null);
-const [rankingRede, setRankingRede] = React.useState([]);
-const [maisVendidos, setMaisVendidos] = React.useState([]);
-const [relatorioPreco, setRelatorioPreco] = React.useState([]);
-const [relatorioEstoque, setRelatorioEstoque] = React.useState([]);
-const [relatorioOperacional, setRelatorioOperacional] = React.useState(null);
-
-const [loading, setLoading] = React.useState(true); // Um estado de loading único
-  const [error, setError] = React.useState(null); // Para guardar erros
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const postoId = localStorage.getItem('postoSelecionadoId');
         const queryParam = postoId ? `?id_posto=${postoId}` : '';
-        
-        // --- MUDANÇA ---
-        // Coloca todas as chamadas em um array de "Promises"
+
         const promises = [
           axios.get(`${BASE_URL}/DadosFinanceiros${queryParam}`),
           axios.get(`${BASE_URL}/RankingRede${queryParam}`),
@@ -98,50 +80,33 @@ const [loading, setLoading] = React.useState(true); // Um estado de loading úni
           axios.get(`${BASE_URL}/RelatorioOperacional${queryParam}`)
         ];
 
-        // Promise.all espera todas terminarem
         const responses = await Promise.all(promises);
-        
-        // 'responses' é um array com os resultados NA MESMA ORDEM que as chamadas
-        console.log('Dados Financeiros:', responses[0].data);
-        // DadosFinanceiros agora é um array, pega o primeiro item ou o objeto único
-        const dadosFinanceiros = Array.isArray(responses[0].data) 
-          ? (responses[0].data[0] || responses[0].data) 
+
+        const dadosFinanceiros = Array.isArray(responses[0].data)
+          ? (responses[0].data[0] || responses[0].data)
           : responses[0].data;
         setDadosFinanceiros(dadosFinanceiros);
 
-        console.log('Ranking da Rede:', responses[1].data);
         setRankingRede(Array.isArray(responses[1].data) ? responses[1].data : []);
-        
-        console.log('Mais Vendidos:', responses[2].data);
         setMaisVendidos(Array.isArray(responses[2].data) ? responses[2].data : []);
-        
-        console.log('Relatório de Preço:', responses[3].data);
         setRelatorioPreco(Array.isArray(responses[3].data) ? responses[3].data : []);
-        
-        console.log('Relatório de Estoque:', responses[4].data);
         setRelatorioEstoque(Array.isArray(responses[4].data) ? responses[4].data : []);
-        
-        console.log('Relatório Operacional:', responses[5].data);
-        // RelatorioOperacional agora é um array, pega o primeiro item
-        const relatorioOperacional = Array.isArray(responses[5].data) 
+
+        const relatorioOperacional = Array.isArray(responses[5].data)
           ? (responses[5].data[0] || null)
           : responses[5].data;
         setRelatorioOperacional(relatorioOperacional);
       } catch (err) {
-        // Pega qualquer erro de qualquer chamada
         console.error("Erro ao buscar dados do dashboard:", err);
         setError(err.message);
       } finally {
-        // Roda no final, com sucesso ou erro
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, []); // Array vazio, roda só uma vez
+  }, []);
 
-  // --- MUDANÇA ---
-  // Verificação de loading e erro centralizada
   if (loading) {
     return <div>Carregando dados do dashboard...</div>;
   }
@@ -150,460 +115,431 @@ const [loading, setLoading] = React.useState(true); // Um estado de loading úni
     return <div>Ocorreu um erro: {error}</div>;
   }
 
-  return (
-    <div style={styles.appLayout}>
-      <main style={styles.mainContent}>
-        <Header />
-
-        {/* --- Seções do Dashboard --- */}
-        <FinancialReportCard financialData = {dadosFinanceiros}/>
-        <NetworkReportCard networkRanking = {rankingRede} topProducts={maisVendidos}/>
-        <PriceReportCard priceReportData = {relatorioPreco}/>
-        <StockReportCard stockReportData = {relatorioEstoque}/>
-        <OperationalReportCard operationalData = {relatorioOperacional}/>
-
-      </main>
-    </div>
-  );
-};
-
-// Componentes menores para organizar o código
-
-const Header = () => {
   const nomePosto = localStorage.getItem('postoSelecionado') || 'Posto Ipiranga Vila';
-  
+
   return (
-      <header style={styles.header}>
-          <h1>Relatórios - {nomePosto}</h1>
-          <p style={styles.subtitle}>Análise o desempenho e acompanhe indicadores importantes do seu posto</p>
-      </header>
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '20px' }}>
+        <div className='container-icone-coluna' onClick={toggleMenu}>
+          <img src={iconeColuna} alt="Coluna" width="16" height="16" />
+        </div>
+        <span className='textoDashboard'>Dashboard - {nomePosto}</span>
+      </div>
+      
+      <div style={{ marginBottom: '32px' }}>
+        <h1 className='textoTitulo'>Relatórios - {nomePosto}</h1>
+        <h1 className='textoSubtitulo'>Analise o desempenho e acompanhe indicadores importantes do seu posto</h1>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <FinancialReportCard financialData={dadosFinanceiros} />
+        <NetworkReportCard networkRanking={rankingRede} topProducts={maisVendidos} />
+        <PriceReportCard priceReportData={relatorioPreco} />
+        <StockReportCard stockReportData={relatorioEstoque} />
+        <OperationalReportCard operationalData={relatorioOperacional} />
+      </div>
+    </div>
   );
-};
+}
 
-const Card = ({ children, style }) => (
-    <div style={{...styles.card, ...style}}>
-        {children}
-    </div>
-);
-
-// --- MODIFICADO ---
-// Agora aceita a prop 'onDownload'
-const CardHeader = ({ icon, title, children, onDownload }) => (
-    <div style={styles.cardHeader}>
-        <div style={styles.cardTitleContainer}>
-            {icon}
-            <h2 style={styles.cardTitle}>{title}</h2>
-        </div>
-        <div style={styles.cardActions}>
-            <select style={styles.select}>{children}</select>
-            {/* --- MODIFICADO --- */}
-            {/* Adiciona o onClick e desabilita se não houver função */}
-            <button 
-              style={styles.downloadButton}
-              onClick={onDownload}
-              disabled={!onDownload}
-            >
-                <FiDownload style={{ marginRight: '8px' }} />
-                Baixar
-            </button>
-        </div>
-    </div>
-);
-
-const KpiCard = ({ title, value }) => (
-    <div style={styles.kpiCard}>
-        <p style={styles.kpiTitle}>{title}</p>
-        <h3 style={styles.kpiValue}>{value}</h3>
-    </div>
-);
-
-// --- MODIFICADO ---
-// Adicionada a lógica de download
-const FinancialReportCard = ({financialData}) => {
-  
-  // --- NOVO ---
-  // Função que será chamada pelo botão de download
+const FinancialReportCard = ({ financialData }) => {
   const handleDownload = () => {
-    // Como os dados são KPIs, é melhor formatá-los manualmente
+    if (!financialData) return;
     const dataToExport = [
       { Indicador: 'Faturamento Total', Valor: financialData.faturamentoTotal },
       { Indicador: 'Ticket Médio', Valor: financialData.ticketMedio },
       { Indicador: 'Total de Vendas', Valor: financialData.totalVendas },
       { Indicador: 'Pagamento Principal', Valor: financialData.mainPayment },
     ];
-    
     const csvContent = convertArrayToCSV(dataToExport);
     downloadCSV(csvContent, 'relatorio-financeiro.csv');
   };
 
+  if (!financialData) return null;
+
   return (
-    <Card>
-        {/* --- MODIFICADO --- */}
-        <CardHeader 
-          icon={<FiDollarSign size={20} color="#6c757d" />} 
-          title="Relatórios Financeiros"
-          onDownload={handleDownload} // Passa a função de download
-        >
+    <Card
+      title="Relatórios Financeiros"
+      iconeTitle={iconeCifrao}
+      botaoHeader={
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
             <option>Mensal</option>
             <option>Semanal</option>
-        </CardHeader>
-        <p style={styles.cardSubtitle}>Acompanhe faturamento, ticket médio e vendas por período</p>
-        <div style={styles.kpiGrid}>
-            <KpiCard title="Faturamento Total" value={financialData.faturamentoTotal} />
-            <KpiCard title="Ticket Médio" value={financialData.ticketMedio} />
-            <KpiCard title="Total de Vendas" value={financialData.totalVendas} />
-            <KpiCard title="Pagamento Principal" value={financialData.mainPayment} />
+          </select>
+          <button
+            type='button'
+            className='btn btn-primary d-flex align-items-center'
+            onClick={handleDownload}
+            style={{ backgroundColor: '#000000'}}
+          >
+            <FiDownload style={{ marginRight: '8px' }} />
+            Baixar
+          </button>
         </div>
+      }
+    >
+      <p style={{ color: '#6c757d', marginBottom: '24px', fontSize: '16px', fontFamily: 'system-ui' }}>
+        Acompanhe faturamento, ticket médio e vendas por período
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+        <div style={{ padding: '16px', borderLeft: '4px solid #e9ecef' }}>
+          <p style={{ margin: 0, color: '#6c757d', fontSize: '16px', fontFamily: 'system-ui' }}>Faturamento Total</p>
+          <h3 style={{ margin: '8px 0 0 0', fontSize: '24px', fontWeight: 'bold' }}>{financialData.faturamentoTotal}</h3>
+        </div>
+        <div style={{ padding: '16px', borderLeft: '4px solid #e9ecef' }}>
+          <p style={{ margin: 0, color: '#6c757d', fontSize: '16px', fontFamily: 'system-ui' }}>Ticket Médio</p>
+          <h3 style={{ margin: '8px 0 0 0', fontSize: '24px', fontWeight: 'bold' }}>{financialData.ticketMedio}</h3>
+        </div>
+        <div style={{ padding: '16px', borderLeft: '4px solid #e9ecef' }}>
+          <p style={{ margin: 0, color: '#6c757d', fontSize: '16px', fontFamily: 'system-ui' }}>Total de Vendas</p>
+          <h3 style={{ margin: '8px 0 0 0', fontSize: '24px', fontWeight: 'bold' }}>{financialData.totalVendas}</h3>
+        </div>
+        <div style={{ padding: '16px', borderLeft: '4px solid #e9ecef' }}>
+          <p style={{ margin: 0, color: '#6c757d', fontSize: '16px', fontFamily: 'system-ui' }}>Pagamento Principal</p>
+          <p style={{ margin: '8px 0 0 0', fontSize: '18px', fontWeight: '500', fontFamily: 'system-ui' }}>{financialData.mainPayment}</p>
+        </div>
+      </div>
     </Card>
   );
 };
 
-// --- MODIFICADO ---
-// Adicionada a lógica de download
-const NetworkReportCard = ({networkRanking, topProducts}) => {
-
-  // --- NOVO ---
-  // Esta função de download vai combinar as DUAS tabelas em um único CSV
+const NetworkReportCard = ({ networkRanking, topProducts }) => {
   const handleDownload = () => {
     const csvRanking = convertArrayToCSV(networkRanking);
     const csvTopProducts = convertArrayToCSV(topProducts);
-    
-    // Combina os dois CSVs em uma única string, separados por um título e quebras de linha
-    const combinedCSV = 
+    const combinedCSV =
       "Ranking de Faturamento\n" +
       csvRanking +
       "\n\n" +
       "Produtos Mais Vendidos\n" +
       csvTopProducts;
-
     downloadCSV(combinedCSV, 'relatorio-rede.csv');
   };
 
   return (
-    <Card>
-        {/* --- MODIFICADO --- */}
-        <CardHeader 
-          icon={<FiBarChart2 size={20} color="#6c757d" />} 
-          title="Relatórios da Rede"
-          onDownload={handleDownload} // Passa a função de download
-        >
+    <Card
+      title="Relatórios da Rede"
+      iconeTitle={rede}
+      botaoHeader={
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
             <option>Mensal</option>
             <option>Anual</option>
-        </CardHeader>
-        <section style={{marginTop: '16px'}}>
-            {/* ... (o resto do componente Ranking continua igual) ... */}
-            <h3 style={styles.sectionTitle}>Ranking de Faturamento</h3>
-            <div style={styles.rankingList}>
-                {networkRanking.map((item) => (
-                    <div key={item.id} style={item.isCurrent ? styles.rankingItemCurrent : styles.rankingItem}>
-                        <div style={styles.rankingInfo}>
-                            <span>#{item.id}</span>
-                            <span style={{ marginLeft: '16px' }}>{item.name}</span>
-                            {item.isCurrent && <span style={styles.currentBadge}>Atual</span>}
-                        </div>
-                        <span style={styles.rankingValue}>{item.revenue}</span>
-                    </div>
-                ))}
+          </select>
+          <button
+            type='button'
+            className='btn btn-secondary d-flex align-items-center'
+            onClick={handleDownload}
+            style={{ backgroundColor: '#ffffff', color: '#000000'}}
+          >
+            <FiDownload style={{ marginRight: '8px' }} />
+            Baixar
+          </button>
+        </div>
+      }
+    >
+      <div style={{ marginTop: '16px' }}>
+        <h4 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px' }}>Ranking de Faturamento</h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {networkRanking.map((item, index) => (
+            <div
+              key={item.id || index}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '16px',
+                backgroundColor: item.isCurrent ? '#e9ecef' : '#e9ebef',
+                borderRadius: '6px',
+                border: item.isCurrent ? '1px solid #dee2e6' : 'none'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', fontWeight: '500' }}>
+                <span style={{
+                  backgroundColor: '#6c757d',
+                  color: '#ffffff',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  padding: '4px 8px',
+                  borderRadius: '12px',
+                  marginRight: '12px'
+                }}>
+                  #{item.id || index + 1}
+                </span>
+                <span>{item.name}</span>
+                {item.isCurrent && (
+                  <span style={{
+                    backgroundColor: '#343a40',
+                    color: '#ffffff',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    padding: '4px 8px',
+                    borderRadius: '12px',
+                    marginLeft: '16px'
+                  }}>
+                    Atual
+                  </span>
+                )}
+              </div>
+              <span style={{ fontWeight: 'bold' }}>{item.revenue}</span>
             </div>
-        </section>
-        <section style={{ marginTop: '32px' }}>
-            {/* ... (o resto do componente Tabela continua igual) ... */}
-            <h3 style={styles.sectionTitle}>Produtos Mais Vendidos</h3>
-            <table style={styles.table}>
-                <thead>
-                    <tr>
-                        <th style={styles.th}>Produto</th>
-                        <th style={styles.th}>Quantidade</th>
-                        <th style={styles.th}>Faturamento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {topProducts.map((product, index) => (
-                        <tr key={index}>
-                            <td style={styles.td}>{product.name}</td>
-                            <td style={styles.td}>{product.quantity}</td>
-                            <td style={styles.td}>{product.revenue}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </section>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginTop: '32px', borderTop: '1px solid #e9ecef', paddingTop: '24px' }}>
+        <h4 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px' }}>Produtos Mais Vendidos</h4>
+        <div className='table-responsive'>
+          <table className='table table-hover' style={{ borderCollapse: 'collapse', width: '100%' }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Produto</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Quantidade</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Faturamento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topProducts.map((product, index) => (
+                <tr key={index}>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px', fontWeight: '500' }}>{product.name}</td>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{product.quantity}</td>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{product.revenue}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </Card>
   );
 };
 
-// --- MODIFICADO ---
-// Adicionada a lógica de download
-const PriceReportCard = ({priceReportData}) => {
-  
-  // --- NOVO ---
+const PriceReportCard = ({ priceReportData }) => {
   const handleDownload = () => {
     const csvContent = convertArrayToCSV(priceReportData);
     downloadCSV(csvContent, 'relatorio-precos.csv');
   };
-  
+
   return (
-    <Card>
-        {/* --- MODIFICADO --- */}
-        <CardHeader 
-          icon={<FiTag size={20} color="#6c757d" />} 
-          title="Relatórios de Preço"
-          onDownload={handleDownload} // Passa a função de download
-        >
+    <Card
+      title="Relatórios de Preço"
+      iconeTitle={aumento}
+      botaoHeader={
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
             <option>Mensal</option>
-        </CardHeader>
-        <table style={{...styles.table, marginTop: '16px'}}>
-            {/* ... (o resto da tabela continua igual) ... */}
-            <thead>
-                <tr>
-                    <th style={styles.th}>Produto</th>
-                    <th style={styles.th}>Responsável</th>
-                    <th style={styles.th}>Preço Anterior</th>
-                    <th style={styles.th}>Novo Preço</th>
-                    <th style={styles.th}>Data Alteração</th>
-                    <th style={styles.th}>Vigência</th>
-                </tr>
-            </thead>
-            <tbody>
-                {priceReportData.map((row, index) => (
-                    <tr key={index}>
-                        <td style={styles.td}>{row.product}</td>
-                        <td style={styles.td}>{row.responsible}</td>
-                        <td style={styles.td}>{row.prevPrice}</td>
-                        <td style={styles.td}>{row.newPrice}</td>
-                        <td style={styles.td}>{row.date}</td>
-                        <td style={styles.td}>{row.effective}</td>
-                    </tr>
-                ))}
-            </tbody>
+          </select>
+          <button
+            type='button'
+            className='btn btn-secondary d-flex align-items-center'
+            onClick={handleDownload}
+            style={{ backgroundColor: '#ffffff', color: '#000000'}}
+          >
+            <FiDownload style={{ marginRight: '8px' }} />
+            Baixar
+          </button>
+        </div>
+      }
+    >
+      <br></br>
+      <div className='table-responsive'>
+        <table className='table table-hover' style={{ borderCollapse: 'collapse', width: '100%' }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Produto</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Responsável</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Preço Anterior</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Novo Preço</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Data Alteração</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Vigência</th>
+            </tr>
+          </thead>
+          <tbody>
+            {priceReportData.map((row, index) => (
+              <tr key={index}>
+                <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px', fontWeight: '500' }}>{row.product}</td>
+                <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.responsible}</td>
+                <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.prevPrice}</td>
+                <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.newPrice}</td>
+                <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.date}</td>
+                <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.effective}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
+      </div>
     </Card>
   );
 };
 
 const StatusBadge = ({ status }) => {
-    const style = status === 'Crítico' ? styles.statusBadgeCritical : styles.statusBadgeAlert;
-    return <span style={style}>{status}</span>
-}
+  const isCritical = status === 'Vencimento' || status === 'Crítico';
+  return (
+    <span style={{
+      backgroundColor: isCritical ? '#f8d7da' : '#fff3cd',
+      color: isCritical ? '#721c24' : '#856404',
+      padding: '4px 10px',
+      borderRadius: '12px',
+      fontWeight: '600',
+      fontSize: '12px'
+    }}>
+      {status}
+    </span>
+  );
+};
 
-// --- MODIFICADO ---
-const StockReportCard = ({stockReportData}) => {
-  
-  // --- NOVO ---
+const StockReportCard = ({ stockReportData }) => {
   const handleDownload = () => {
     const csvContent = convertArrayToCSV(stockReportData);
     downloadCSV(csvContent, 'relatorio-estoque.csv');
   };
 
   return (
-    <Card>
-        {/* --- MODIFICADO --- */}
-        <CardHeader 
-          icon={<FiArchive size={20} color="#6c757d" />} 
-          title="Relatórios de Estoque"
-          onDownload={handleDownload} 
-        >
-            <option>Hoje</option>
-        </CardHeader>
-        <table style={{...styles.table, marginTop: '16px'}}>
-            {/* ... (o resto da tabela continua igual) ... */}
+    <Card
+      title="Relatórios de Estoque"
+      iconeTitle={cubo}
+      botaoHeader={
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
+            <option>Atual</option>
+          </select>
+          <button
+            type='button'
+            className='btn btn-secondary d-flex align-items-center'
+            onClick={handleDownload}
+            style={{ backgroundColor: '#ffffff', color: '#000000'}}
+          >
+            <FiDownload style={{ marginRight: '8px' }} />
+            Baixar
+          </button>
+        </div>
+      }
+    >
+      <div style={{ marginTop: '16px' }}>
+        <div className='table-responsive'>
+          <table className='table table-hover' style={{ borderCollapse: 'collapse', width: '100%' }}>
             <thead>
-                <tr>
-                    <th style={styles.th}>Item em Situação de Vencimento</th>
-                    <th style={styles.th}>Quantidade</th>
-                    <th style={styles.th}>Estoque Min.</th>
-                    <th style={styles.th}>Status</th>
-                    <th style={styles.th}>Validade</th>
-                </tr>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Item</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Quantidade</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Estoque Mín.</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Status</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '12px' }}>Validade</th>
+              </tr>
             </thead>
             <tbody>
-                {stockReportData.map((row, index) => (
-                    <tr key={index}>
-                        <td style={styles.td}>{row.item}</td>
-                        <td style={styles.td}>{row.quantity}</td>
-                        <td style={styles.td}>{row.minStock}</td>
-                        <td style={styles.td}><StatusBadge status={row.status} /></td>
-                        <td style={styles.td}>{row.expiry}</td>
-                    </tr>
-                ))}
+              {stockReportData.map((row, index) => (
+                <tr key={index}>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px', fontWeight: '500' }}>{row.item}</td>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.quantity}</td>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.minStock}</td>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>
+                    <StatusBadge status={row.status} />
+                  </td>
+                  <td style={{ textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' }}>{row.expiry}</td>
+                </tr>
+              ))}
             </tbody>
-        </table>
+          </table>
+        </div>
+      </div>
     </Card>
   );
 };
 
-const OperationalKpiCard = ({icon, value, label}) => (
-    <div style={styles.opKpiCard}>
-        <div style={styles.opKpiIcon}>{icon}</div>
-        <div>
-            <div style={styles.opKpiValue}>{value}</div>
-            <div style={styles.opKpiLabel}>{label}</div>
-        </div>
+const OperationalKpiCard = ({ icon, value, label }) => (
+  <div style={{ display: 'flex', alignItems: 'center', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+    <div style={{ fontSize: '24px', color: '#495057', marginRight: '16px' }}>{icon}</div>
+    <div>
+      <div style={{ fontSize: '22px', fontWeight: 'bold' }}>{value}</div>
+      <div style={{ color: '#6c757d', fontSize: '14px' }}>{label}</div>
     </div>
-)
+  </div>
+);
 
-// --- MODIFICADO ---
-// --- MODIFICADO ---
-const OperationalReportCard = ({operationalData}) => {
-  
-  // Verifica se os dados existem antes de acessar
-  if (!operationalData) {
-    return (
-      <Card>
-        <CardHeader 
-          icon={<FiCheckSquare size={20} color="#6c757d" />} 
-          title="Relatórios Operacionais"
-        >
-            <option>Diário</option>
-        </CardHeader>
-        <p style={styles.cardSubtitle}>Carregando dados...</p>
-      </Card>
-    );
-  }
-  
-  // --- NOVO ---
+const OperationalReportCard = ({ operationalData }) => {
   const handleDownload = () => {
+    if (!operationalData) return;
     const dataToExport = [
-      { Indicador: operationalData.openChecklists.label, Valor: operationalData.openChecklists.value },
-      { Indicador: operationalData.activeShifts.label, Valor: operationalData.activeShifts.value },
-      { Indicador: operationalData.formsToday.label, Valor: operationalData.formsToday.value },
+      { Indicador: operationalData.openChecklists?.label || 'Checklists Abertos', Valor: operationalData.openChecklists?.value || 0 },
+      { Indicador: operationalData.activeShifts?.label || 'Turnos Ativos', Valor: operationalData.activeShifts?.value || 0 },
+      { Indicador: operationalData.formsToday?.label || 'Relatórios Hoje', Valor: operationalData.formsToday?.value || 0 },
     ];
-    
     const csvContent = convertArrayToCSV(dataToExport);
     downloadCSV(csvContent, 'relatorio-operacional.csv');
   };
 
+  if (!operationalData) {
+    return (
+      <Card
+        title="Relatórios Operacionais"
+        iconeTitle={config1}
+        botaoHeader={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
+              <option>Diário</option>
+            </select>
+            <button
+              type='button'
+              className='btn btn-secondary d-flex align-items-center'
+              onClick={handleDownload}
+              disabled
+            >
+              <FiDownload style={{ marginRight: '8px' }} />
+              Baixar
+            </button>
+          </div>
+        }
+      >
+        <p style={{ color: '#6c757d', marginBottom: '24px', fontSize: '14px' }}>Carregando dados...</p>
+      </Card>
+    );
+  }
+
   return (
-    <Card>
-        {/* --- MODIFICADO --- */}
-        <CardHeader 
-          icon={<FiCheckSquare size={20} color="#6c757d" />} 
-          title="Relatórios Operacionais"
-          onDownload={handleDownload} // Passa a função de download
-        >
+    <Card
+      title="Relatórios Operacionais"
+      iconeTitle={config1}
+      botaoHeader={
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <select style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ced4da', marginRight: '8px' }}>
             <option>Diário</option>
-        </CardHeader>
-        <p style={styles.cardSubtitle}>Análise por turnos, checklist e fluxo de trabalho</p>
-        <div style={styles.opKpiGrid}>
-            <OperationalKpiCard icon={<FiCheckSquare />} value={operationalData.openChecklists.value} label={operationalData.openChecklists.label} />
-            <OperationalKpiCard icon={<FiClock />} value={operationalData.activeShifts.value} label={operationalData.activeShifts.label} />
-            <OperationalKpiCard icon={<FiFileText />} value={operationalData.formsToday.value} label={operationalData.formsToday.label} />
+          </select>
+          <button
+            type='button'
+            className='btn btn-secondary d-flex align-items-center'
+            onClick={handleDownload}
+            style={{ backgroundColor: '#ffffff', color: '#000000'}}
+          >
+            <FiDownload style={{ marginRight: '8px' }} />
+            Baixar
+          </button>
         </div>
+      }
+    >
+      <p style={{ color: '#6c757d', marginBottom: '24px', fontSize: '16px', fontFamily: 'system-ui' }}>
+        Análises por bomba, combustível e turno de trabalho
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
+        <OperationalKpiCard
+          icon={<FiCheckSquare />}
+          value={operationalData.openChecklists?.value || 0}
+          label={operationalData.openChecklists?.label || 'Bombas Ativas'}
+        />
+        <OperationalKpiCard
+          icon={<FiClock />}
+          value={operationalData.activeShifts?.value || 0}
+          label={operationalData.activeShifts?.label || 'Turnos Ativos'}
+        />
+        <OperationalKpiCard
+          icon={<FiFileText />}
+          value={operationalData.formsToday?.value || 0}
+          label={operationalData.formsToday?.label || 'Relatórios Hoje'}
+        />
+      </div>
     </Card>
   );
-};
-
-const styles = {
-  appLayout: {
-    display: 'flex',
-    backgroundColor: '#f8f9fa',
-    minHeight: '100vh',
-    fontFamily: '"Inter", Arial, sans-serif',
-  },
-  sidebar: {
-    width: '250px',
-    backgroundColor: '#ffffff',
-    padding: '20px',
-    borderRight: '1px solid #dee2e6',
-  },
-  sidebarHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px',
-    marginBottom: '20px',
-    border: '1px solid #e9ecef',
-    borderRadius: '8px',
-  },
-  navItem: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '12px 10px',
-    listStyle: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    color: '#495057',
-    marginBottom: '4px'
-  },
-  navItemActive: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '12px 10px',
-    listStyle: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    backgroundColor: '#f1f3f5',
-    color: '#212529',
-    fontWeight: '600',
-    marginBottom: '4px'
-  },
-  mainContent: {
-    flex: 1,
-    padding: '32px',
-    overflowY: 'auto',
-  },
-  header: {
-    marginBottom: '32px',
-  },
-  subtitle: {
-    color: '#6c757d'
-  },
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    padding: '24px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-    marginBottom: '24px',
-  },
-  cardHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px',
-  },
-  cardTitleContainer: { display: 'flex', alignItems: 'center' },
-  cardTitle: { fontSize: '18px', fontWeight: '600', marginLeft: '12px', margin: '0 0 0 12px' },
-  cardActions: { display: 'flex', alignItems: 'center' },
-  select: { padding: '8px 12px', borderRadius: '6px', border: '1px solid #ced4da', backgroundColor: '#f8f9fa', marginRight: '16px' },
-  // --- MODIFICADO ---
-  downloadButton: { 
-    display: 'flex', 
-    alignItems: 'center', 
-    padding: '8px 16px', 
-    borderRadius: '6px', 
-    border: 'none', 
-    backgroundColor: '#343a40', 
-    color: '#ffffff', 
-    cursor: 'pointer', 
-    fontWeight: 'bold',
-    // --- NOVO ---
-    "&:disabled": {
-      backgroundColor: '#6c757d',
-      cursor: 'not-allowed',
-    }
-  },
-  cardSubtitle: { color: '#6c757d', marginTop: 0, marginBottom: '24px', fontSize: '14px' },
-  kpiGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' },
-  kpiCard: { padding: '16px', borderLeft: '4px solid #e9ecef' },
-  kpiTitle: { margin: 0, color: '#6c757d', fontSize: '14px' },
-  kpiValue: { margin: '8px 0 0 0', fontSize: '24px', fontWeight: 'bold' },
-  sectionTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px' },
-  rankingList: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  rankingItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '6px' },
-  rankingItemCurrent: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', backgroundColor: '#e9ecef', borderRadius: '6px', border: '1px solid #dee2e6' },
-  rankingInfo: { display: 'flex', alignItems: 'center', fontWeight: '500' },
-  currentBadge: { backgroundColor: '#6c757d', color: '#ffffff', fontSize: '12px', fontWeight: 'bold', padding: '4px 8px', borderRadius: '12px', marginLeft: '16px' },
-  rankingValue: { fontWeight: 'bold' },
-  table: { width: '100%', borderCollapse: 'collapse', },
-  th: { textAlign: 'left', padding: '12px 16px', color: '#6c757d', borderBottom: '2px solid #e9ecef', fontWeight: 'normal', textTransform: 'uppercase', fontSize: '12px' },
-  td: { textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #e9ecef', fontSize: '14px' },
-  statusBadgeAlert: { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 10px', borderRadius: '12px', fontWeight: '600', fontSize: '12px' },
-  statusBadgeCritical: { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 10px', borderRadius: '12px', fontWeight: '600', fontSize: '12px' },
-  opKpiGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' },
-  opKpiCard: { display: 'flex', alignItems: 'center', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' },
-  opKpiIcon: { fontSize: '24px', color: '#495057', marginRight: '16px' },
-  opKpiValue: { fontSize: '22px', fontWeight: 'bold' },
-  opKpiLabel: { color: '#6c757d', fontSize: '14px' },
 };
 
 export default Dashboard;

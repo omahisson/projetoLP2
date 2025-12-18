@@ -47,7 +47,7 @@ class App extends React.Component {
   render() {
     const { menuVisivel } = this.state;
     const currentPath = window.location.pathname;
-    const mostrarNavbar = !currentPath.includes('/cadastro-posto') && !currentPath.includes('/postos');
+    const mostrarNavbar = currentPath !== '/' && !currentPath.includes('/cadastro-posto') && currentPath !== '/postos';
     
     return (
       <div className='d-flex'>

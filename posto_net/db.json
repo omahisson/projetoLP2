@@ -275,14 +275,16 @@
       "faturamentoTotal": "R$ 125.430,50",
       "ticketMedio": "R$ 87,25",
       "totalVendas": "1438",
-      "mainPayment": "Cartão de Crédito (45%)"
+      "mainPayment": "Cartão de Crédito (45%)",
+      "id": "966d"
     },
     {
       "id_posto": "2",
       "faturamentoTotal": "R$ 98.320,75",
       "ticketMedio": "R$ 72,15",
       "totalVendas": "1362",
-      "mainPayment": "Dinheiro (52%)"
+      "mainPayment": "Dinheiro (52%)",
+      "id": "f1e4"
     }
   ],
   "RankingRede": [
@@ -403,7 +405,8 @@
       "formsToday": {
         "value": 12,
         "label": "Formulários Hoje"
-      }
+      },
+      "id": "4a88"
     },
     {
       "id_posto": "2",
@@ -418,7 +421,8 @@
       "formsToday": {
         "value": 8,
         "label": "Formulários Hoje"
-      }
+      },
+      "id": "47c7"
     }
   ],
   "TiposCombustivel": [
@@ -1192,11 +1196,22 @@
       "horaAberturaISO": "2025-12-15T16:09:41.088Z",
       "valorInicialCaixa": 1,
       "status": "aberto"
+    },
+    {
+      "id": "1766013193506",
+      "id_posto": "1",
+      "operadorId": "1",
+      "operadorNome": "Pedro Oliveira",
+      "turno": "matutino",
+      "horaAbertura": "17/12/2025, 20:13:13",
+      "horaAberturaISO": "2025-12-17T23:13:13.500Z",
+      "valorInicialCaixa": 1,
+      "status": "aberto"
     }
   ],
   "vendas": [
     {
-      "id": 1765734866876,
+      "id": "1765734866876",
       "id_posto": "1",
       "id_turno": "1765734855679",
       "itens": [
@@ -1215,7 +1230,7 @@
       "data": "2025-12-14T17:54:26.876Z"
     },
     {
-      "id": 1765734867793,
+      "id": "1765734867793",
       "id_posto": "2",
       "id_turno": "1765734856870",
       "itens": [
@@ -1234,7 +1249,7 @@
       "data": "2025-12-14T17:54:27.793Z"
     },
     {
-      "id": 1765736786264,
+      "id": "1765736786264",
       "id_posto": "1",
       "id_turno": "1765736768230",
       "itens": [
@@ -1271,7 +1286,7 @@
       "data": "2025-12-14T18:26:26.264Z"
     },
     {
-      "id": 1765736804400,
+      "id": "1765736804400",
       "id_posto": "2",
       "id_turno": "1765736769545",
       "itens": [
@@ -1308,7 +1323,7 @@
       "data": "2025-12-14T18:26:44.400Z"
     },
     {
-      "id": 1765810144966,
+      "id": "1765810144966",
       "id_posto": "1",
       "id_turno": "1765810138424",
       "itens": [
@@ -1327,7 +1342,7 @@
       "data": "2025-12-15T14:49:04.966Z"
     },
     {
-      "id": 1765810760849,
+      "id": "1765810760849",
       "id_posto": "1",
       "id_turno": "1765810138424",
       "itens": [
@@ -1346,7 +1361,7 @@
       "data": "2025-12-15T14:59:20.849Z"
     },
     {
-      "id": 1765814125402,
+      "id": "1765814125402",
       "id_posto": "2",
       "id_turno": "1765814121965",
       "itens": [
@@ -1366,7 +1381,7 @@
       "cancelada": false
     },
     {
-      "id": 1765814308516,
+      "id": "1765814308516",
       "id_posto": "2",
       "id_turno": "1765814304943",
       "itens": [
@@ -1386,7 +1401,7 @@
       "cancelada": false
     },
     {
-      "id": 1765814513308,
+      "id": "1765814513308",
       "id_posto": "2",
       "id_turno": "1765814510632",
       "itens": [
@@ -1406,7 +1421,7 @@
       "cancelada": false
     },
     {
-      "id": 1765814673077,
+      "id": "1765814673077",
       "id_posto": "2",
       "id_turno": "1765814668341",
       "itens": [
@@ -1426,7 +1441,7 @@
       "cancelada": false
     },
     {
-      "id": 1765814721082,
+      "id": "1765814721082",
       "id_posto": "1",
       "id_turno": "1765814704724",
       "itens": [
@@ -1446,7 +1461,7 @@
       "cancelada": false
     },
     {
-      "id": 1765814818359,
+      "id": "1765814818359",
       "id_posto": "2",
       "id_turno": "1765814816144",
       "itens": [
@@ -1466,7 +1481,7 @@
       "cancelada": false
     },
     {
-      "id": 1765814884843,
+      "id": "1765814884843",
       "id_posto": "1",
       "id_turno": "1765814882171",
       "itens": [
@@ -1486,7 +1501,7 @@
       "cancelada": false
     },
     {
-      "id": 1765814990320,
+      "id": "1765814990320",
       "id_posto": "2",
       "id_turno": "1765814981088",
       "itens": [
@@ -1508,7 +1523,7 @@
   ],
   "fechamentoTurnos": [
     {
-      "id": 1765734885841,
+      "id": "1765734885841",
       "id_posto": "1",
       "id_turno": "1765734855679",
       "operadorNome": "Pedro Oliveira",
@@ -1526,7 +1541,7 @@
       "totalDinheiro": 0
     },
     {
-      "id": 1765734887174,
+      "id": "1765734887174",
       "id_posto": "2",
       "id_turno": "1765734856870",
       "operadorNome": "Felipe Torres",
@@ -1544,7 +1559,7 @@
       "totalDinheiro": 3.89
     },
     {
-      "id": 1765736815043,
+      "id": "1765736815043",
       "id_posto": "1",
       "id_turno": "1765736768230",
       "operadorNome": "Pedro Oliveira",
@@ -1562,7 +1577,7 @@
       "totalDinheiro": 238.8
     },
     {
-      "id": 1765736818783,
+      "id": "1765736818783",
       "id_posto": "2",
       "id_turno": "1765736769545",
       "operadorNome": "Felipe Torres",

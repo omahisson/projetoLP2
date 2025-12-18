@@ -52,7 +52,7 @@ function Rotas({ toggleMenu }){
             <Route path='/pdv-aberto' element={<PdvAberto toggleMenu={toggleMenu} />} />
             <Route path='/postos' element={<Postos />} />
             
-            <Route path='/' element={<Dashboard toggleMenu={toggleMenu}/>} />
+            <Route path='/' element={<Postos />} />
         </Routes>
         </BrowserRouter>
     )
