@@ -408,3 +408,13 @@ ul {
       opacity: 1;
   }
 }
+
+.nav-item-active {
+  background-color: oklch(.95 .0058 264.53) !important;
+  border-radius: 8px;
+}
+
+.nav-link-active {
+  font-weight: 500 !important;
+  color: #0f172a !important;
+}

@@ -51,7 +51,7 @@ class App extends React.Component {
     
     return (
       <div className='d-flex'>
-        {mostrarNavbar && <Navbar menuVisivel={menuVisivel} />}
+        {mostrarNavbar && <Navbar menuVisivel={menuVisivel} currentPath={currentPath} />}
         <div className={`conteudo-principal ${!menuVisivel && 'menu-escondido'} ${!mostrarNavbar && 'menu-escondido'}`}>
           <Rotas toggleMenu={this.toggleMenu} />
         </div>
