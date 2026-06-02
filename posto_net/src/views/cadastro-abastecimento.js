@@ -126,6 +126,31 @@ function CadastroAbastecimento({ toggleMenu }) {
         }
     }, [tipoCombustivel, tiposCombustivelCompletos]);
 
+    async function atualizarUltimoAbastecimentoTipoCombustivel(postoId) {
+        if (!postoId || !tipoCombustivel || !dataEntrega) {
+            return;
+        }
+
+        try {
+            const response = await axios.get(
+                `${BASE_URL}/TiposCombustivel?id_posto=${postoId}&nome=${encodeURIComponent(tipoCombustivel)}`
+            );
+            const tipos = Array.isArray(response.data) ? response.data : [];
+
+            if (tipos.length === 0) {
+                return;
+            }
+
+            const tipo = tipos[0];
+            await axios.put(`${BASE_URL}/TiposCombustivel/${tipo.id}`, {
+                ...tipo,
+                ultimoAbastecimento: dataEntrega
+            });
+        } catch (error) {
+            console.error('Erro ao atualizar último abastecimento do tipo de combustível:', error);
+        }
+    }
+
     async function salvar(e) {
         e.preventDefault();
         const postoId = localStorage.getItem('postoSelecionadoId');
@@ -150,9 +175,11 @@ function CadastroAbastecimento({ toggleMenu }) {
         try {
             if (idParam) {
                 await axios.put(`${baseURL}/${idParam}`, payload);
+                await atualizarUltimoAbastecimentoTipoCombustivel(postoId);
                 alert('Abastecimento alterado com sucesso');
             } else {
                 await axios.post(baseURL, payload);
+                await atualizarUltimoAbastecimentoTipoCombustivel(postoId);
                 alert('Abastecimento registrado com sucesso');
             }
 

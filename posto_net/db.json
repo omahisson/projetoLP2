@@ -1,1699 +1,280 @@
 {
   "administradores": [
     {
-      "id": "1",
-      "id_posto": "1",
-      "nome": "João Silva2",
+      "id": "azR-a8TYNGo",
+      "id_posto": "o-zvLQ9Lx6s",
+      "nome": "NomeAdministrador",
       "cpf": "12345678901",
-      "email": "joao1@exemplo.com",
-      "celular": "33988776655",
-      "senha": "aaa",
-      "gerenciarTodosPostos": false,
-      "gerenciarGerentes": true,
-      "gerenciarFuncionarios": true,
-      "gerenciarProdutos": true,
-      "postosPermitidos": [
-        "Posto Shell Centro1"
-      ],
-      "labels": [
-        "Posto Shell Centro1",
-        "gerentes",
-        "funcionarios",
-        "produtos"
-      ]
-    },
-    {
-      "id": "2",
-      "id_posto": "2",
-      "nome": "Maria Santos",
-      "cpf": "23056098765",
-      "email": "maria@exemplo.com",
-      "celular": "33940028922",
-      "senha": "abc",
+      "email": "email@adm.com",
+      "celular": "11911111111",
+      "senha": "Senha",
       "gerenciarTodosPostos": true,
-      "gerenciarGerentes": false,
-      "gerenciarFuncionarios": true,
-      "gerenciarProdutos": false,
-      "postosPermitidos": [],
-      "labels": [
-        "Postos",
-        "funcionarios"
-      ]
-    },
-    {
-      "id": "3",
-      "id_posto": "1",
-      "nome": "Jo1",
-      "cpf": "11122233344",
-      "email": "1@g.com1",
-      "celular": "33988776655",
-      "senha": "1a",
-      "gerenciarTodosPostos": true,
-      "gerenciarGerentes": false,
-      "gerenciarFuncionarios": true,
-      "gerenciarProdutos": false,
-      "postosPermitidos": [],
-      "labels": [
-        "Postos",
-        "funcionarios"
-      ]
-    },
-    {
-      "id": "4",
-      "id_posto": "2",
-      "nome": "Jo2",
-      "cpf": "12345678900",
-      "email": "1@g.com1",
-      "celular": "33988776655",
-      "senha": "1",
-      "gerenciarTodosPostos": false,
       "gerenciarGerentes": true,
       "gerenciarFuncionarios": false,
-      "gerenciarProdutos": true,
-      "postosPermitidos": [
-        "Posto Ipiranga Vila1"
-      ],
+      "gerenciarProdutos": false,
+      "postosPermitidos": [],
       "labels": [
-        "Posto Ipiranga Vila1",
-        "gerentes",
-        "produtos"
+        "Postos",
+        "gerentes"
       ]
     }
   ],
   "gerentes": [
     {
-      "id": "1",
-      "id_posto": "1",
-      "nome": "Ana Costa",
-      "email": "ana@exemplo.com",
-      "telefone": "(11) 99999-9999",
-      "senha": "aaa",
-      "labels": [
-        "Posto Shell Centro1"
-      ]
-    },
-    {
-      "id": "2",
-      "id_posto": "2",
-      "nome": "Carlos Mendes",
-      "email": "carlos@exemplo.com",
-      "telefone": "(11) 88888-8888",
-      "senha": "bbb",
-      "labels": [
-        "Posto Ipiranga Vila1"
-      ]
-    },
-    {
-      "id": "3",
-      "id_posto": "1",
-      "nome": "jo3",
-      "email": "1@g.com1",
-      "telefone": "(11) 99999-9999",
-      "senha": "1",
-      "labels": [
-        "Posto Shell Centro1"
-      ]
+      "id": "gPgLgvrV3eg",
+      "id_posto": "o-zvLQ9Lx6s",
+      "nome": "NomeGerente",
+      "email": "email@gerente.com",
+      "telefone": "11911111111",
+      "senha": "Senha",
+      "labels": []
     }
   ],
   "funcionarios": [
     {
-      "id": "1",
-      "id_posto": "1",
-      "nome": "Pedro Oliveira",
+      "id": "iM1WQWI-d7U",
+      "id_posto": "o-zvLQ9Lx6s",
+      "nome": "NomeFuncionario Sobrenome",
       "cpf": "12345678900",
-      "postoDeTrabalho": "Posto Shell Centro1",
-      "labels": [
-        "Mecânico"
-      ],
-      "value": "1",
-      "text": "Pedro Oliveira"
-    },
-    {
-      "id": "2",
-      "id_posto": "1",
-      "nome": "Juliana Souza",
-      "cpf": "98765432100",
-      "postoDeTrabalho": "Posto Shell Centro1",
+      "postoDeTrabalho": "PostoFantasia",
       "labels": [
         "Caixa"
       ],
-      "value": "2",
-      "text": "Juliana Souza"
-    },
-    {
-      "id": "3",
-      "id_posto": "2",
-      "nome": "Felipe Torres",
-      "cpf": "11122233344",
-      "postoDeTrabalho": "Posto Ipiranga Vila1",
-      "labels": [
-        "Frentista"
-      ],
-      "value": "3",
-      "text": "Felipe Torres"
-    },
-    {
-      "id": "4",
-      "id_posto": "2",
-      "nome": "Jose Jose",
-      "cpf": "11111133344",
-      "postoDeTrabalho": "Posto Ipiranga Vila1",
-      "labels": [
-        "Vendedor"
-      ],
-      "value": 1764031377266,
-      "text": "Jose Jose"
-    },
-    {
-      "id": "5",
-      "id_posto": "2",
-      "nome": "jo4 4",
-      "cpf": "111111111111",
-      "postoDeTrabalho": "Posto Shell Centro1",
-      "labels": [
-        "Frentista"
-      ],
-      "value": 1765736053661,
-      "text": "jo4 4"
+      "value": 1780402600185,
+      "text": "NomeFuncionario Sobrenome"
     }
   ],
   "servicos": [
     {
-      "id": "1",
-      "id_posto": "1",
-      "nome": "Lavagem Completa",
-      "sku": "SRV001",
-      "valor": 45.9,
+      "id": "ZP8J1oBM_Cg",
+      "id_posto": "o-zvLQ9Lx6s",
+      "nome": "Lavagem1",
+      "preco": 41,
+      "duracao": 31,
+      "descricao": "Lavagem por dentro e por fora",
       "labels": [
-        "Lavagem",
-        "Popular"
-      ]
-    },
-    {
-      "id": "2",
-      "id_posto": "1",
-      "nome": "Troca de Óleo",
-      "sku": "SRV002",
-      "valor": 89.9,
-      "labels": [
-        "Manutenção",
-        "Essencial"
-      ]
-    },
-    {
-      "id": "3",
-      "id_posto": "2",
-      "nome": "Lavagem Express",
-      "sku": "SRV003",
-      "valor": 35.9,
-      "labels": [
-        "Lavagem",
-        "Rápido"
-      ]
-    },
-    {
-      "id": "4",
-      "id_posto": "2",
-      "nome": "Alinhamento e Balanceamento",
-      "sku": "SRV004",
-      "valor": 120,
-      "labels": [
-        "Manutenção",
-        "Completo"
-      ]
+        "lavagemTag1"
+      ],
+      "value": "ZP8J1oBM_Cg",
+      "text": "Lavagem1"
     }
   ],
   "produtos": [
     {
-      "id": "1",
-      "id_posto": "1",
-      "nome": "Óleo Motor 5W30",
-      "preco": 35.9,
-      "estoque": 50,
+      "id": "q_uvzK4WDRg",
+      "id_posto": "o-zvLQ9Lx6s",
+      "nome": "NomeProduto1",
+      "preco": 40,
+      "estoque": 100,
+      "sku": "123AS",
+      "dataValidade": "2027-02-02",
       "labels": [
-        "Automotivo",
-        "Sintético"
-      ]
-    },
-    {
-      "id": "2",
-      "id_posto": "1",
-      "nome": "Refrigerante Coca-Cola 350ml",
-      "preco": 4.5,
-      "estoque": 120,
-      "labels": [
-        "Bebidas",
-        "Refrigerante"
-      ]
-    },
-    {
-      "id": "3",
-      "id_posto": "2",
-      "nome": "Salgadinho Doritos",
-      "preco": 8.9,
-      "estoque": 5,
-      "labels": [
-        "Snacks",
-        "Salgadinho"
-      ]
-    },
-    {
-      "id": "4",
-      "id_posto": "2",
-      "nome": "Água Mineral 500ml",
-      "preco": 2.5,
-      "estoque": 200,
-      "labels": [
-        "Bebidas",
-        "Água"
-      ]
+        "nomeTag"
+      ],
+      "value": "q_uvzK4WDRg",
+      "text": "NomeProduto1"
     }
   ],
-  "DadosFinanceiros": [
-    {
-      "id_posto": "1",
-      "faturamentoTotal": "R$ 125.430,50",
-      "ticketMedio": "R$ 87,25",
-      "totalVendas": "1438",
-      "mainPayment": "Cartão de Crédito (45%)",
-      "id": "966d"
-    },
-    {
-      "id_posto": "2",
-      "faturamentoTotal": "R$ 98.320,75",
-      "ticketMedio": "R$ 72,15",
-      "totalVendas": "1362",
-      "mainPayment": "Dinheiro (52%)",
-      "id": "f1e4"
-    }
-  ],
-  "RankingRede": [
-    {
-      "id": "1",
-      "id_posto": "1",
-      "name": "Posto Shell Centro",
-      "revenue": "R$ 125.430,50"
-    },
-    {
-      "id": "2",
-      "id_posto": "2",
-      "name": "Posto Ipiranga Vila",
-      "revenue": "R$ 98.320,75"
-    }
-  ],
-  "MaisVendidos": [
-    {
-      "id_posto": "1",
-      "name": "Gasolina Comum",
-      "quantity": "15.420",
-      "revenue": "R$ 89.250,30",
-      "id": "83d7"
-    },
-    {
-      "id_posto": "1",
-      "name": "Óleo Motor 5W30",
-      "quantity": "320",
-      "revenue": "R$ 11.488,00",
-      "id": "0f81"
-    },
-    {
-      "id_posto": "2",
-      "name": "Etanol",
-      "quantity": "8.760",
-      "revenue": "R$ 34.056,40",
-      "id": "fe12"
-    },
-    {
-      "id_posto": "2",
-      "name": "Diesel S-10",
-      "quantity": "5.200",
-      "revenue": "R$ 22.100,00",
-      "id": "698c"
-    }
-  ],
-  "RelatorioPreco": [
-    {
-      "id_posto": "1",
-      "product": "Gasolina Comum",
-      "responsible": "João Silva",
-      "prevPrice": "R$ 5,65",
-      "newPrice": "R$ 5,39",
-      "date": "19/08/2024",
-      "effective": "20/08/2024",
-      "id": "dd5c"
-    },
-    {
-      "id_posto": "2",
-      "product": "Etanol",
-      "responsible": "Carlos Mendes",
-      "prevPrice": "R$ 4,25",
-      "newPrice": "R$ 3,89",
-      "date": "18/08/2024",
-      "effective": "19/08/2024",
-      "id": "2059"
-    }
-  ],
-  "RelatorioEstoque": [
-    {
-      "id_posto": "1",
-      "item": "Gasolina Aditivada",
-      "quantity": 855,
-      "minStock": 1000,
-      "status": "Em Alerta",
-      "expiry": "14/12/2024",
-      "id": "1871"
-    },
-    {
-      "id_posto": "1",
-      "item": "Óleo Lubrificante 1L",
-      "quantity": 12,
-      "minStock": 20,
-      "status": "Crítico",
-      "expiry": "25/10/2024",
-      "id": "3583"
-    },
-    {
-      "id_posto": "2",
-      "item": "Diesel S-10",
-      "quantity": 7500,
-      "minStock": 5000,
-      "status": "Normal",
-      "expiry": "15/12/2024",
-      "id": "0912"
-    },
-    {
-      "id_posto": "2",
-      "item": "Etanol",
-      "quantity": 4200,
-      "minStock": 3000,
-      "status": "Normal",
-      "expiry": "20/12/2024",
-      "id": "0913"
-    }
-  ],
-  "RelatorioOperacional": [
-    {
-      "id_posto": "1",
-      "openChecklists": {
-        "value": "8/10",
-        "label": "Checklists Abertos"
-      },
-      "activeShifts": {
-        "value": 3,
-        "label": "Turnos Ativos"
-      },
-      "formsToday": {
-        "value": 12,
-        "label": "Formulários Hoje"
-      },
-      "id": "4a88"
-    },
-    {
-      "id_posto": "2",
-      "openChecklists": {
-        "value": "6/10",
-        "label": "Checklists Abertos"
-      },
-      "activeShifts": {
-        "value": 2,
-        "label": "Turnos Ativos"
-      },
-      "formsToday": {
-        "value": 8,
-        "label": "Formulários Hoje"
-      },
-      "id": "47c7"
-    }
-  ],
+  "DadosFinanceiros": [],
+  "RankingRede": [],
+  "MaisVendidos": [],
+  "RelatorioPreco": [],
+  "RelatorioEstoque": [],
+  "RelatorioOperacional": [],
   "TiposCombustivel": [
     {
-      "id": "2",
-      "id_posto": "1",
-      "nome": "Gasolina Aditivada1",
-      "preco": 10,
-      "fornecedor": "Shell",
-      "ultimoAbastecimento": "2024-01-14",
-      "validade": "2024-03-14",
-      "estoque": "8.500L",
-      "status": "Ativo"
-    },
-    {
-      "id": "3",
-      "id_posto": "1",
-      "nome": "Gasolina Comum",
-      "preco": "R$ 5,49",
-      "fornecedor": "Petrobrás",
-      "ultimoAbastecimento": "2024-01-16",
-      "validade": "2024-02-16",
-      "estoque": "5.000L",
-      "status": "Ativo"
-    },
-    {
-      "id": "4",
-      "id_posto": "2",
-      "nome": "Etanol",
-      "preco": "R$ 3,89",
-      "fornecedor": "Raízen",
-      "ultimoAbastecimento": "2024-01-13",
-      "validade": "2024-06-13",
-      "estoque": "12.000L",
-      "status": "Ativo"
-    },
-    {
-      "id": "5",
-      "id_posto": "2",
-      "nome": "Diesel S-10",
-      "preco": "R$ 4,25",
-      "fornecedor": "Petrobrás",
-      "ultimoAbastecimento": "2024-01-12",
-      "validade": "-",
-      "estoque": "8.000L",
-      "status": "Ativo"
-    },
-    {
-      "id": "880e",
-      "id_posto": "1",
-      "nome": "Jo11",
-      "preco": "1",
+      "id_posto": "o-zvLQ9Lx6s",
+      "nome": "NomeCombustivel",
+      "preco": 3,
       "unidade": "Litro",
-      "fornecedor": "Joao",
-      "estoque": "10",
-      "validade": "2011-10-10",
-      "status": "Ativo"
+      "fornecedor": "Petrobras",
+      "estoque": "1000",
+      "validade": "2027-01-31",
+      "status": "Ativo",
+      "id": "adK3FfRCpMs",
+      "ultimoAbastecimento": "2026-06-03"
     }
   ],
   "DadosBomba": [
     {
-      "id": "1",
-      "id_posto": "1",
-      "nome": "Bomba 01",
-      "status": "Ativa",
+      "id_posto": "o-zvLQ9Lx6s",
+      "nome": "BombaTeste",
       "combustiveis": [
-        "Gasolina Comum",
-        "Gasolina Aditivada"
-      ]
-    },
-    {
-      "id": "2",
-      "id_posto": "1",
-      "nome": "Bomba 02",
+        "NomeCombustivel"
+      ],
       "status": "Ativa",
-      "combustiveis": [
-        "Gasolina Comum"
-      ]
-    },
-    {
-      "id": "3",
-      "id_posto": "2",
-      "nome": "Bomba 01",
-      "status": "Ativa",
-      "combustiveis": [
-        "Etanol",
-        "Diesel S-10"
-      ]
-    },
-    {
-      "id": "4",
-      "id_posto": "2",
-      "nome": "Bomba 02",
-      "status": "Ativa",
-      "combustiveis": [
-        "Etanol"
-      ]
+      "id": "F_LtVrbqtwA"
     }
   ],
   "postos": [
     {
-      "id": "1",
-      "nome": "Posto Shell Centro1"
-    },
-    {
-      "id": "2",
-      "nome": "Posto Ipiranga Vila1"
+      "razaoSocial": "PostoRazao",
+      "cnpj": "11111111111111",
+      "nomeFantasia": "PostoFantasia",
+      "rua": "Rua X",
+      "numero": "123",
+      "complemento": "PostoComplemento",
+      "bairro": "Centro",
+      "cidade": "Juiz de Fora",
+      "estado": "JF",
+      "cep": "36085680",
+      "telefone": "33998122236",
+      "email": "mahisson@icloud.com",
+      "horarioFuncionamento": "PostoHorario",
+      "id": "o-zvLQ9Lx6s"
     }
   ],
   "abastecimentos": [
     {
-      "id": "8b9d",
-      "id_posto": "1",
-      "tipoCombustivel": "Gasolina Aditivada",
-      "fornecedor": "petrobras",
-      "quantidade": 10,
-      "unidade": "m³",
-      "numeroNota": "6",
-      "dataEntrega": "2002-11-25",
-      "dataValidade": "2002-11-25",
-      "precoUnitario": "10",
-      "valorTotal": "R$ 100,00"
+      "id_posto": "o-zvLQ9Lx6s",
+      "tipoCombustivel": "NomeCombustivel",
+      "fornecedor": "Petrobras",
+      "quantidade": 10000,
+      "unidade": "Litro",
+      "numeroNota": "NF123",
+      "dataEntrega": "2027-06-03",
+      "dataValidade": "2027-02-01",
+      "precoUnitario": "4",
+      "valorTotal": "R$ 40000,00",
+      "id": "Aj2yG88tdAU"
     },
     {
-      "id": "8f9b",
-      "id_posto": "2",
-      "tipoCombustivel": "Etanol",
-      "fornecedor": "petrobras",
+      "id_posto": "o-zvLQ9Lx6s",
+      "tipoCombustivel": "NomeCombustivel",
+      "fornecedor": "Petrobras",
       "quantidade": 1000,
       "unidade": "Litro",
-      "numeroNota": "6a",
-      "dataEntrega": "2025-12-01",
-      "dataValidade": "2026-01-01",
-      "precoUnitario": "1,00",
-      "valorTotal": "R$ 1000,00"
+      "numeroNota": "NF1234",
+      "dataEntrega": "2026-06-02",
+      "dataValidade": "2027-06-02",
+      "precoUnitario": "4",
+      "valorTotal": "R$ 4000,00",
+      "id": "BRjRpxYS5DE"
     },
     {
-      "id": "0532",
-      "id_posto": "1",
-      "tipoCombustivel": "Gasolina Aditivada",
-      "fornecedor": "jo5",
-      "quantidade": 10,
+      "id_posto": "o-zvLQ9Lx6s",
+      "tipoCombustivel": "NomeCombustivel",
+      "fornecedor": "Petrobras",
+      "quantidade": 1000,
       "unidade": "Litro",
-      "numeroNota": "6",
-      "dataEntrega": "2025-12-13",
-      "dataValidade": "2025-12-12",
-      "precoUnitario": "1",
-      "valorTotal": "R$ 10,00"
+      "numeroNota": "NF12345",
+      "dataEntrega": "2026-06-03",
+      "dataValidade": "2028-03-03",
+      "precoUnitario": "4",
+      "valorTotal": "R$ 4000,00",
+      "id": "lSCgnq63k8M"
     }
   ],
   "HistoricoCombustivel": [
     {
-      "id": "eb28",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada",
-      "precoAnterior": "R$ 5,85",
-      "novoPreco": "1,01",
-      "dataVigencia": "2025-12-12",
-      "responsavel": "Allan",
-      "motivo": "Teste1",
-      "dataAlteracao": "2025-12-01"
+      "id_posto": "o-zvLQ9Lx6s",
+      "tipoCombustivelId": "adK3FfRCpMs",
+      "tipoCombustivel": "NomeCombustivel",
+      "precoAnterior": 5,
+      "novoPreco": 6,
+      "dataVigencia": "2026-09-03",
+      "responsavel": "NomeFuncionario Sobrenome",
+      "motivo": "Aumento do fornecedor",
+      "dataAlteracao": "2026-06-02",
+      "id": "xwe-RSaCejg"
     },
     {
-      "id": "6b5a",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.95,
-      "novoPreco": 3.89,
-      "dataVigencia": "2026-01-01",
-      "responsavel": "Carlos",
-      "motivo": "Ajuste de preço",
-      "dataAlteracao": "2025-12-01"
-    },
-    {
-      "id": "72dc",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada",
-      "precoAnterior": 10,
-      "novoPreco": 10,
-      "dataVigencia": "2025-12-14",
-      "responsavel": "Pedro Oliveira",
-      "motivo": "jo10",
-      "dataAlteracao": "2025-12-14"
-    },
-    {
-      "id": "f325",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 10,
-      "novoPreco": 10,
-      "dataVigencia": "2025-12-14",
-      "responsavel": "Pedro Oliveira",
-      "motivo": "Teste",
-      "dataAlteracao": "2025-12-14"
-    },
-    {
-      "id": "h001",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.2,
-      "novoPreco": 5.25,
-      "dataVigencia": "2024-10-05",
-      "responsavel": "Maria Silva",
-      "motivo": "Ajuste de mercado",
-      "dataAlteracao": "2024-10-05"
-    },
-    {
-      "id": "h002",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.25,
-      "novoPreco": 5.3,
-      "dataVigencia": "2024-10-15",
-      "responsavel": "João Santos",
-      "motivo": "Aumento de custo",
-      "dataAlteracao": "2024-10-15"
-    },
-    {
-      "id": "h003",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.3,
-      "novoPreco": 5.35,
-      "dataVigencia": "2024-10-25",
-      "responsavel": "Pedro Oliveira",
-      "motivo": "Reajuste mensal",
-      "dataAlteracao": "2024-10-25"
-    },
-    {
-      "id": "h004",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.35,
-      "novoPreco": 5.4,
-      "dataVigencia": "2024-11-05",
-      "responsavel": "Maria Silva",
-      "motivo": "Ajuste de preço",
-      "dataAlteracao": "2024-11-05"
-    },
-    {
-      "id": "h005",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.4,
-      "novoPreco": 5.38,
-      "dataVigencia": "2024-11-12",
-      "responsavel": "João Santos",
-      "motivo": "Promoção",
-      "dataAlteracao": "2024-11-12"
-    },
-    {
-      "id": "h006",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.38,
-      "novoPreco": 5.42,
-      "dataVigencia": "2024-11-20",
-      "responsavel": "Pedro Oliveira",
-      "motivo": "Ajuste de mercado",
-      "dataAlteracao": "2024-11-20"
-    },
-    {
-      "id": "h007",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.42,
-      "novoPreco": 5.45,
-      "dataVigencia": "2024-11-28",
-      "responsavel": "Maria Silva",
-      "motivo": "Reajuste",
-      "dataAlteracao": "2024-11-28"
-    },
-    {
-      "id": "h008",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.45,
-      "novoPreco": 5.49,
-      "dataVigencia": "2024-12-05",
-      "responsavel": "João Santos",
-      "motivo": "Aumento de custo",
-      "dataAlteracao": "2024-12-05"
-    },
-    {
-      "id": "h009",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.49,
-      "novoPreco": 5.47,
-      "dataVigencia": "2024-12-10",
-      "responsavel": "Pedro Oliveira",
-      "motivo": "Ajuste",
-      "dataAlteracao": "2024-12-10"
-    },
-    {
-      "id": "h010",
-      "id_posto": "1",
-      "tipoCombustivelId": "3",
-      "tipoCombustivel": "Gasolina Comum",
-      "precoAnterior": 5.47,
-      "novoPreco": 5.5,
-      "dataVigencia": "2024-12-15",
-      "responsavel": "Maria Silva",
-      "motivo": "Reajuste mensal",
-      "dataAlteracao": "2024-12-15"
-    },
-    {
-      "id": "h011",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 9.5,
-      "novoPreco": 9.75,
-      "dataVigencia": "2024-10-08",
-      "responsavel": "Carlos Mendes",
-      "motivo": "Ajuste de preço",
-      "dataAlteracao": "2024-10-08"
-    },
-    {
-      "id": "h012",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 9.75,
-      "novoPreco": 9.8,
-      "dataVigencia": "2024-10-18",
-      "responsavel": "Ana Costa",
-      "motivo": "Aumento de custo",
-      "dataAlteracao": "2024-10-18"
-    },
-    {
-      "id": "h013",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 9.8,
-      "novoPreco": 9.85,
-      "dataVigencia": "2024-10-28",
-      "responsavel": "Carlos Mendes",
-      "motivo": "Reajuste",
-      "dataAlteracao": "2024-10-28"
-    },
-    {
-      "id": "h014",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 9.85,
-      "novoPreco": 9.9,
-      "dataVigencia": "2024-11-08",
-      "responsavel": "Ana Costa",
-      "motivo": "Ajuste de mercado",
-      "dataAlteracao": "2024-11-08"
-    },
-    {
-      "id": "h015",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 9.9,
-      "novoPreco": 9.88,
-      "dataVigencia": "2024-11-15",
-      "responsavel": "Carlos Mendes",
-      "motivo": "Promoção",
-      "dataAlteracao": "2024-11-15"
-    },
-    {
-      "id": "h016",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 9.88,
-      "novoPreco": 9.95,
-      "dataVigencia": "2024-11-22",
-      "responsavel": "Ana Costa",
-      "motivo": "Reajuste",
-      "dataAlteracao": "2024-11-22"
-    },
-    {
-      "id": "h017",
-      "id_posto": "1",
-      "tipoCombustivelId": "2",
-      "tipoCombustivel": "Gasolina Aditivada1",
-      "precoAnterior": 9.95,
-      "novoPreco": 10,
-      "dataVigencia": "2024-12-01",
-      "responsavel": "Carlos Mendes",
-      "motivo": "Aumento de custo",
-      "dataAlteracao": "2024-12-01"
-    },
-    {
-      "id": "h018",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.75,
-      "novoPreco": 3.8,
-      "dataVigencia": "2024-10-10",
-      "responsavel": "Roberto Lima",
-      "motivo": "Ajuste de preço",
-      "dataAlteracao": "2024-10-10"
-    },
-    {
-      "id": "h019",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.8,
-      "novoPreco": 3.82,
-      "dataVigencia": "2024-10-20",
-      "responsavel": "Fernanda Souza",
-      "motivo": "Reajuste",
-      "dataAlteracao": "2024-10-20"
-    },
-    {
-      "id": "h020",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.82,
-      "novoPreco": 3.85,
-      "dataVigencia": "2024-10-30",
-      "responsavel": "Roberto Lima",
-      "motivo": "Aumento de custo",
-      "dataAlteracao": "2024-10-30"
-    },
-    {
-      "id": "h021",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.85,
-      "novoPreco": 3.87,
-      "dataVigencia": "2024-11-10",
-      "responsavel": "Fernanda Souza",
-      "motivo": "Ajuste de mercado",
-      "dataAlteracao": "2024-11-10"
-    },
-    {
-      "id": "h022",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.87,
-      "novoPreco": 3.85,
-      "dataVigencia": "2024-11-18",
-      "responsavel": "Roberto Lima",
-      "motivo": "Promoção",
-      "dataAlteracao": "2024-11-18"
-    },
-    {
-      "id": "h023",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.85,
-      "novoPreco": 3.89,
-      "dataVigencia": "2024-11-25",
-      "responsavel": "Fernanda Souza",
-      "motivo": "Reajuste mensal",
-      "dataAlteracao": "2024-11-25"
-    },
-    {
-      "id": "h024",
-      "id_posto": "2",
-      "tipoCombustivelId": "4",
-      "tipoCombustivel": "Etanol",
-      "precoAnterior": 3.89,
-      "novoPreco": 3.92,
-      "dataVigencia": "2024-12-08",
-      "responsavel": "Roberto Lima",
-      "motivo": "Ajuste de preço",
-      "dataAlteracao": "2024-12-08"
-    },
-    {
-      "id": "h025",
-      "id_posto": "2",
-      "tipoCombustivelId": "5",
-      "tipoCombustivel": "Diesel S-10",
-      "precoAnterior": 4.1,
-      "novoPreco": 4.15,
-      "dataVigencia": "2024-10-12",
-      "responsavel": "Paulo Rocha",
-      "motivo": "Ajuste de preço",
-      "dataAlteracao": "2024-10-12"
-    },
-    {
-      "id": "h026",
-      "id_posto": "2",
-      "tipoCombustivelId": "5",
-      "tipoCombustivel": "Diesel S-10",
-      "precoAnterior": 4.15,
-      "novoPreco": 4.2,
-      "dataVigencia": "2024-10-22",
-      "responsavel": "Juliana Alves",
-      "motivo": "Aumento de custo",
-      "dataAlteracao": "2024-10-22"
-    },
-    {
-      "id": "h027",
-      "id_posto": "2",
-      "tipoCombustivelId": "5",
-      "tipoCombustivel": "Diesel S-10",
-      "precoAnterior": 4.2,
-      "novoPreco": 4.22,
-      "dataVigencia": "2024-11-02",
-      "responsavel": "Paulo Rocha",
-      "motivo": "Reajuste",
-      "dataAlteracao": "2024-11-02"
-    },
-    {
-      "id": "h028",
-      "id_posto": "2",
-      "tipoCombustivelId": "5",
-      "tipoCombustivel": "Diesel S-10",
-      "precoAnterior": 4.22,
-      "novoPreco": 4.25,
-      "dataVigencia": "2024-11-14",
-      "responsavel": "Juliana Alves",
-      "motivo": "Ajuste de mercado",
-      "dataAlteracao": "2024-11-14"
-    },
-    {
-      "id": "h029",
-      "id_posto": "2",
-      "tipoCombustivelId": "5",
-      "tipoCombustivel": "Diesel S-10",
-      "precoAnterior": 4.25,
-      "novoPreco": 4.23,
-      "dataVigencia": "2024-11-28",
-      "responsavel": "Paulo Rocha",
-      "motivo": "Promoção",
-      "dataAlteracao": "2024-11-28"
-    },
-    {
-      "id": "h030",
-      "id_posto": "2",
-      "tipoCombustivelId": "5",
-      "tipoCombustivel": "Diesel S-10",
-      "precoAnterior": 4.23,
-      "novoPreco": 4.25,
-      "dataVigencia": "2024-12-12",
-      "responsavel": "Juliana Alves",
-      "motivo": "Reajuste mensal",
-      "dataAlteracao": "2024-12-12"
+      "id_posto": "o-zvLQ9Lx6s",
+      "tipoCombustivelId": "adK3FfRCpMs",
+      "tipoCombustivel": "NomeCombustivel",
+      "precoAnterior": 6,
+      "novoPreco": 3,
+      "dataVigencia": "2026-12-12",
+      "responsavel": "NomeFuncionario Sobrenome",
+      "motivo": "Ajuste de margem",
+      "dataAlteracao": "2026-06-02",
+      "id": "164E741BMyo"
     }
   ],
   "turnosAbertos": [
     {
-      "id": "1765734855679",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "vespertino",
-      "horaAbertura": "14/12/2025, 14:54:15",
-      "horaAberturaISO": "2025-12-14T17:54:15.679Z",
-      "valorInicialCaixa": 2,
-      "status": "fechado",
-      "horaFechamento": "2025-12-14T17:54:45.835Z"
-    },
-    {
-      "id": "1765734856870",
-      "id_posto": "2",
-      "operadorId": "3",
-      "operadorNome": "Felipe Torres",
+      "id": "YlGagHuPYCM",
+      "id_posto": "o-zvLQ9Lx6s",
+      "operadorId": "iM1WQWI-d7U",
+      "operadorNome": "NomeFuncionario Sobrenome",
       "turno": "matutino",
-      "horaAbertura": "14/12/2025, 14:54:16",
-      "horaAberturaISO": "2025-12-14T17:54:16.870Z",
-      "valorInicialCaixa": 1,
-      "status": "fechado",
-      "horaFechamento": "2025-12-14T17:54:47.169Z"
-    },
-    {
-      "id": "1765736768230",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "noturno",
-      "horaAbertura": "14/12/2025, 15:26:08",
-      "horaAberturaISO": "2025-12-14T18:26:08.230Z",
-      "valorInicialCaixa": 1,
-      "status": "fechado",
-      "horaFechamento": "2025-12-14T18:26:55.038Z"
-    },
-    {
-      "id": "1765736769545",
-      "id_posto": "2",
-      "operadorId": "3",
-      "operadorNome": "Felipe Torres",
-      "turno": "matutino",
-      "horaAbertura": "14/12/2025, 15:26:09",
-      "horaAberturaISO": "2025-12-14T18:26:09.545Z",
+      "horaAbertura": "02/06/2026, 09:21:43",
+      "horaAberturaISO": "2026-06-02T12:21:43.798Z",
       "valorInicialCaixa": 10,
       "status": "fechado",
-      "horaFechamento": "2025-12-14T18:26:58.778Z"
-    },
-    {
-      "id": "1765737445787",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "14/12/2025, 15:37:25",
-      "horaAberturaISO": "2025-12-14T18:37:25.787Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765738834177",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "14/12/2025, 16:00:34",
-      "horaAberturaISO": "2025-12-14T19:00:34.177Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765738880673",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "vespertino",
-      "horaAbertura": "14/12/2025, 16:01:20",
-      "horaAberturaISO": "2025-12-14T19:01:20.673Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765738983964",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "14/12/2025, 16:03:03",
-      "horaAberturaISO": "2025-12-14T19:03:03.963Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765739437146",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "14/12/2025, 16:10:37",
-      "horaAberturaISO": "2025-12-14T19:10:37.146Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765756893742",
-      "id_posto": "1",
-      "operadorId": "2",
-      "operadorNome": "Juliana Souza",
-      "turno": "matutino",
-      "horaAbertura": "14/12/2025, 21:01:33",
-      "horaAberturaISO": "2025-12-15T00:01:33.740Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765810138424",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "vespertino",
-      "horaAbertura": "15/12/2025, 11:48:58",
-      "horaAberturaISO": "2025-12-15T14:48:58.424Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814121965",
-      "id_posto": "2",
-      "operadorId": "3",
-      "operadorNome": "Felipe Torres",
-      "turno": "matutino",
-      "horaAbertura": "15/12/2025, 12:55:21",
-      "horaAberturaISO": "2025-12-15T15:55:21.964Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814304943",
-      "id_posto": "2",
-      "operadorId": "3",
-      "operadorNome": "Felipe Torres",
-      "turno": "matutino",
-      "horaAbertura": "15/12/2025, 12:58:24",
-      "horaAberturaISO": "2025-12-15T15:58:24.942Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814510632",
-      "id_posto": "2",
-      "operadorId": "3",
-      "operadorNome": "Felipe Torres",
-      "turno": "matutino",
-      "horaAbertura": "15/12/2025, 13:01:50",
-      "horaAberturaISO": "2025-12-15T16:01:50.631Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814668341",
-      "id_posto": "2",
-      "operadorId": "3",
-      "operadorNome": "Felipe Torres",
-      "turno": "matutino",
-      "horaAbertura": "15/12/2025, 13:04:28",
-      "horaAberturaISO": "2025-12-15T16:04:28.340Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814704724",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "15/12/2025, 13:05:04",
-      "horaAberturaISO": "2025-12-15T16:05:04.714Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814816144",
-      "id_posto": "2",
-      "operadorId": "4",
-      "operadorNome": "Jose Jose",
-      "turno": "matutino",
-      "horaAbertura": "15/12/2025, 13:06:56",
-      "horaAberturaISO": "2025-12-15T16:06:56.143Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814882171",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "vespertino",
-      "horaAbertura": "15/12/2025, 13:08:02",
-      "horaAberturaISO": "2025-12-15T16:08:02.170Z",
-      "valorInicialCaixa": 2,
-      "status": "aberto"
-    },
-    {
-      "id": "1765814981088",
-      "id_posto": "2",
-      "operadorId": "3",
-      "operadorNome": "Felipe Torres",
-      "turno": "vespertino",
-      "horaAbertura": "15/12/2025, 13:09:41",
-      "horaAberturaISO": "2025-12-15T16:09:41.088Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1766013193506",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "17/12/2025, 20:13:13",
-      "horaAberturaISO": "2025-12-17T23:13:13.500Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1766019160951",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "17/12/2025, 21:52:40",
-      "horaAberturaISO": "2025-12-18T00:52:40.947Z",
-      "valorInicialCaixa": 1,
-      "status": "aberto"
-    },
-    {
-      "id": "1766019985116",
-      "id_posto": "1",
-      "operadorId": "1",
-      "operadorNome": "Pedro Oliveira",
-      "turno": "matutino",
-      "horaAbertura": "17/12/2025, 22:06:25",
-      "horaAberturaISO": "2025-12-18T01:06:25.114Z",
-      "valorInicialCaixa": 10,
-      "status": "fechado",
-      "horaFechamento": "2025-12-18T01:07:58.339Z"
+      "horaFechamento": "2026-06-02T12:27:27.753Z"
     }
   ],
   "vendas": [
     {
-      "id": "1765734866876",
-      "id_posto": "1",
-      "id_turno": "1765734855679",
+      "id": "WQD08pKhlnY",
+      "id_posto": "o-zvLQ9Lx6s",
+      "id_turno": "YlGagHuPYCM",
       "itens": [
         {
-          "id": 1765734864361,
-          "produtoId": "2",
-          "titulo": "Gasolina Aditivada",
-          "quantidade": 1,
-          "precoUnitario": 5.79,
-          "valorTotal": 5.79,
-          "unidade": "L"
-        }
-      ],
-      "total": 5.79,
-      "formaPagamento": "cartao",
-      "data": "2025-12-14T17:54:26.876Z"
-    },
-    {
-      "id": "1765734867793",
-      "id_posto": "2",
-      "id_turno": "1765734856870",
-      "itens": [
-        {
-          "id": 1765734861188,
-          "produtoId": "3",
-          "titulo": "Etanol",
-          "quantidade": 1,
-          "precoUnitario": 3.89,
-          "valorTotal": 3.89,
-          "unidade": "L"
-        }
-      ],
-      "total": 3.89,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-14T17:54:27.793Z"
-    },
-    {
-      "id": "1765736786264",
-      "id_posto": "1",
-      "id_turno": "1765736768230",
-      "itens": [
-        {
-          "id": 1765736778207,
-          "produtoId": "1",
-          "titulo": "Gasolina Comum",
-          "quantidade": 9.107468123861565,
-          "precoUnitario": 5.49,
-          "valorTotal": 50,
-          "unidade": "L"
-        },
-        {
-          "id": 1765736781526,
-          "produtoId": "2",
-          "titulo": "Refrigerante Coca-Cola 350ml",
-          "quantidade": 2,
-          "precoUnitario": 4.5,
-          "valorTotal": 9,
-          "unidade": "unidade"
-        },
-        {
-          "id": 1765736784672,
-          "produtoId": "2",
-          "titulo": "Troca de Óleo",
-          "quantidade": 2,
-          "precoUnitario": 89.9,
-          "valorTotal": 179.8,
-          "unidade": "serviço"
-        }
-      ],
-      "total": 238.8,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-14T18:26:26.264Z"
-    },
-    {
-      "id": "1765736804400",
-      "id_posto": "2",
-      "id_turno": "1765736769545",
-      "itens": [
-        {
-          "id": 1765736793895,
-          "produtoId": "4",
-          "titulo": "Diesel S-10",
-          "quantidade": 2.3529411764705883,
-          "precoUnitario": 4.25,
-          "valorTotal": 10,
-          "unidade": "L"
-        },
-        {
-          "id": 1765736797051,
-          "produtoId": "4",
-          "titulo": "Água Mineral 500ml",
-          "quantidade": 2,
-          "precoUnitario": 2.5,
-          "valorTotal": 5,
-          "unidade": "unidade"
-        },
-        {
-          "id": 1765736799773,
-          "produtoId": "4",
-          "titulo": "Alinhamento e Balanceamento",
-          "quantidade": 2,
-          "precoUnitario": 120,
-          "valorTotal": 240,
-          "unidade": "serviço"
-        }
-      ],
-      "total": 255,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-14T18:26:44.400Z"
-    },
-    {
-      "id": "1765810144966",
-      "id_posto": "1",
-      "id_turno": "1765810138424",
-      "itens": [
-        {
-          "id": 1765810141865,
-          "produtoId": "2",
-          "titulo": "Troca de Óleo",
-          "quantidade": 1,
-          "precoUnitario": 89.9,
-          "valorTotal": 89.9,
-          "unidade": "serviço"
-        }
-      ],
-      "total": 89.9,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T14:49:04.966Z"
-    },
-    {
-      "id": "1765810760849",
-      "id_posto": "1",
-      "id_turno": "1765810138424",
-      "itens": [
-        {
-          "id": 1765810758022,
-          "produtoId": "2",
-          "titulo": "Refrigerante Coca-Cola 350ml",
-          "quantidade": 1,
-          "precoUnitario": 4.5,
-          "valorTotal": 4.5,
-          "unidade": "unidade"
-        }
-      ],
-      "total": 4.5,
-      "formaPagamento": "cartao",
-      "data": "2025-12-15T14:59:20.849Z"
-    },
-    {
-      "id": "1765814125402",
-      "id_posto": "2",
-      "id_turno": "1765814121965",
-      "itens": [
-        {
-          "id": 1765814124012,
-          "produtoId": "5",
-          "titulo": "Diesel S-10",
-          "quantidade": 1,
-          "precoUnitario": 4.25,
-          "valorTotal": 4.25,
-          "unidade": "L"
-        }
-      ],
-      "total": 4.25,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T15:55:25.402Z",
-      "cancelada": false
-    },
-    {
-      "id": "1765814308516",
-      "id_posto": "2",
-      "id_turno": "1765814304943",
-      "itens": [
-        {
-          "id": 1765814307409,
-          "produtoId": "5",
-          "titulo": "Diesel S-10",
-          "quantidade": 1,
-          "precoUnitario": 4.25,
-          "valorTotal": 4.25,
-          "unidade": "L"
-        }
-      ],
-      "total": 4.25,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T15:58:28.516Z",
-      "cancelada": false
-    },
-    {
-      "id": "1765814513308",
-      "id_posto": "2",
-      "id_turno": "1765814510632",
-      "itens": [
-        {
-          "id": 1765814512387,
-          "produtoId": "4",
-          "titulo": "Etanol",
-          "quantidade": 1,
-          "precoUnitario": 3.89,
-          "valorTotal": 3.89,
-          "unidade": "L"
-        }
-      ],
-      "total": 3.89,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T16:01:53.308Z",
-      "cancelada": false
-    },
-    {
-      "id": "1765814673077",
-      "id_posto": "2",
-      "id_turno": "1765814668341",
-      "itens": [
-        {
-          "id": 1765814670582,
-          "produtoId": "4",
-          "titulo": "Etanol",
-          "quantidade": 1.1,
-          "precoUnitario": 3.89,
-          "valorTotal": 4.279000000000001,
-          "unidade": "L"
-        }
-      ],
-      "total": 4.279000000000001,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T16:04:33.077Z",
-      "cancelada": false
-    },
-    {
-      "id": "1765814721082",
-      "id_posto": "1",
-      "id_turno": "1765814704724",
-      "itens": [
-        {
-          "id": 1765814708296,
-          "produtoId": "2",
-          "titulo": "Gasolina Aditivada1",
-          "quantidade": 1,
-          "precoUnitario": 10,
-          "valorTotal": 10,
-          "unidade": "L"
-        }
-      ],
-      "total": 10,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T16:05:21.082Z",
-      "cancelada": false
-    },
-    {
-      "id": "1765814818359",
-      "id_posto": "2",
-      "id_turno": "1765814816144",
-      "itens": [
-        {
-          "id": 1765814817502,
-          "produtoId": "5",
-          "titulo": "Diesel S-10",
-          "quantidade": 1,
-          "precoUnitario": 4.25,
-          "valorTotal": 4.25,
-          "unidade": "L"
-        }
-      ],
-      "total": 4.25,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T16:06:58.359Z",
-      "cancelada": false
-    },
-    {
-      "id": "1765814884843",
-      "id_posto": "1",
-      "id_turno": "1765814882171",
-      "itens": [
-        {
-          "id": 1765814884125,
-          "produtoId": "3",
-          "titulo": "Gasolina Comum",
-          "quantidade": 1,
-          "precoUnitario": 5.49,
-          "valorTotal": 5.49,
-          "unidade": "L"
-        }
-      ],
-      "total": 5.49,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T16:08:04.843Z",
-      "cancelada": false
-    },
-    {
-      "id": "1765814990320",
-      "id_posto": "2",
-      "id_turno": "1765814981088",
-      "itens": [
-        {
-          "id": 1765814982430,
-          "produtoId": "4",
-          "titulo": "Etanol",
-          "quantidade": 1,
-          "precoUnitario": 3.89,
-          "valorTotal": 3.89,
-          "unidade": "L"
-        }
-      ],
-      "total": 3.89,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-15T16:09:50.320Z",
-      "cancelada": false
-    },
-    {
-      "id": 1766019168441,
-      "id_posto": "1",
-      "id_turno": "1766019160951",
-      "itens": [
-        {
-          "id": 1766019166504,
-          "produtoId": "2",
-          "titulo": "Troca de Óleo",
-          "quantidade": 1,
-          "precoUnitario": 89.9,
-          "valorTotal": 89.9,
-          "unidade": "serviço"
-        }
-      ],
-      "total": 89.9,
-      "formaPagamento": "dinheiro",
-      "data": "2025-12-18T00:52:48.441Z",
-      "cancelada": false
-    },
-    {
-      "id": 1766020012843,
-      "id_posto": "1",
-      "id_turno": "1766019985116",
-      "itens": [
-        {
-          "id": 1766020002894,
-          "produtoId": "2",
-          "titulo": "Gasolina Aditivada1",
+          "id": 1780402929402,
+          "produtoId": "adK3FfRCpMs",
+          "titulo": "NomeCombustivel",
           "quantidade": 10,
-          "precoUnitario": 10,
-          "valorTotal": 100,
-          "unidade": "L"
+          "precoUnitario": 3,
+          "valorTotal": 30,
+          "unidade": "Litro"
+        },
+        {
+          "id": 1780402939720,
+          "produtoId": "q_uvzK4WDRg",
+          "titulo": "NomeProduto1",
+          "quantidade": 1,
+          "precoUnitario": 40,
+          "valorTotal": 40,
+          "unidade": "unidade"
         }
       ],
-      "total": 100,
+      "total": 70,
       "formaPagamento": "dinheiro",
-      "data": "2025-12-18T01:06:52.843Z",
+      "data": "2026-06-02T12:22:55.913Z",
       "cancelada": false
     },
     {
-      "id": 1766020032993,
-      "id_posto": "1",
-      "id_turno": "1766019985116",
+      "id": "cysnjbmZ8Qg",
+      "id_posto": "o-zvLQ9Lx6s",
+      "id_turno": "YlGagHuPYCM",
       "itens": [
         {
-          "id": 1766020029130,
-          "produtoId": "1",
-          "titulo": "Lavagem Completa",
-          "quantidade": 2,
-          "precoUnitario": 45.9,
-          "valorTotal": 91.8,
+          "id": 1780403214067,
+          "produtoId": "ZP8J1oBM_Cg",
+          "titulo": "Lavagem1",
+          "quantidade": 1,
+          "precoUnitario": 41,
+          "valorTotal": 41,
           "unidade": "serviço"
         }
       ],
-      "total": 91.8,
+      "total": 41,
       "formaPagamento": "cartao",
-      "data": "2025-12-18T01:07:12.993Z",
+      "data": "2026-06-02T12:26:57.451Z",
       "cancelada": false
     }
   ],
   "fechamentoTurnos": [
     {
-      "id": "1765734885841",
-      "id_posto": "1",
-      "id_turno": "1765734855679",
-      "operadorNome": "Pedro Oliveira",
-      "operadorId": "1",
-      "turno": "vespertino",
-      "horaAbertura": "14/12/2025, 14:54:15",
-      "horaFechamento": "2025-12-14T17:54:45.841Z",
-      "valorInicialCaixa": 2,
-      "valorFinalCaixa": 1,
-      "valorEsperado": 2,
-      "diferenca": 1,
-      "totalVendas": 5.79,
-      "totalTransacoes": 1,
-      "totalCartao": 5.79,
-      "totalDinheiro": 0
-    },
-    {
-      "id": "1765734887174",
-      "id_posto": "2",
-      "id_turno": "1765734856870",
-      "operadorNome": "Felipe Torres",
-      "operadorId": "3",
+      "id": "NTAHC4uv0Q8",
+      "id_posto": "o-zvLQ9Lx6s",
+      "id_turno": "YlGagHuPYCM",
+      "operadorNome": "NomeFuncionario Sobrenome",
+      "operadorId": "iM1WQWI-d7U",
       "turno": "matutino",
-      "horaAbertura": "14/12/2025, 14:54:16",
-      "horaFechamento": "2025-12-14T17:54:47.174Z",
-      "valorInicialCaixa": 1,
-      "valorFinalCaixa": 10,
-      "valorEsperado": 4.890000000000001,
-      "diferenca": -5.109999999999999,
-      "totalVendas": 3.89,
-      "totalTransacoes": 1,
-      "totalCartao": 0,
-      "totalDinheiro": 3.89
-    },
-    {
-      "id": "1765736815043",
-      "id_posto": "1",
-      "id_turno": "1765736768230",
-      "operadorNome": "Pedro Oliveira",
-      "operadorId": "1",
-      "turno": "noturno",
-      "horaAbertura": "14/12/2025, 15:26:08",
-      "horaFechamento": "2025-12-14T18:26:55.043Z",
-      "valorInicialCaixa": 1,
-      "valorFinalCaixa": 10,
-      "valorEsperado": 239.8,
-      "diferenca": 229.8,
-      "totalVendas": 238.8,
-      "totalTransacoes": 1,
-      "totalCartao": 0,
-      "totalDinheiro": 238.8
-    },
-    {
-      "id": "1765736818783",
-      "id_posto": "2",
-      "id_turno": "1765736769545",
-      "operadorNome": "Felipe Torres",
-      "operadorId": "3",
-      "turno": "matutino",
-      "horaAbertura": "14/12/2025, 15:26:09",
-      "horaFechamento": "2025-12-14T18:26:58.783Z",
+      "horaAbertura": "02/06/2026, 09:21:43",
+      "horaFechamento": "2026-06-02T12:27:27.763Z",
       "valorInicialCaixa": 10,
-      "valorFinalCaixa": 300,
-      "valorEsperado": 265,
-      "diferenca": -35,
-      "totalVendas": 255,
-      "totalTransacoes": 1,
-      "totalCartao": 0,
-      "totalDinheiro": 255
-    },
-    {
-      "id": 1766020078345,
-      "id_posto": "1",
-      "id_turno": "1766019985116",
-      "operadorNome": "Pedro Oliveira",
-      "operadorId": "1",
-      "turno": "matutino",
-      "horaAbertura": "17/12/2025, 22:06:25",
-      "horaFechamento": "2025-12-18T01:07:58.345Z",
-      "valorInicialCaixa": 10,
-      "valorFinalCaixa": 50,
-      "valorEsperado": 110,
-      "diferenca": 60,
-      "totalVendas": 191.8,
+      "valorFinalCaixa": 75,
+      "valorEsperado": 80,
+      "diferenca": 5,
+      "totalVendas": 111,
       "totalTransacoes": 2,
-      "totalCartao": 91.8,
-      "totalDinheiro": 100
+      "totalCartao": 41,
+      "totalDinheiro": 70
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

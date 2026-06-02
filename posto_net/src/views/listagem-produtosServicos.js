@@ -114,7 +114,7 @@ function ListagemServicosProdutos({ toggleMenu }) {
                                                     </td>
                                                     <td style={{ border: 'none', padding: '12px' }}>
                                                         <div style={{ fontWeight: 500, color: '#2E7D32' }}>
-                                                            {formatarValor(servico.valor)}
+                                                            {formatarValor(servico.preco)}
                                                         </div>
                                                     </td>
                                                     <td className='text-end' style={{ border: 'none', padding: '12px' }}>

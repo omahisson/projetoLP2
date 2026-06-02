@@ -444,8 +444,8 @@ function CadastroFuncionario({ toggleMenu }) {
                                     >
                                         <option value="">Selecione o posto</option>
                                         {postos.map((posto) => (
-                                            <option key={posto.id} value={posto.nome}>
-                                                {posto.nome}
+                                            <option key={posto.id} value={posto.nomeFantasia}>
+                                                {posto.nomeFantasia}
                                             </option>
                                         ))}
                                     </select>
