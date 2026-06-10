@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { excluirPosto, listarPostos } from '../services/postoService';
 
 function Postos() {
     const navigate = useNavigate();
@@ -12,8 +11,8 @@ function Postos() {
     useEffect(() => {
         const fetchPostos = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/postos`);
-                setPostos(response.data || []);
+                const data = await listarPostos();
+                setPostos(data || []);
             } catch (error) {
                 console.error('Erro ao buscar postos:', error);
                 setPostos([]);
@@ -45,7 +44,7 @@ function Postos() {
 
     const handleExcluirPosto = async (id, nomePosto) => {
         try {
-            await axios.delete(`${BASE_URL}/postos/${id}`);
+            await excluirPosto(id);
             alert(`Posto ${nomePosto} excluído com sucesso!`);
             setPostos(postos.filter(posto => posto.id !== id));
             setModoExclusao(false);

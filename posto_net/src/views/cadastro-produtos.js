@@ -3,13 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { atualizarProduto, buscarProduto, criarProduto } from '../services/produtoService';
 
 function CadastroProdutos({ toggleMenu }) {
     const { idParam } = useParams();
     const navigate = useNavigate();
-    const baseURL = `${BASE_URL}/produtos`;
 
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
@@ -33,27 +31,23 @@ function CadastroProdutos({ toggleMenu }) {
         const postoId = localStorage.getItem('postoSelecionadoId');
         const labelsArray = labels ? labels.split(',').map(label => label.trim()).filter(label => label !== '') : [];
 
-        let data = {
+        const data = {
             id,
-            id_posto: postoId,
+            idPosto: postoId,
             nome,
             preco: parseFloat(preco),
             estoque: parseInt(estoque),
             sku,
             dataValidade,
-            labels: labelsArray,
-            value: id || Date.now(),
-            text: nome
+            labels: labelsArray
         };
-
-        data = JSON.stringify(data);
 
         try {
             if (idParam == null) {
-                await axios.post(baseURL, data);
+                await criarProduto(data);
                 alert(`Produto ${nome} cadastrado com sucesso!`);
             } else {
-                await axios.put(`${baseURL}/${idParam}`, data);
+                await atualizarProduto(idParam, data);
                 alert(`Produto ${nome} alterado com sucesso!`);
             }
             navigate('/produtosServicos');
@@ -65,14 +59,14 @@ function CadastroProdutos({ toggleMenu }) {
     async function buscar() {
         if (idParam != null) {
             try {
-                const response = await axios.get(`${baseURL}/${idParam}`);
-                setId(response.data.id);
-                setNome(response.data.nome || '');
-                setPreco(response.data.preco || '');
-                setEstoque(response.data.estoque || '');
-                setSku(response.data.sku || '');
-                setDataValidade(response.data.dataValidade || '');
-                setLabels(response.data.labels ? response.data.labels.join(', ') : '');
+                const data = await buscarProduto(idParam);
+                setId(data.id);
+                setNome(data.nome || '');
+                setPreco(data.preco || '');
+                setEstoque(data.estoque || '');
+                setSku(data.sku || '');
+                setDataValidade(data.dataValidade || '');
+                setLabels(data.labels ? data.labels.join(', ') : '');
             } catch (error) {
                 console.error('Erro ao buscar produto:', error);
             }

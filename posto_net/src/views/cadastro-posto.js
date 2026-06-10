@@ -2,16 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Card from '../components/card';
-import iconeColuna from '../icones/coluna.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { atualizarPosto, buscarPosto, criarPosto } from '../services/postoService';
 import '../styles/form-cadastro.css';
 
 function CadastroPosto({ toggleMenu }) {
     const { idParam } = useParams();
     const navigate = useNavigate();
-    const baseURL = `${BASE_URL}/postos`;
 
     const [id, setId] = useState('');
     const [razaoSocial, setRazaoSocial] = useState('');
@@ -49,14 +46,13 @@ function CadastroPosto({ toggleMenu }) {
         }
 
         setCarregando(true);
-        axios
-            .get(`${baseURL}/${idParam}`)
-            .then(({ data }) => {
+        buscarPosto(idParam)
+            .then((data) => {
                 setId(data.id);
                 setRazaoSocial(data.razaoSocial || '');
                 setCnpj(data.cnpj || '');
                 setNomeFantasia(data.nomeFantasia || '');
-                setRua(data.rua || '');
+                setRua(data.rua || data.logradouro || '');
                 setNumero(data.numero || '');
                 setComplemento(data.complemento || '');
                 setBairro(data.bairro || '');
@@ -100,7 +96,7 @@ function CadastroPosto({ toggleMenu }) {
 
         const payload = {
             razaoSocial,
-            cnpj: cnpj.replace(/\D/g, ''),
+            cnpj,
             nomeFantasia,
             rua,
             numero,
@@ -108,8 +104,8 @@ function CadastroPosto({ toggleMenu }) {
             bairro,
             cidade,
             estado: estado.toUpperCase(),
-            cep: cep.replace(/\D/g, ''),
-            telefone: telefone.replace(/\D/g, ''),
+            cep,
+            telefone,
             email,
             horarioFuncionamento
         };
@@ -120,10 +116,10 @@ function CadastroPosto({ toggleMenu }) {
 
         try {
             if (idParam) {
-                await axios.put(`${baseURL}/${idParam}`, payload);
+                await atualizarPosto(idParam, payload);
                 alert('Posto alterado com sucesso');
             } else {
-                await axios.post(baseURL, payload);
+                await criarPosto(payload);
                 alert('Posto cadastrado com sucesso');
             }
 

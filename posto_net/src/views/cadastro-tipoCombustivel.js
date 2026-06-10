@@ -4,14 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { atualizarCombustivel, buscarCombustivel, criarCombustivel } from '../services/combustivelService';
 import '../styles/form-cadastro.css';
 
 function CadastroTipoCombustivel({ toggleMenu }) {
     const { idParam } = useParams();
     const navigate = useNavigate();
-    const baseURL = `${BASE_URL}/TiposCombustivel`;
 
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
@@ -44,16 +42,15 @@ function CadastroTipoCombustivel({ toggleMenu }) {
         }
 
         setCarregando(true);
-        axios
-            .get(`${baseURL}/${idParam}`)
-            .then(({ data }) => {
+        buscarCombustivel(idParam)
+            .then((data) => {
                 setId(data.id);
                 setNome(data.nome || '');
                 setPreco(data.preco || '');
                 setUnidade(data.unidade || '');
                 setFornecedor(data.fornecedor || '');
                 setEstoque(data.estoque || '');
-                setDataValidade(data.validade || '');
+                setDataValidade(data.validade || data.dataValidade || '');
             })
             .catch((error) => alert(error.response?.data || 'Erro ao buscar tipo de combustível'))
             .finally(() => setCarregando(false));
@@ -64,13 +61,13 @@ function CadastroTipoCombustivel({ toggleMenu }) {
         const postoId = localStorage.getItem('postoSelecionadoId');
 
         const payload = {
-            id_posto: postoId,
+            idPosto: postoId,
             nome,
             preco,
             unidade,
             fornecedor,
             estoque: estoque ? estoque : '0',
-            validade: dataValidade,
+            dataValidade,
             status: 'Ativo'
         };
 
@@ -80,10 +77,10 @@ function CadastroTipoCombustivel({ toggleMenu }) {
 
         try {
             if (idParam) {
-                await axios.put(`${baseURL}/${idParam}`, payload);
+                await atualizarCombustivel(idParam, payload);
                 alert('Tipo de combustível alterado com sucesso');
             } else {
-                await axios.post(baseURL, payload);
+                await criarCombustivel(payload);
                 alert('Tipo de combustível cadastrado com sucesso');
             }
 

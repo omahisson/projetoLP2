@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
 import {
   FiPlus,
   FiTag,
@@ -11,6 +9,8 @@ import {
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import iconeColuna from '../icones/coluna.svg';
+import { atualizarBomba, excluirBomba, listarBombas } from '../services/bombaService';
+import { excluirCombustivel, listarCombustiveis } from '../services/combustivelService';
 
 // --- COMPONENTE PRINCIPAL ---
 
@@ -31,7 +31,7 @@ const ListagemCombustiveis = ({toggleMenu}) => {
     }
 
     try {
-      await axios.delete(`${BASE_URL}/DadosBomba/${id}`);
+      await excluirBomba(id);
       alert(`Bomba ${nome} excluída com sucesso!`);
       setDadosBomba(dadosBomba.filter(item => item.id !== id));
     } catch (error) {
@@ -45,7 +45,7 @@ const ListagemCombustiveis = ({toggleMenu}) => {
     }
 
     try {
-      await axios.delete(`${BASE_URL}/TiposCombustivel/${id}`);
+      await excluirCombustivel(id);
       alert(`Tipo de combustível ${nome} excluído com sucesso!`);
       setTiposCombustivel(tiposCombustivel.filter(item => item.id !== id));
     } catch (error) {
@@ -63,7 +63,7 @@ const ListagemCombustiveis = ({toggleMenu}) => {
 
     try {
       const bomba = dadosBomba.find(b => b.id === id);
-      await axios.put(`${BASE_URL}/DadosBomba/${id}`, {
+      await atualizarBomba(id, {
         ...bomba,
         status: novoStatus
       });
@@ -78,28 +78,21 @@ const ListagemCombustiveis = ({toggleMenu}) => {
 
   React.useEffect(() => {
     const postoId = localStorage.getItem('postoSelecionadoId');
-    
-    const queryParam = `?id_posto=${postoId}`;
-    
-    const promises = [
-      axios.get(`${BASE_URL}/TiposCombustivel${queryParam}`),
-      axios.get(`${BASE_URL}/DadosBomba${queryParam}`),
-    ];
 
-    Promise.all(promises)
+    Promise.all([
+      listarCombustiveis(postoId),
+      listarBombas(postoId),
+    ])
       .then((responses) => {
-        console.log('Tipos de combustíveis:', responses[0].data);
-        setTiposCombustivel(Array.isArray(responses[0].data) ? responses[0].data : []);
-
-        console.log('Dados das bombas:', responses[1].data);
-        setDadosBomba(Array.isArray(responses[1].data) ? responses[1].data : []);
+        setTiposCombustivel(Array.isArray(responses[0]) ? responses[0] : []);
+        setDadosBomba(Array.isArray(responses[1]) ? responses[1] : []);
       })
       .catch((err) => {
         console.error("Erro ao buscar dados do dashboard:", err);
         setError(err.message);
       })
       .finally(() => {
-        setLoading(false); 
+        setLoading(false);
       });
   }, []);
 

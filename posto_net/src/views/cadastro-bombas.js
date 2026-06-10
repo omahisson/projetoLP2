@@ -4,14 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { atualizarBomba, buscarBomba, criarBomba } from '../services/bombaService';
+import { listarCombustiveis } from '../services/combustivelService';
 import '../styles/form-cadastro.css';
 
 function CadastroBombas({ toggleMenu }) {
     const { idParam } = useParams();
     const navigate = useNavigate();
-    const baseURL = `${BASE_URL}/DadosBomba`;
 
     const [id, setId] = useState('');
     const [nomeBomba, setNomeBomba] = useState('');
@@ -28,9 +27,8 @@ function CadastroBombas({ toggleMenu }) {
         }
 
         setCarregando(true);
-        axios
-            .get(`${baseURL}/${idParam}`)
-            .then(({ data }) => {
+        buscarBomba(idParam)
+            .then((data) => {
                 setId(data.id);
                 setNomeBomba(data.nome || '');
                 setCombustiveisSelecionados(Array.isArray(data.combustiveis) ? data.combustiveis : []);
@@ -49,9 +47,9 @@ function CadastroBombas({ toggleMenu }) {
             }
 
             try {
-                const response = await axios.get(`${BASE_URL}/TiposCombustivel?id_posto=${postoId}`);
-                const tipos = Array.isArray(response.data)
-                    ? response.data.map(item => item.nome)
+                const data = await listarCombustiveis(postoId);
+                const tipos = Array.isArray(data)
+                    ? data.map(item => item.nome)
                     : [];
                 setTiposCombustivel(tipos);
             } catch (error) {
@@ -90,10 +88,10 @@ function CadastroBombas({ toggleMenu }) {
 
         try {
             if (idParam) {
-                await axios.put(`${baseURL}/${idParam}`, payload);
+                await atualizarBomba(idParam, payload);
                 alert('Bomba alterada com sucesso');
             } else {
-                await axios.post(baseURL, payload);
+                await criarBomba(payload);
                 alert('Bomba cadastrada com sucesso');
             }
 
