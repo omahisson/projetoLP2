@@ -4,8 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { buscarCombustivel } from '../services/combustivelService';
+import { alterarPrecoCombustivel } from '../services/historicoCombustivelService';
+import { listarFuncionarios } from '../services/funcionarioService';
 import '../styles/form-cadastro.css';
 
 function CadastroNovoPreco({ toggleMenu }) {
@@ -42,9 +43,8 @@ function CadastroNovoPreco({ toggleMenu }) {
         }
 
         setCarregando(true);
-        axios
-            .get(`${BASE_URL}/TiposCombustivel/${idParam}`)
-            .then(({ data }) => {
+        buscarCombustivel(idParam)
+            .then((data) => {
                 setNomeTipoCombustivel(data.nome || '');
                 setPrecoAtual(data.preco || '');
                 setFornecedorAtual(data.fornecedor || '');
@@ -60,9 +60,9 @@ function CadastroNovoPreco({ toggleMenu }) {
     useEffect(() => {
         async function carregarFuncionarios() {
             try {
-                const response = await axios.get(`${BASE_URL}/funcionarios`);
-                const funcionariosFormatados = Array.isArray(response.data)
-                    ? response.data.map(funcionario => ({
+                const data = await listarFuncionarios();
+                const funcionariosFormatados = Array.isArray(data)
+                    ? data.map(funcionario => ({
                         value: funcionario.nome,
                         text: funcionario.nome
                     }))
@@ -80,9 +80,6 @@ function CadastroNovoPreco({ toggleMenu }) {
         e.preventDefault();
 
         try {
-            const tipoAtual = await axios.get(`${BASE_URL}/TiposCombustivel/${idParam}`);
-            const dadosAtuais = tipoAtual.data;
-
             let precoNumerico = novoPreco.trim();
             precoNumerico = precoNumerico.replace(/[^\d,.-]/g, '');
             precoNumerico = precoNumerico.replace(',', '.');
@@ -93,34 +90,19 @@ function CadastroNovoPreco({ toggleMenu }) {
                 return;
             }
 
-            const payloadAtualizado = {
-                ...dadosAtuais,
-                id: dadosAtuais.id || idParam,
+            await alterarPrecoCombustivel({
+                idPosto: localStorage.getItem('postoSelecionadoId'),
+                idCombustivel: idParam,
+                tipoCombustivelId: idParam,
                 nome: nomeTipoCombustivel,
+                tipoCombustivel: nomeTipoCombustivel,
                 fornecedor: fornecedorAtual,
                 estoque: estoqueAtual,
-                preco: numero
-            };
-
-            await axios.put(`${BASE_URL}/TiposCombustivel/${idParam}`, payloadAtualizado);
-
-            const precoAtualStr = String(precoAtual || '');
-            const precoAnteriorNumerico = precoAtualStr.replace(/[^\d,.-]/g, '').replace(',', '.');
-            const precoAnterior = parseFloat(precoAnteriorNumerico) || (typeof precoAtual === 'number' ? precoAtual : 0);
-
-            const historicoPayload = {
-                id_posto: localStorage.getItem('postoSelecionadoId'),
-                tipoCombustivelId: idParam,
-                tipoCombustivel: nomeTipoCombustivel,
-                precoAnterior: precoAnterior,
                 novoPreco: numero,
-                dataVigencia: dataVigencia,
-                responsavel: responsavel,
-                motivo: motivo,
-                dataAlteracao: new Date().toISOString().split('T')[0]
-            };
-
-            await axios.post(`${BASE_URL}/HistoricoCombustivel`, historicoPayload);
+                dataVigencia,
+                responsavel,
+                motivo
+            });
             localStorage.setItem('dicaNovoPrecoVista', 'true');
             alert('Preço alterado com sucesso');
             navigate('/combustiveis');

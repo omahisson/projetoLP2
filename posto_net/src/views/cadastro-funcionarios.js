@@ -4,15 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom'; //navega entre rotas 
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { listarPostos } from '../services/postoService';
+import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
 
 function CadastroFuncionario({ toggleMenu }) {
     const { idParam } = useParams(); //pega o parametro da url
 
     const navigate = useNavigate();
-
-    const baseURL = `${BASE_URL}/funcionarios`;
 
     //criou um campo para cada campo que ta na tela
     const [id, setId] = useState('');
@@ -28,8 +26,8 @@ function CadastroFuncionario({ toggleMenu }) {
     useEffect(() => {
         async function carregarPostos() {
             try {
-                const resp = await axios.get(`${BASE_URL}/postos`);
-                setPostos(resp.data || []);
+                const data = await listarPostos();
+                setPostos(data || []);
             } catch (e) {
                 console.error('Erro ao carregar postos:', e);
                 setPostos([]);
@@ -61,22 +59,17 @@ function CadastroFuncionario({ toggleMenu }) {
         const nomeCompleto = `${nome} ${sobrenome}`.trim();
         const labels = cargo ? [cargo] : [];
 
-        let data = { 
+        const data = {
             id, 
-            id_posto: postoId,
+            idPosto: postoDeTrabalho || postoId,
             nome: nomeCompleto,
             cpf,
-            postoDeTrabalho,
-            labels,
-            value: id || Date.now(),
-            text: nomeCompleto
+            setor: cargo,
+            cargo,
+            labels
         };
-        data = JSON.stringify(data);
         if (idParam == null) {
-            await axios
-                .post(baseURL, data, {
-                    headers: { 'Content-Type': 'application/json' },
-                })
+            await criarFuncionario(data, 'funcionarios')
                 .then(function (response) {
                     alert(`Funcionário ${nomeCompleto} cadastrado com sucesso!`);
                     navigate(`/empregados`);
@@ -85,10 +78,7 @@ function CadastroFuncionario({ toggleMenu }) {
                     alert('Erro ao cadastrar funcionário: ' + (error.response?.data || error.message));
                 });
         } else {
-            await axios
-                .put(`${baseURL}/${idParam}`, data, {
-                    headers: { 'Content-Type': 'application/json' },
-                })
+            await atualizarFuncionario(idParam, data, 'funcionarios')
                 .then(function (response) {
                     alert(`Funcionário ${nomeCompleto} alterado com sucesso!`);
                     navigate(`/empregados`);
@@ -102,15 +92,15 @@ function CadastroFuncionario({ toggleMenu }) {
     async function buscar() {
         if (idParam != null) {
             try {
-                const response = await axios.get(`${baseURL}/${idParam}`); //get para buscar o dado
-                setDados(response.data);
-                setId(response.data.id);
-                const nomeParts = response.data.nome ? response.data.nome.split(' ') : [];
+                const response = await buscarFuncionario(idParam);
+                setDados(response);
+                setId(response.id);
+                const nomeParts = response.nome ? response.nome.split(' ') : [];
                 setNome(nomeParts[0] || '');
                 setSobrenome(nomeParts.slice(1).join(' ') || '');
-                setCpf(response.data.cpf || '');
-                setCargo(response.data.labels && response.data.labels.length > 0 ? response.data.labels[0] : '');
-                setPostoDeTrabalho(response.data.postoDeTrabalho || '');
+                setCpf(response.cpf || '');
+                setCargo(response.setor || (response.labels && response.labels.length > 0 ? response.labels[0] : ''));
+                setPostoDeTrabalho(response.idPosto || '');
             } catch (error) {
                 console.error('Erro ao buscar funcionário:', error);
             }
@@ -444,7 +434,7 @@ function CadastroFuncionario({ toggleMenu }) {
                                     >
                                         <option value="">Selecione o posto</option>
                                         {postos.map((posto) => (
-                                            <option key={posto.id} value={posto.nomeFantasia}>
+                                            <option key={posto.id} value={posto.id}>
                                                 {posto.nomeFantasia}
                                             </option>
                                         ))}

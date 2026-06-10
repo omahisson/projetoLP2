@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { buscarCombustivel } from '../services/combustivelService';
+import { listarHistoricoCombustivel } from '../services/historicoCombustivelService';
 import iconeColuna from '../icones/coluna.svg';
 
 function ListagemEstatisticas({ toggleMenu }) {
@@ -28,13 +28,10 @@ function ListagemEstatisticas({ toggleMenu }) {
 
             try {
                 const postoId = localStorage.getItem('postoSelecionadoId');
-                
-                const responseCombustivel = await axios.get(`${BASE_URL}/TiposCombustivel/${idParam}`);
-                const dadosCombustivel = responseCombustivel.data;
+                const dadosCombustivel = await buscarCombustivel(idParam);
                 setCombustivel(dadosCombustivel);
 
-                const responseHistorico = await axios.get(`${BASE_URL}/HistoricoCombustivel?tipoCombustivelId=${idParam}${postoId ? `&id_posto=${postoId}` : ''}`);
-                const historicoDataArray = Array.isArray(responseHistorico.data) ? responseHistorico.data : [];
+                const historicoDataArray = await listarHistoricoCombustivel({ idCombustivel: idParam, idPosto: postoId });
                 setHistoricoData(historicoDataArray); 
                 
                 const historicoProcessado = processarHistorico(historicoDataArray);

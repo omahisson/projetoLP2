@@ -10,12 +10,7 @@ import iconeAdd from '../icones/add.svg';
 import iconeGerentes from '../icones/gerentes.svg';
 import iconeFuncionarios from '../icones/funcionarios.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
-
-const baseURLAdministradores = `${BASE_URL}/administradores`;
-const baseURLGerentes = `${BASE_URL}/gerentes`;
-const baseURLFuncionarios = `${BASE_URL}/funcionarios`;
+import { listarFuncionariosPorTipo, excluirFuncionario } from '../services/funcionarioService';
 
 function ListagemEmpregados({ toggleMenu }) {
     const navigate = useNavigate();
@@ -48,17 +43,8 @@ function ListagemEmpregados({ toggleMenu }) {
             return;
         }
 
-        let url = '';
-        if (tipo === 'administradores') {
-            url = `${baseURLAdministradores}/${id}`;
-        } else if (tipo === 'gerentes') {
-            url = `${baseURLGerentes}/${id}`;
-        } else if (tipo === 'funcionarios') {
-            url = `${baseURLFuncionarios}/${id}`;
-        }
-
         try {
-            await axios.delete(url);
+            await excluirFuncionario(id);
             alert(`${nome} excluído com sucesso!`);
             if (tipo === 'administradores') {
                 setDadosAdministradores(dadosAdministradores.filter(item => item.id !== id));
@@ -73,36 +59,22 @@ function ListagemEmpregados({ toggleMenu }) {
     }
 
     React.useEffect(() => {
-        const postoId = localStorage.getItem('postoSelecionadoId');
-        
-        const queryParam = `?id_posto=${postoId}`;
-        
-        axios.get(`${baseURLAdministradores}${queryParam}`)
-            .then(function (response) {
-                console.log('Administradores:', response.data);
-                setDadosAdministradores(Array.isArray(response.data) ? response.data : []);
-            })
-            .catch(function (error) {
-                console.error('Erro ao buscar administradores:', error);
-            });
-
-        axios.get(`${baseURLGerentes}${queryParam}`)
-            .then(function (response) {
-                console.log('Gerentes:', response.data);
-                setDadosGerentes(Array.isArray(response.data) ? response.data : []);
-            })
-            .catch(function (error) {
-                console.error('Erro ao buscar gerentes:', error);
-            });
-
-        axios.get(`${baseURLFuncionarios}${queryParam}`)
-            .then(function (response) {
-                console.log('Funcionários:', response.data);
-                setDadosFuncionarios(Array.isArray(response.data) ? response.data : []);
-            })
-            .catch(function (error) {
-                console.error('Erro ao buscar funcionários:', error);
-            });
+        async function carregarEmpregados() {
+            try {
+                const postoId = localStorage.getItem('postoSelecionadoId');
+                const [administradores, gerentes, funcionarios] = await Promise.all([
+                    listarFuncionariosPorTipo('administradores', postoId),
+                    listarFuncionariosPorTipo('gerentes', postoId),
+                    listarFuncionariosPorTipo('funcionarios', postoId)
+                ]);
+                setDadosAdministradores(administradores);
+                setDadosGerentes(gerentes);
+                setDadosFuncionarios(funcionarios);
+            } catch (error) {
+                console.error('Erro ao buscar empregados:', error);
+            }
+        }
+        carregarEmpregados();
     }, []);
 
     const renderizarCard = () => {

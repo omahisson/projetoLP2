@@ -5,11 +5,8 @@ import iconeColuna from '../icones/coluna.svg';
 import iconeServicos from '../icones/servicos.svg';
 import iconeProdutos from '../icones/produtos.svg';
 import iconeAdd from '../icones/add.svg';
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
 import { excluirProduto, listarProdutos } from '../services/produtoService';
-
-const baseURLServicos = `${BASE_URL}/servicos`;
+import { excluirServico, listarServicos } from '../services/servicoService';
 
 function ListagemServicosProdutos({ toggleMenu }) {
     const navigate = useNavigate();
@@ -38,14 +35,9 @@ function ListagemServicosProdutos({ toggleMenu }) {
             return;
         }
 
-        let url = '';
-        if (tipo === 'servicos') {
-            url = `${baseURLServicos}/${id}`;
-        }
-
         try {
             if (tipo === 'servicos') {
-                await axios.delete(url);
+                await excluirServico(id);
             } else if (tipo === 'produtos') {
                 await excluirProduto(id);
             }
@@ -62,15 +54,13 @@ function ListagemServicosProdutos({ toggleMenu }) {
 
     React.useEffect(() => {
         const postoId = localStorage.getItem('postoSelecionadoId');
-        const queryParam = `?id_posto=${postoId}`;
         
-        axios.get(`${baseURLServicos}${queryParam}`)
-            .then(function (response) {
-                console.log('Serviços:', response.data);
-                setDadosServicos(Array.isArray(response.data) ? response.data : []);
+        listarServicos(postoId)
+            .then(function (data) {
+                setDadosServicos(Array.isArray(data) ? data : []);
             })
             .catch(function (error) {
-                console.error('Erro ao buscar serviços:', error);
+                console.error('Erro ao buscar servicos:', error);
             });
 
         listarProdutos(postoId)

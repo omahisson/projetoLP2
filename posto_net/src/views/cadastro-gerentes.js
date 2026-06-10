@@ -4,15 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom'; //navega entre rotas 
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { listarPostos } from '../services/postoService';
+import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
 
 function CadastroGerente({ toggleMenu }) {
     const { idParam } = useParams(); //pega o parametro da url
 
     const navigate = useNavigate();
-
-    const baseURL = `${BASE_URL}/gerentes`;
 
     //criou um campo para cada campo que ta na tela
     const [id, setId] = useState('');
@@ -28,8 +26,8 @@ function CadastroGerente({ toggleMenu }) {
     useEffect(() => {
         async function carregarPostos() {
             try {
-                const resp = await axios.get(`${BASE_URL}/postos`);
-                setPostos(resp.data || []);
+                const data = await listarPostos();
+                setPostos(data || []);
             } catch (e) {
                 console.error('Erro ao carregar postos:', e);
                 setPostos([]);
@@ -59,21 +57,20 @@ function CadastroGerente({ toggleMenu }) {
 
     async function salvar() {
         const postoId = localStorage.getItem('postoSelecionadoId');
-        let data = { 
+        const data = {
             id, 
-            id_posto: postoId,
+            idPosto: postosSelecionados[0] || postoId,
             nome, 
             email, 
             telefone, 
             senha,
+            setor: 'Gerencia',
+            cargoApi: 'GERENTE',
+            bonusMeta: 1,
             labels: postosSelecionados
         };
-        data = JSON.stringify(data); //formata para mandar pro backend
         if (idParam == null) { //se nulo pq estou incluindo e uso post
-            await axios
-                .post(baseURL, data, {
-                    headers: { 'Content-Type': 'application/json' },
-                })
+            await criarFuncionario(data, 'gerentes')
                 .then(function (response) { //se 200, redireciona para a lista de gerentes
                     alert(`Gerente ${nome} cadastrado com sucesso!`);
                     navigate(`/empregados`);
@@ -82,10 +79,7 @@ function CadastroGerente({ toggleMenu }) {
                     alert('Erro ao cadastrar gerente: ' + (error.response?.data || error.message));
                 });
         } else { //se nao esta nulo pq estou editando e uso put
-            await axios
-                .put(`${baseURL}/${idParam}`, data, {
-                    headers: { 'Content-Type': 'application/json' },
-                })
+            await atualizarFuncionario(idParam, data, 'gerentes')
                 .then(function (response) {
                     alert(`Gerente ${nome} alterado com sucesso!`);
                     navigate(`/empregados`);
@@ -99,14 +93,14 @@ function CadastroGerente({ toggleMenu }) {
     async function buscar() {
         if (idParam != null) {
             try {
-                const response = await axios.get(`${baseURL}/${idParam}`); //get para buscar o dado
-                setDados(response.data);
-                setId(response.data.id);
-                setNome(response.data.nome || '');
-                setEmail(response.data.email || '');
-                setTelefone(response.data.telefone || '');
-                setSenha(response.data.senha || '');
-                const postosVinculados = Array.isArray(response.data.labels) ? response.data.labels : [];
+                const response = await buscarFuncionario(idParam);
+                setDados(response);
+                setId(response.id);
+                setNome(response.nome || '');
+                setEmail(response.email || '');
+                setTelefone(response.telefone || '');
+                setSenha(response.senha || '');
+                const postosVinculados = response.idPosto ? [response.idPosto] : [];
                 setPostosSelecionados(postosVinculados);
             } catch (error) {
                 console.error('Erro ao buscar gerente:', error);
@@ -419,7 +413,7 @@ function CadastroGerente({ toggleMenu }) {
                                 <p style={formStyles.description}>Selecione os postos que este gerente supervisionará</p>
                                 <div style={formStyles.postoCheckboxGrid}>
                                     {postos.map((p) => {
-                                        const marcado = postosSelecionados.includes(p.nome);
+                                        const marcado = postosSelecionados.includes(p.id);
                                         return (
                                             <div 
                                                 key={p.id} 
@@ -428,8 +422,8 @@ function CadastroGerente({ toggleMenu }) {
                                                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                                                 onClick={() => {
                                                     const novo = marcado
-                                                        ? postosSelecionados.filter(n => n !== p.nome)
-                                                        : [...postosSelecionados, p.nome];
+                                                        ? postosSelecionados.filter(n => n !== p.id)
+                                                        : [...postosSelecionados, p.id];
                                                     setPostosSelecionados(novo);
                                                 }}
                                             >
@@ -439,15 +433,15 @@ function CadastroGerente({ toggleMenu }) {
                                                     checked={marcado}
                                                     onChange={(e) => {
                                                         const novo = e.target.checked
-                                                            ? [...postosSelecionados, p.nome]
-                                                            : postosSelecionados.filter(n => n !== p.nome);
+                                                            ? [...postosSelecionados, p.id]
+                                                            : postosSelecionados.filter(n => n !== p.id);
                                                         setPostosSelecionados(novo);
                                                     }}
                                                     onClick={(e) => e.stopPropagation()}
                                                     style={formStyles.checkbox}
                                                 />
                                                 <label htmlFor={`posto_${p.id}`} style={formStyles.postoCheckboxLabel}>
-                                                    {p.nome}
+                                                    {p.nomeFantasia || p.nome}
                                                 </label>
                                             </div>
                                         );

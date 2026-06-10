@@ -1,10 +1,9 @@
 import React from 'react';
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
 import {
   FiDollarSign, FiBarChart2, FiDownload, FiTag,
   FiArchive, FiCheckSquare, FiClock, FiFileText
 } from 'react-icons/fi';
+import { buscarDashboard } from '../services/dashboardService';
 import '../index.css';
 import iconeColuna from '../icones/coluna.svg';
 import Card from '../components/card';
@@ -69,33 +68,13 @@ function Dashboard({ toggleMenu }) {
     const fetchData = async () => {
       try {
         const postoId = localStorage.getItem('postoSelecionadoId');
-        const queryParam = postoId ? `?id_posto=${postoId}` : '';
-
-        const promises = [
-          axios.get(`${BASE_URL}/DadosFinanceiros${queryParam}`),
-          axios.get(`${BASE_URL}/RankingRede${queryParam}`),
-          axios.get(`${BASE_URL}/MaisVendidos${queryParam}`),
-          axios.get(`${BASE_URL}/RelatorioPreco${queryParam}`),
-          axios.get(`${BASE_URL}/RelatorioEstoque${queryParam}`),
-          axios.get(`${BASE_URL}/RelatorioOperacional${queryParam}`)
-        ];
-
-        const responses = await Promise.all(promises);
-
-        const dadosFinanceiros = Array.isArray(responses[0].data)
-          ? (responses[0].data[0] || responses[0].data)
-          : responses[0].data;
-        setDadosFinanceiros(dadosFinanceiros);
-
-        setRankingRede(Array.isArray(responses[1].data) ? responses[1].data : []);
-        setMaisVendidos(Array.isArray(responses[2].data) ? responses[2].data : []);
-        setRelatorioPreco(Array.isArray(responses[3].data) ? responses[3].data : []);
-        setRelatorioEstoque(Array.isArray(responses[4].data) ? responses[4].data : []);
-
-        const relatorioOperacional = Array.isArray(responses[5].data)
-          ? (responses[5].data[0] || null)
-          : responses[5].data;
-        setRelatorioOperacional(relatorioOperacional);
+        const data = await buscarDashboard(postoId);
+        setDadosFinanceiros(data.dadosFinanceiros || null);
+        setRankingRede(Array.isArray(data.rankingRede) ? data.rankingRede : []);
+        setMaisVendidos(Array.isArray(data.maisVendidos) ? data.maisVendidos : []);
+        setRelatorioPreco(Array.isArray(data.relatorioPreco) ? data.relatorioPreco : []);
+        setRelatorioEstoque(Array.isArray(data.relatorioEstoque) ? data.relatorioEstoque : []);
+        setRelatorioOperacional(data.relatorioOperacional || null);
       } catch (err) {
         console.error("Erro ao buscar dados do dashboard:", err);
         setError(err.message);

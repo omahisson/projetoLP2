@@ -4,17 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom'; //navega entre rotas 
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
 
-import { mensagemSucesso, mensagemErro } from '../components/toastr';
-
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { listarPostos } from '../services/postoService';
+import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
 
 function CadastroAdministrador({ toggleMenu }) {
     const { idParam } = useParams(); //pega o parametro da url
 
     const navigate = useNavigate();
-
-    const baseURL = `${BASE_URL}/administradores`;
 
     const [postos, setPostos] = useState([]);
     const [postosSelecionados, setPostosSelecionados] = useState([]);
@@ -22,8 +18,8 @@ function CadastroAdministrador({ toggleMenu }) {
     useEffect(() => {
         async function carregarPostos() {
             try {
-                const resp = await axios.get(`${BASE_URL}/postos`);
-                setPostos(resp.data || []);
+                const data = await listarPostos();
+                setPostos(data || []);
             } catch (e) {
                 console.error('Erro ao carregar postos:', e);
                 setPostos([]);
@@ -79,8 +75,7 @@ function CadastroAdministrador({ toggleMenu }) {
         if (idParam != null) {
             setCarregando(true);
             try {
-                const response = await axios.get(`${baseURL}/${idParam}`);
-                const dadosResp = response.data;
+                const dadosResp = await buscarFuncionario(idParam);
 
                 if (!dadosResp) {
                     alert('Administrador não encontrado');
@@ -93,13 +88,13 @@ function CadastroAdministrador({ toggleMenu }) {
                 setNome(dadosResp.nome || '');
                 setCpf(dadosResp.cpf || '');
                 setEmail(dadosResp.email || '');
-                setCelular(dadosResp.celular || '');
+                setCelular(dadosResp.telefone || dadosResp.celular || '');
                 setSenha(dadosResp.senha || '');
-                setGerenciarTodosPostos(!!dadosResp.gerenciarTodosPostos);
-                setGerenciarGerentes(!!dadosResp.gerenciarGerentes);
-                setGerenciarFuncionarios(!!dadosResp.gerenciarFuncionarios);
-                setGerenciarProdutos(!!dadosResp.gerenciarProdutos);
-                const permitidos = Array.isArray(dadosResp.postosPermitidos) ? dadosResp.postosPermitidos : [];
+                setGerenciarTodosPostos(false);
+                setGerenciarGerentes(false);
+                setGerenciarFuncionarios(false);
+                setGerenciarProdutos(false);
+                const permitidos = dadosResp.idPosto ? [dadosResp.idPosto] : [];
                 setPostosSelecionados(permitidos);
             } catch (error) {
                 console.error('Erro ao buscar administrador:', error);
@@ -120,8 +115,9 @@ function CadastroAdministrador({ toggleMenu }) {
         if (gerenciarTodosPostos) {
             labels.push('Postos');
         } else if (postosPermitidos.length > 0) {
-            postosPermitidos.forEach(nomePosto => {
-                labels.push(nomePosto);
+            postosPermitidos.forEach(idPosto => {
+                const posto = postos.find(item => String(item.id) === String(idPosto));
+                labels.push(posto?.nomeFantasia || posto?.nome || idPosto);
             });
         }
         
@@ -135,14 +131,17 @@ function CadastroAdministrador({ toggleMenu }) {
             labels.push('produtos');
         }
 
-        let data = {
+        const data = {
             id,
-            id_posto: postoId,
+            idPosto: postosPermitidos[0] || postoId,
             nome,
             cpf,
             email,
             celular,
+            telefone: celular,
             senha,
+            setor: 'Administracao',
+            cargoApi: 'ADMINISTRADOR',
             gerenciarTodosPostos,
             gerenciarGerentes,
             gerenciarFuncionarios,
@@ -150,12 +149,8 @@ function CadastroAdministrador({ toggleMenu }) {
             postosPermitidos,
             labels 
         };
-        data = JSON.stringify(data);
         if (idParam == null) {
-            await axios
-                .post(baseURL, data, {
-                    headers: { 'Content-Type': 'application/json' },
-                })
+            await criarFuncionario(data, 'administradores')
                 .then(function (response) {
                     alert(`Administrador ${nome} cadastrado com sucesso!`);
                     navigate(`/empregados`);
@@ -164,10 +159,7 @@ function CadastroAdministrador({ toggleMenu }) {
                     alert('Erro ao cadastrar administrador: ' + (error.response?.data || error.message));
                 });
         } else {
-            await axios
-                .put(`${baseURL}/${idParam}`, data, {
-                    headers: { 'Content-Type': 'application/json' },
-                })
+            await atualizarFuncionario(idParam, data, 'administradores')
                 .then(function (response) {
                     alert(`Administrador ${nome} alterado com sucesso!`);
                     navigate(`/empregados`);
@@ -557,7 +549,7 @@ function CadastroAdministrador({ toggleMenu }) {
                                     <label style={formStyles.label}>Postos Permitidos</label>
                                     <div style={formStyles.checkboxGrid}>
                                         {postos.map((p) => {
-                                            const marcado = postosSelecionados.includes(p.nome);
+                                            const marcado = postosSelecionados.includes(p.id);
                                             return (
                                                 <div key={p.id} style={formStyles.checkboxContainer}>
                                                     <input
@@ -566,14 +558,14 @@ function CadastroAdministrador({ toggleMenu }) {
                                                         checked={marcado}
                                                         onChange={(e) => {
                                                             const novo = e.target.checked
-                                                                ? [...postosSelecionados, p.nome]
-                                                                : postosSelecionados.filter(n => n !== p.nome);
+                                                                ? [...postosSelecionados, p.id]
+                                                                : postosSelecionados.filter(n => n !== p.id);
                                                             setPostosSelecionados(novo);
                                                         }}
                                                         style={formStyles.checkbox}
                                                     />
                                                     <label htmlFor={`posto_${p.id}`} style={formStyles.checkboxLabel}>
-                                                        {p.nome}
+                                                        {p.nomeFantasia || p.nome}
                                                     </label>
                                                 </div>
                                             );

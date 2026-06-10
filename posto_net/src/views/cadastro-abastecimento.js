@@ -4,16 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { listarCombustiveis } from '../services/combustivelService';
+import { buscarAbastecimento, criarAbastecimento, atualizarAbastecimento } from '../services/abastecimentoService';
 import '../styles/form-cadastro.css';
 
 function CadastroAbastecimento({ toggleMenu }) {
     const { idParam } = useParams();
     const navigate = useNavigate();
-    const baseURL = `${BASE_URL}/abastecimentos`;
-
     const [id, setId] = useState('');
+    const [idCombustivel, setIdCombustivel] = useState('');
     const [tipoCombustivel, setTipoCombustivel] = useState('');
     const [tiposCombustivelCompletos, setTiposCombustivelCompletos] = useState([]);
     const [fornecedor, setFornecedor] = useState('');
@@ -38,11 +37,10 @@ function CadastroAbastecimento({ toggleMenu }) {
             }
 
             try {
-                const response = await axios.get(`${BASE_URL}/TiposCombustivel?id_posto=${postoId}`);
-                const tipos = Array.isArray(response.data) ? response.data : [];
+                const tipos = await listarCombustiveis(postoId);
                 setTiposCombustivelCompletos(tipos);
                 setTiposCombustivel(tipos.map(item => ({
-                    value: item.nome,
+                    value: String(item.id),
                     text: item.nome
                 })));
             } catch (error) {
@@ -68,6 +66,7 @@ function CadastroAbastecimento({ toggleMenu }) {
     useEffect(() => {
         if (!idParam) {
             setId('');
+            setIdCombustivel('');
             setTipoCombustivel('');
             setFornecedor('');
             setQuantidade('');
@@ -81,10 +80,10 @@ function CadastroAbastecimento({ toggleMenu }) {
         }
 
         setCarregando(true);
-        axios
-            .get(`${baseURL}/${idParam}`)
-            .then(({ data }) => {
+        buscarAbastecimento(idParam)
+            .then((data) => {
                 setId(data.id);
+                setIdCombustivel(data.idCombustivel || '');
                 setTipoCombustivel(data.tipoCombustivel || '');
                 setFornecedor(data.fornecedor || '');
                 setQuantidade(data.quantidade || '');
@@ -99,9 +98,13 @@ function CadastroAbastecimento({ toggleMenu }) {
     }, [idParam]);
 
     useEffect(() => {
-        if (tipoCombustivel && tiposCombustivelCompletos.length > 0) {
-            const tipoSelecionado = tiposCombustivelCompletos.find(t => t.nome === tipoCombustivel);
+        if (idCombustivel && tiposCombustivelCompletos.length > 0) {
+            const tipoSelecionado = tiposCombustivelCompletos.find(t => String(t.id) === String(idCombustivel));
             if (tipoSelecionado) {
+                setTipoCombustivel(tipoSelecionado.nome || '');
+                if (!fornecedor) {
+                    setFornecedor(tipoSelecionado.fornecedor || '');
+                }
                 let unidadeEncontrada = '';
 
                 if (tipoSelecionado.unidade) {
@@ -121,42 +124,18 @@ function CadastroAbastecimento({ toggleMenu }) {
             } else {
                 setUnidade('');
             }
-        } else if (!tipoCombustivel) {
+        } else if (!idCombustivel) {
             setUnidade('');
         }
-    }, [tipoCombustivel, tiposCombustivelCompletos]);
-
-    async function atualizarUltimoAbastecimentoTipoCombustivel(postoId) {
-        if (!postoId || !tipoCombustivel || !dataEntrega) {
-            return;
-        }
-
-        try {
-            const response = await axios.get(
-                `${BASE_URL}/TiposCombustivel?id_posto=${postoId}&nome=${encodeURIComponent(tipoCombustivel)}`
-            );
-            const tipos = Array.isArray(response.data) ? response.data : [];
-
-            if (tipos.length === 0) {
-                return;
-            }
-
-            const tipo = tipos[0];
-            await axios.put(`${BASE_URL}/TiposCombustivel/${tipo.id}`, {
-                ...tipo,
-                ultimoAbastecimento: dataEntrega
-            });
-        } catch (error) {
-            console.error('Erro ao atualizar último abastecimento do tipo de combustível:', error);
-        }
-    }
+    }, [idCombustivel, tiposCombustivelCompletos, fornecedor]);
 
     async function salvar(e) {
         e.preventDefault();
         const postoId = localStorage.getItem('postoSelecionadoId');
 
         const payload = {
-            id_posto: postoId,
+            idPosto: postoId,
+            idCombustivel,
             tipoCombustivel,
             fornecedor,
             quantidade: parseFloat(quantidade) || 0,
@@ -174,12 +153,10 @@ function CadastroAbastecimento({ toggleMenu }) {
 
         try {
             if (idParam) {
-                await axios.put(`${baseURL}/${idParam}`, payload);
-                await atualizarUltimoAbastecimentoTipoCombustivel(postoId);
+                await atualizarAbastecimento(idParam, payload);
                 alert('Abastecimento alterado com sucesso');
             } else {
-                await axios.post(baseURL, payload);
-                await atualizarUltimoAbastecimentoTipoCombustivel(postoId);
+                await criarAbastecimento(payload);
                 alert('Abastecimento registrado com sucesso');
             }
 
@@ -242,8 +219,8 @@ function CadastroAbastecimento({ toggleMenu }) {
                                     <select
                                         id="tipoCombustivel"
                                         name="tipoCombustivel"
-                                        value={tipoCombustivel}
-                                        onChange={(e) => setTipoCombustivel(e.target.value)}
+                                        value={idCombustivel}
+                                        onChange={(e) => setIdCombustivel(e.target.value)}
                                         required
                                         className="card-pdv-input form-input"
                                         style={{
