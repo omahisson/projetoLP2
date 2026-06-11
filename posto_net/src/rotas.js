@@ -23,7 +23,6 @@ import Dashboard from './views/dashboard';
 
 import { Route, Routes, BrowserRouter} from 'react-router-dom'
 import ListagemCombustiveis from './views/listagem-combustiveis';
-import CadastroCombustiveis from './views/cadastro-combustiveis';
 
 function Rotas({ toggleMenu }){
     return(
@@ -32,7 +31,6 @@ function Rotas({ toggleMenu }){
             <Route path='/cadastro-administradores/:idParam?' element={<CadastroAdministradores toggleMenu={toggleMenu} />} /> 
             <Route path='/cadastro-gerentes/:idParam?' element={<CadastroGerentes toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-funcionarios/:idParam?' element={<CadastroFuncionarios toggleMenu={toggleMenu} />} />
-            <Route path='/cadastro-combustiveis/:idParam?' element={<CadastroCombustiveis toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-servicos/:idParam?' element={<CadastroServicos toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-produtos/:idParam?' element={<CadastroProdutos toggleMenu={toggleMenu} />} />
             <Route path='/cadastro-bombas/:idParam?' element={<CadastroBombas toggleMenu={toggleMenu} />} />

@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
 
 function ModalVendas({
     vendas = [],
@@ -35,10 +33,17 @@ function ModalVendas({
         return 'Produto';
     };
 
-    const handleCancelarVenda = (vendaId) => {
-        const novoSet = new Set(vendasCanceladas);
-        novoSet.add(vendaId);
-        setVendasCanceladas(novoSet);
+    const handleCancelarVenda = async (vendaId) => {
+        try {
+            if (onVendaCancelada) {
+                await onVendaCancelada(vendaId);
+            }
+            const novoSet = new Set(vendasCanceladas);
+            novoSet.add(vendaId);
+            setVendasCanceladas(novoSet);
+        } catch (error) {
+            alert('Erro ao cancelar venda. Tente novamente.');
+        }
     };
 
     const isVendaCancelada = (vendaId) => {

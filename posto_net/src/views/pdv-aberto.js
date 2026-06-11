@@ -2,8 +2,6 @@ import React from 'react';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import iconeColuna from '../icones/coluna.svg';
-import iconeFecharTurno from '../icones/fecharTurno.svg';
 import Card from '../components/card';
 import CardItemPDV from '../components/card-item-pdv';
 import Quantidade from '../components/quantidade';
@@ -11,8 +9,10 @@ import Quantidade from '../components/quantidade';
 import ModalFecharTurno from '../components/modal-fechar-turno';
 import ModalVendas from '../components/modal-vendas';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import { listarProdutos } from '../services/produtoService';
+import { listarServicos } from '../services/servicoService';
+import { listarCombustiveis } from '../services/combustivelService';
+import { buscarTurno, listarVendasTurno, registrarVenda, cancelarVenda, fecharTurno } from '../services/pdvService';
 
 function PdvAberto({ toggleMenu }) {
     const navigate = useNavigate();
@@ -26,7 +26,9 @@ function PdvAberto({ toggleMenu }) {
     const [loading, setLoading] = React.useState(true);
 
     const [turnoId, setTurnoId] = React.useState(null);
-    const { operadorNome, turno, horaAbertura, valorInicialCaixa, operadorId } = location.state || {};
+    const [turnoAtual, setTurnoAtual] = React.useState(location.state || null);
+    const dadosTurno = turnoAtual || {};
+    const { operadorNome, turno, horaAbertura, valorInicialCaixa } = dadosTurno;
 
     const [tipoVenda, setTipoVenda] = React.useState('quantidade');
     const [quantidade, setQuantidade] = React.useState(1);
@@ -46,17 +48,25 @@ function PdvAberto({ toggleMenu }) {
             try {
                 if (location.state?.turnoId) {
                     setTurnoId(location.state.turnoId);
+                    setTurnoAtual(location.state);
                     await buscarVendasDoTurno(location.state.turnoId);
                     return;
                 }
 
                 const turnoIdSalvo = localStorage.getItem('turnoAbertoId');
                 if (turnoIdSalvo) {
-                    const response = await axios.get(`${BASE_URL}/turnosAbertos/${turnoIdSalvo}`);
-                    const turnoData = response.data;
+                    const turnoData = await buscarTurno(turnoIdSalvo);
 
                     if (turnoData && turnoData.status === 'aberto') {
                         setTurnoId(turnoData.id);
+                        setTurnoAtual({
+                            turnoId: turnoData.id,
+                            operadorId: turnoData.operadorId,
+                            operadorNome: turnoData.operadorNome,
+                            turno: turnoData.turno,
+                            horaAbertura: formatarDataHora(turnoData.horaAberturaISO),
+                            valorInicialCaixa: turnoData.valorInicialCaixa || 0
+                        });
                         await buscarVendasDoTurno(turnoData.id);
                     } else {
                         localStorage.removeItem('turnoAbertoId');
@@ -73,13 +83,11 @@ function PdvAberto({ toggleMenu }) {
         };
 
         recuperarTurno();
-    }, []);
+    }, [location.state, navigate]);
 
     const buscarVendasDoTurno = async (idTurno) => {
         try {
-            const postoId = localStorage.getItem('postoSelecionadoId');
-            const response = await axios.get(`${BASE_URL}/vendas?id_posto=${postoId}&id_turno=${idTurno}`);
-            const vendas = Array.isArray(response.data) ? response.data : [];
+            const vendas = await listarVendasTurno(idTurno);
             setVendasFinalizadas(vendas);
         } catch (error) {
             console.error('Erro ao buscar vendas do turno:', error);
@@ -90,16 +98,14 @@ function PdvAberto({ toggleMenu }) {
         const fetchDados = async () => {
             try {
                 const postoId = localStorage.getItem('postoSelecionadoId');
-                const queryParam = `?id_posto=${postoId}`;
-
-                const [responseProdutos, responseServicos, responseCombustiveis] = await Promise.all([
-                    axios.get(`${BASE_URL}/produtos${queryParam}`),
-                    axios.get(`${BASE_URL}/servicos${queryParam}`),
-                    axios.get(`${BASE_URL}/TiposCombustivel${queryParam}`)
+                const [produtosData, servicosData, combustiveisData] = await Promise.all([
+                    listarProdutos(postoId),
+                    listarServicos(postoId),
+                    listarCombustiveis(postoId)
                 ]);
-                setProdutos(responseProdutos.data || []);
-                setServicos(responseServicos.data || []);
-                setCombustiveis(responseCombustiveis.data || []);
+                setProdutos(produtosData || []);
+                setServicos(servicosData || []);
+                setCombustiveis(combustiveisData || []);
             } catch (error) {
                 console.error('Erro ao buscar dados:', error);
             } finally {
@@ -127,6 +133,13 @@ function PdvAberto({ toggleMenu }) {
         return turnos[turno] || turno;
     };
 
+    const formatarDataHora = (dataStr) => {
+        if (!dataStr) return '';
+        const data = new Date(dataStr);
+        if (isNaN(data.getTime())) return '';
+        return data.toLocaleString('pt-BR');
+    };
+
     const handleFecharTurno = () => {
         setMostrarModalFecharTurno(true);
     };
@@ -138,40 +151,14 @@ function PdvAberto({ toggleMenu }) {
                 return;
             }
 
-            const postoId = localStorage.getItem('postoSelecionadoId');
-            const totais = calcularTotaisVendas();
-
-            const turnoAtual = await axios.get(`${BASE_URL}/turnosAbertos/${turnoId}`);
-            await axios.put(`${BASE_URL}/turnosAbertos/${turnoId}`, {
-                ...turnoAtual.data,
-                status: 'fechado',
-                horaFechamento: new Date().toISOString()
-            });
-
-            const fechamentoTurno = {
-                id: Date.now(),
-                id_posto: postoId,
-                id_turno: turnoId,
-                operadorNome: operadorNome,
-                operadorId: operadorId,
-                turno: turno,
-                horaAbertura: horaAbertura,
-                horaFechamento: new Date().toISOString(),
-                valorInicialCaixa: valorInicialCaixa || 0,
+            await fecharTurno(turnoId, {
                 valorFinalCaixa: dados.valorFinalCaixa,
                 valorEsperado: dados.valorEsperado,
-                diferenca: dados.diferenca,
-                totalVendas: totais.total,
-                totalTransacoes: totais.transacoes,
-                totalCartao: totais.cartao,
-                totalDinheiro: totais.dinheiro
-            };
-
-            await axios.post(`${BASE_URL}/fechamentoTurnos`, fechamentoTurno);
+                diferenca: dados.diferenca
+            });
 
             localStorage.removeItem('turnoAbertoId');
 
-            console.log('Turno fechado e salvo:', fechamentoTurno);
             setMostrarModalFecharTurno(false);
             navigate('/pdv');
         } catch (error) {
@@ -182,8 +169,7 @@ function PdvAberto({ toggleMenu }) {
 
     const handleVendaCancelada = async (vendaId) => {
         try {
-            const response = await axios.get(`${BASE_URL}/vendas/${vendaId}`);
-            const vendaAtualizada = response.data;
+            const vendaAtualizada = await cancelarVenda(vendaId);
 
             setVendasFinalizadas(prevVendas =>
                 prevVendas.map(v => v.id === vendaId ? vendaAtualizada : v)
@@ -222,23 +208,27 @@ function PdvAberto({ toggleMenu }) {
             return;
         }
 
-        const postoId = localStorage.getItem('postoSelecionadoId');
         const totalVenda = calcularTotal();
         const novaVenda = {
-            id: Date.now(),
-            id_posto: postoId,
-            id_turno: turnoId,
-            itens: [...itensVenda],
+            idTurno: turnoId,
+            itens: itensVenda.map(item => ({
+                tipo: item.tipo,
+                itemId: item.itemId,
+                titulo: item.titulo,
+                quantidade: item.quantidade,
+                precoUnitario: item.precoUnitario,
+                valorTotal: item.valorTotal,
+                unidade: item.unidade
+            })),
             total: totalVenda,
             formaPagamento: formaPagamento,
-            data: new Date().toISOString(),
-            cancelada: false
+            data: new Date().toISOString()
         };
 
         try {
-            await axios.post(`${BASE_URL}/vendas`, novaVenda);
+            const vendaSalva = await registrarVenda(novaVenda);
 
-            setVendasFinalizadas([...vendasFinalizadas, novaVenda]);
+            setVendasFinalizadas([vendaSalva, ...vendasFinalizadas]);
             setItensVenda([]);
             setMostrarToast(true);
 
@@ -284,6 +274,8 @@ function PdvAberto({ toggleMenu }) {
         const novoItem = {
             id: Date.now(),
             produtoId: itemSelecionado.id,
+            itemId: itemSelecionado.id,
+            tipo: itemSelecionado.tipo,
             titulo: itemSelecionado.titulo,
             quantidade: tipoVenda === 'quantidade' ? quantidade : qtd,
             precoUnitario: extrairPrecoNumerico(itemSelecionado.valor),
@@ -313,6 +305,7 @@ function PdvAberto({ toggleMenu }) {
         if (categoriaSelecionada === 'servicos') {
             itens = servicos.map(servico => ({
                 id: servico.id,
+                tipo: 'servico',
                 titulo: servico.nome,
                 label: servico.labels && servico.labels.length > 0 ? servico.labels[0] : '',
                 valor: formatarPreco(servico.preco),
@@ -337,6 +330,7 @@ function PdvAberto({ toggleMenu }) {
 
                 return {
                     id: combustivel.id,
+                    tipo: 'combustivel',
                     titulo: combustivel.nome,
                     label: primeiroNome,
                     valor: formatarPreco(precoNumerico),
@@ -354,6 +348,7 @@ function PdvAberto({ toggleMenu }) {
                 )
                 .map(produto => ({
                     id: produto.id,
+                    tipo: 'produto',
                     titulo: produto.nome,
                     label: produto.labels && produto.labels.length > 0 ? produto.labels[0] : '',
                     valor: formatarPreco(produto.preco),

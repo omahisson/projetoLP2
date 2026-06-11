@@ -1,7 +1,6 @@
 import React from 'react';
 import {
-  FiDollarSign, FiBarChart2, FiDownload, FiTag,
-  FiArchive, FiCheckSquare, FiClock, FiFileText
+  FiDownload
 } from 'react-icons/fi';
 import { buscarDashboard } from '../services/dashboardService';
 import '../index.css';
@@ -11,7 +10,6 @@ import iconeCifrao from '../icones/cifrao.svg';
 import rede from '../icones/rede.svg';
 import aumento from '../icones/aumento.svg';
 import cubo from '../icones/cubo.svg';
-import config1 from '../icones/config.svg';
 
 /**
  * Converte um array de objetos para uma string CSV.
@@ -59,8 +57,6 @@ function Dashboard({ toggleMenu }) {
   const [maisVendidos, setMaisVendidos] = React.useState([]);
   const [relatorioPreco, setRelatorioPreco] = React.useState([]);
   const [relatorioEstoque, setRelatorioEstoque] = React.useState([]);
-  const [relatorioOperacional, setRelatorioOperacional] = React.useState(null);
-
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
 
@@ -74,7 +70,6 @@ function Dashboard({ toggleMenu }) {
         setMaisVendidos(Array.isArray(data.maisVendidos) ? data.maisVendidos : []);
         setRelatorioPreco(Array.isArray(data.relatorioPreco) ? data.relatorioPreco : []);
         setRelatorioEstoque(Array.isArray(data.relatorioEstoque) ? data.relatorioEstoque : []);
-        setRelatorioOperacional(data.relatorioOperacional || null);
       } catch (err) {
         console.error("Erro ao buscar dados do dashboard:", err);
         setError(err.message);
@@ -425,15 +420,5 @@ const StockReportCard = ({ stockReportData }) => {
     </Card>
   );
 };
-
-const OperationalKpiCard = ({ icon, value, label }) => (
-  <div style={{ display: 'flex', alignItems: 'center', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-    <div style={{ fontSize: '24px', color: '#495057', marginRight: '16px' }}>{icon}</div>
-    <div>
-      <div style={{ fontSize: '22px', fontWeight: 'bold' }}>{value}</div>
-      <div style={{ color: '#6c757d', fontSize: '14px' }}>{label}</div>
-    </div>
-  </div>
-);
 
 export default Dashboard;
