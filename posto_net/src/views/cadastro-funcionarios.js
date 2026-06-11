@@ -64,8 +64,10 @@ function CadastroFuncionario({ toggleMenu }) {
             idPosto: postoDeTrabalho || postoId,
             nome: nomeCompleto,
             cpf,
+            // setor recebe o valor descritivo escolhido no formulário (ex: "Frentista")
             setor: cargo,
-            cargo,
+            // cargo deve ser o enum do backend: COLABORADOR para funcionários comuns
+            cargoApi: 'COLABORADOR',
             labels
         };
         if (idParam == null) {
@@ -281,7 +283,8 @@ function CadastroFuncionario({ toggleMenu }) {
         'Auxiliar de Limpeza',
         'Mecânico',
         'Vendedor',
-        'Supervisor'
+        'Supervisor',
+        'Outro'
     ];
 
     return (
@@ -398,7 +401,7 @@ function CadastroFuncionario({ toggleMenu }) {
 
                             <div style={formStyles.fieldGroup}>
                                 <label htmlFor="cargo" style={formStyles.label}>
-                                    Cargo
+                                    Setor / Função
                                 </label>
                                 <div style={formStyles.selectWrapper}>
                                     <select
@@ -409,7 +412,7 @@ function CadastroFuncionario({ toggleMenu }) {
                                         required
                                         style={formStyles.select}
                                     >
-                                        <option value="">Selecione o cargo</option>
+                                        <option value="">Selecione o setor</option>
                                         {cargos.map((cargoOption) => (
                                             <option key={cargoOption} value={cargoOption}>
                                                 {cargoOption}

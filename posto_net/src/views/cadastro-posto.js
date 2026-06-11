@@ -23,7 +23,6 @@ function CadastroPosto({ toggleMenu }) {
     const [cep, setCep] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
-    const [horarioFuncionamento, setHorarioFuncionamento] = useState('');
     const [carregando, setCarregando] = useState(false);
 
     useEffect(() => {
@@ -41,7 +40,6 @@ function CadastroPosto({ toggleMenu }) {
             setCep('');
             setTelefone('');
             setEmail('');
-            setHorarioFuncionamento('');
             return;
         }
 
@@ -61,7 +59,6 @@ function CadastroPosto({ toggleMenu }) {
                 setCep(data.cep || '');
                 setTelefone(data.telefone || '');
                 setEmail(data.email || '');
-                setHorarioFuncionamento(data.horarioFuncionamento || '');
             })
             .catch((error) => alert(error.response?.data || 'Erro ao buscar posto'))
             .finally(() => setCarregando(false));
@@ -106,8 +103,7 @@ function CadastroPosto({ toggleMenu }) {
             estado: estado.toUpperCase(),
             cep,
             telefone,
-            email,
-            horarioFuncionamento
+            email
         };
 
         if (idParam) {
@@ -356,23 +352,6 @@ function CadastroPosto({ toggleMenu }) {
                                     />
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="form-field-group">
-                            <label htmlFor="horarioFuncionamento" className="form-label">Horário de Funcionamento *</label>
-                            <div className="form-input-wrapper">
-                                <input
-                                    type="text"
-                                    id="horarioFuncionamento"
-                                    name="horarioFuncionamento"
-                                    value={horarioFuncionamento}
-                                    onChange={(e) => setHorarioFuncionamento(e.target.value)}
-                                    placeholder="Ex: Segunda a Domingo, 6h às 22h"
-                                    required
-                                    className="card-pdv-input form-input"
-                                />
-                            </div>
-                            <p className="form-subtitle">Descreva os dias e horários de funcionamento</p>
                         </div>
 
                         <div className="form-button-group">

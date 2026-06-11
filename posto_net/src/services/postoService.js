@@ -36,8 +36,6 @@ function fromApiPosto(posto) {
     return {
         ...posto,
         rua: posto.logradouro || '',
-        complemento: posto.complemento || '',
-        horarioFuncionamento: posto.horarioFuncionamento || '',
         nomeFantasia: posto.nomeFantasia || posto.nome || ''
     };
 }

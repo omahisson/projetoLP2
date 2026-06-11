@@ -66,6 +66,7 @@ export async function registrarVenda(payload) {
 }
 
 export async function cancelarVenda(id, motivoCancelamento = 'Cancelada no PDV') {
+    // O backend espera PdvVendaDTO com o campo motivoCancelamento
     const { data } = await api.put(`/pdv/vendas/${id}/cancelar`, { motivoCancelamento });
     return fromApiVenda(data);
 }
