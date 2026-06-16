@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'; //redireciona rotas e guarda variaveis
-import { useNavigate, useParams } from 'react-router-dom'; //navega entre rotas e pega parametros na url
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
@@ -8,11 +8,10 @@ import { listarPostos } from '../services/postoService';
 import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
 
 function CadastroFuncionario({ toggleMenu }) {
-    const { idParam } = useParams(); //pega o parametro da url
+    const { idParam } = useParams();
 
     const navigate = useNavigate();
 
-    //criou um campo para cada campo que ta na tela
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
     const [sobrenome, setSobrenome] = useState('');
@@ -21,7 +20,7 @@ function CadastroFuncionario({ toggleMenu }) {
     const [postoDeTrabalho, setPostoDeTrabalho] = useState('');
     const [postos, setPostos] = useState([]);
 
-    const [dados, setDados] = React.useState([]); //volta pro dado original
+    const [dados, setDados] = React.useState([]);
 
     useEffect(() => {
         async function carregarPostos() {
@@ -36,8 +35,8 @@ function CadastroFuncionario({ toggleMenu }) {
         carregarPostos();
     }, []);
 
-    function inicializar() {
-        if (idParam == null) { //se nulo pq estou incluindo
+    const inicializar = useCallback(() => {
+        if (idParam == null) {
             setId('');
             setNome('');
             setSobrenome('');
@@ -52,7 +51,7 @@ function CadastroFuncionario({ toggleMenu }) {
             setCargo(dados.labels && dados.labels.length > 0 ? dados.labels[0] : '');
             setPostoDeTrabalho(dados.postoDeTrabalho || '');
         }
-    }
+    }, [idParam, dados]);
 
     async function salvar() {
         const postoId = localStorage.getItem('postoSelecionadoId');
@@ -64,9 +63,7 @@ function CadastroFuncionario({ toggleMenu }) {
             idPosto: postoDeTrabalho || postoId,
             nome: nomeCompleto,
             cpf,
-            // setor recebe o valor descritivo escolhido no formulário (ex: "Frentista")
             setor: cargo,
-            // cargo deve ser o enum do backend: COLABORADOR para funcionários comuns
             cargoApi: 'COLABORADOR',
             labels
         };
@@ -91,7 +88,7 @@ function CadastroFuncionario({ toggleMenu }) {
         }
     }
 
-    async function buscar() {
+    const buscar = useCallback(async () => {
         if (idParam != null) {
             try {
                 const response = await buscarFuncionario(idParam);
@@ -107,7 +104,7 @@ function CadastroFuncionario({ toggleMenu }) {
                 console.error('Erro ao buscar funcionário:', error);
             }
         }
-    }
+    }, [idParam]);
 
     useEffect(() => {
         if (idParam) {
@@ -115,9 +112,9 @@ function CadastroFuncionario({ toggleMenu }) {
         } else {
             inicializar();
         }
-    }, [idParam]);
+    }, [idParam, buscar, inicializar]);
 
-    if (!dados) return null; //se nao tem dado, retorna null e n renderiza a tela ate receber os dados
+    if (!dados) return null;
 
     const formStyles = {
         container: {
@@ -351,7 +348,7 @@ function CadastroFuncionario({ toggleMenu }) {
                                             id="nome"
                                             name="nome"
                                             value={nome}
-                                            onChange={(e) => setNome(e.target.value)} //quando o campo mudar, renderizo a tela novamente
+                                            onChange={(e) => setNome(e.target.value)}
                                             placeholder="Nome do funcionário"
                                             required
                                             style={formStyles.input}

@@ -12,7 +12,7 @@ import ModalVendas from '../components/modal-vendas';
 import { listarProdutos } from '../services/produtoService';
 import { listarServicos } from '../services/servicoService';
 import { listarCombustiveis } from '../services/combustivelService';
-import { buscarTurno, listarVendasTurno, registrarVenda, cancelarVenda, fecharTurno } from '../services/pdvService';
+import { buscarTurno, listarTurnosAbertos, listarVendasTurno, registrarVenda, cancelarVenda, fecharTurno } from '../services/pdvService';
 
 function PdvAberto({ toggleMenu }) {
     const navigate = useNavigate();
@@ -43,6 +43,24 @@ function PdvAberto({ toggleMenu }) {
     const [vendasFinalizadas, setVendasFinalizadas] = React.useState([]);
     const [mostrarModalVendas, setMostrarModalVendas] = React.useState(false);
 
+    const montarEstadoTurno = React.useCallback((turnoData) => {
+        const formatarDataHoraTurno = (dataStr) => {
+            if (!dataStr) return '';
+            const data = new Date(dataStr);
+            if (isNaN(data.getTime())) return '';
+            return data.toLocaleString('pt-BR');
+        };
+
+        return {
+            turnoId: turnoData.id,
+            operadorId: turnoData.operadorId,
+            operadorNome: turnoData.operadorNome,
+            turno: turnoData.turno,
+            horaAbertura: formatarDataHoraTurno(turnoData.horaAberturaISO),
+            valorInicialCaixa: turnoData.valorInicialCaixa || 0
+        };
+    }, []);
+
     React.useEffect(() => {
         const recuperarTurno = async () => {
             try {
@@ -59,20 +77,23 @@ function PdvAberto({ toggleMenu }) {
 
                     if (turnoData && turnoData.status === 'aberto') {
                         setTurnoId(turnoData.id);
-                        setTurnoAtual({
-                            turnoId: turnoData.id,
-                            operadorId: turnoData.operadorId,
-                            operadorNome: turnoData.operadorNome,
-                            turno: turnoData.turno,
-                            horaAbertura: formatarDataHora(turnoData.horaAberturaISO),
-                            valorInicialCaixa: turnoData.valorInicialCaixa || 0
-                        });
+                        setTurnoAtual(montarEstadoTurno(turnoData));
                         await buscarVendasDoTurno(turnoData.id);
                     } else {
                         localStorage.removeItem('turnoAbertoId');
                         navigate('/pdv');
                     }
                 } else {
+                    const postoId = localStorage.getItem('postoSelecionadoId');
+                    const turnosAbertos = postoId ? await listarTurnosAbertos(postoId) : [];
+                    if (turnosAbertos.length > 0) {
+                        const turnoAberto = turnosAbertos[0];
+                        localStorage.setItem('turnoAbertoId', turnoAberto.id);
+                        setTurnoId(turnoAberto.id);
+                        setTurnoAtual(montarEstadoTurno(turnoAberto));
+                        await buscarVendasDoTurno(turnoAberto.id);
+                        return;
+                    }
                     navigate('/pdv');
                 }
             } catch (error) {
@@ -83,7 +104,7 @@ function PdvAberto({ toggleMenu }) {
         };
 
         recuperarTurno();
-    }, [location.state, navigate]);
+    }, [location.state, navigate, montarEstadoTurno]);
 
     const buscarVendasDoTurno = async (idTurno) => {
         try {
@@ -94,27 +115,27 @@ function PdvAberto({ toggleMenu }) {
         }
     };
 
-    React.useEffect(() => {
-        const fetchDados = async () => {
-            try {
-                const postoId = localStorage.getItem('postoSelecionadoId');
-                const [produtosData, servicosData, combustiveisData] = await Promise.all([
-                    listarProdutos(postoId),
-                    listarServicos(postoId),
-                    listarCombustiveis(postoId)
-                ]);
-                setProdutos(produtosData || []);
-                setServicos(servicosData || []);
-                setCombustiveis(combustiveisData || []);
-            } catch (error) {
-                console.error('Erro ao buscar dados:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDados();
+    const buscarDados = React.useCallback(async () => {
+        try {
+            const postoId = localStorage.getItem('postoSelecionadoId');
+            const [produtosData, servicosData, combustiveisData] = await Promise.all([
+                listarProdutos(postoId),
+                listarServicos(postoId),
+                listarCombustiveis(postoId)
+            ]);
+            setProdutos(produtosData || []);
+            setServicos(servicosData || []);
+            setCombustiveis(combustiveisData || []);
+        } catch (error) {
+            console.error('Erro ao buscar dados:', error);
+        } finally {
+            setLoading(false);
+        }
     }, []);
+
+    React.useEffect(() => {
+        buscarDados();
+    }, [buscarDados]);
 
     React.useEffect(() => {
         setItemSelecionado(null);
@@ -131,13 +152,6 @@ function PdvAberto({ toggleMenu }) {
             'noturno': 'noturno'
         };
         return turnos[turno] || turno;
-    };
-
-    const formatarDataHora = (dataStr) => {
-        if (!dataStr) return '';
-        const data = new Date(dataStr);
-        if (isNaN(data.getTime())) return '';
-        return data.toLocaleString('pt-BR');
     };
 
     const handleFecharTurno = () => {
@@ -174,6 +188,7 @@ function PdvAberto({ toggleMenu }) {
             setVendasFinalizadas(prevVendas =>
                 prevVendas.map(v => v.id === vendaId ? vendaAtualizada : v)
             );
+            await buscarDados();
         } catch (error) {
             console.error('Erro ao atualizar venda cancelada:', error);
         }
@@ -230,6 +245,7 @@ function PdvAberto({ toggleMenu }) {
 
             setVendasFinalizadas([vendaSalva, ...vendasFinalizadas]);
             setItensVenda([]);
+            await buscarDados();
             setMostrarToast(true);
 
             setTimeout(() => {

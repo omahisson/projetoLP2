@@ -7,7 +7,7 @@ import CardPDV, { CardPDVSelect, CardPDVInput } from '../components/card-pdv';
 import iconeRelogio from '../icones/relogio.svg';
 
 import { listarFuncionarios } from '../services/funcionarioService';
-import { abrirTurno } from '../services/pdvService';
+import { abrirTurno, listarTurnosAbertos } from '../services/pdvService';
 
 function Pdv({ toggleMenu }) {
     const navigate = useNavigate();
@@ -21,6 +21,24 @@ function Pdv({ toggleMenu }) {
         return Number(String(valor || '').replace(/\./g, '').replace(',', '.')) || 0;
     };
 
+    const montarEstadoTurno = React.useCallback((turnoData) => {
+        const formatarDataHora = (dataStr) => {
+            if (!dataStr) return '';
+            const data = new Date(dataStr);
+            if (isNaN(data.getTime())) return '';
+            return data.toLocaleString('pt-BR');
+        };
+
+        return {
+            turnoId: turnoData.id,
+            operadorId: turnoData.operadorId,
+            operadorNome: turnoData.operadorNome,
+            turno: turnoData.turno,
+            horaAbertura: formatarDataHora(turnoData.horaAberturaISO),
+            valorInicialCaixa: turnoData.valorInicialCaixa || 0
+        };
+    }, []);
+
     React.useEffect(() => {
         const fetchFuncionarios = async () => {
             try {
@@ -29,6 +47,16 @@ function Pdv({ toggleMenu }) {
                 if (!postoId) {
                     setFuncionarios([]);
                     setLoading(false);
+                    return;
+                }
+
+                const turnosAbertos = await listarTurnosAbertos(postoId);
+                if (turnosAbertos.length > 0) {
+                    const turnoAberto = turnosAbertos[0];
+                    localStorage.setItem('turnoAbertoId', turnoAberto.id);
+                    navigate('/pdv-aberto', {
+                        state: montarEstadoTurno(turnoAberto)
+                    });
                     return;
                 }
                 
@@ -47,7 +75,7 @@ function Pdv({ toggleMenu }) {
         };
 
         fetchFuncionarios();
-    }, []);
+    }, [navigate, montarEstadoTurno]);
 
     const handleAbrirTurno = async () => {
         if (!operadorSelecionado || !turnoSelecionado) {

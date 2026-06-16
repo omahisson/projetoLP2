@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Card from '../components/card';
@@ -18,7 +18,7 @@ function CadastroServicos({ toggleMenu }) {
     const [labels, setLabels] = useState('');
     const [dados, setDados] = useState(null);
 
-    function inicializar() {
+    const inicializar = useCallback(() => {
         setId('');
         setNome('');
         setPreco('');
@@ -26,7 +26,7 @@ function CadastroServicos({ toggleMenu }) {
         setDescricao('');
         setLabels('');
         setDados({});
-    }
+    }, []);
 
     async function salvar() {
         const labelsArray = labels ? labels.split(',').map(item => item.trim()).filter(Boolean) : [];
@@ -54,7 +54,7 @@ function CadastroServicos({ toggleMenu }) {
         }
     }
 
-    async function buscar() {
+    const buscar = useCallback(async () => {
         if (idParam == null) {
             inicializar();
             return;
@@ -72,11 +72,11 @@ function CadastroServicos({ toggleMenu }) {
         } catch (error) {
             console.error('Erro ao buscar servico:', error);
         }
-    }
+    }, [idParam, inicializar]);
 
     useEffect(() => {
         buscar();
-    }, [idParam]);
+    }, [buscar]);
 
     if (!dados) return null;
 

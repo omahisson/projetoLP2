@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'; //redireciona rotas e guarda variaveis
-import { useNavigate, useParams } from 'react-router-dom'; //navega entre rotas e pega parametros na url
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
@@ -8,11 +8,10 @@ import { listarPostos } from '../services/postoService';
 import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
 
 function CadastroGerente({ toggleMenu }) {
-    const { idParam } = useParams(); //pega o parametro da url
+    const { idParam } = useParams();
 
     const navigate = useNavigate();
 
-    //criou um campo para cada campo que ta na tela
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
@@ -21,7 +20,7 @@ function CadastroGerente({ toggleMenu }) {
     const [postos, setPostos] = useState([]);
     const [postosSelecionados, setPostosSelecionados] = useState([]);
 
-    const [dados, setDados] = React.useState([]); //volta pro dado original
+    const [dados, setDados] = React.useState([]);
 
     useEffect(() => {
         async function carregarPostos() {
@@ -36,8 +35,8 @@ function CadastroGerente({ toggleMenu }) {
         carregarPostos();
     }, []);
 
-    function inicializar() {
-        if (idParam == null) { //se nulo pq estou incluindo
+    const inicializar = useCallback(() => {
+        if (idParam == null) {
             setId('');
             setNome('');
             setEmail('');
@@ -53,7 +52,7 @@ function CadastroGerente({ toggleMenu }) {
             const postosVinculados = Array.isArray(dados.labels) ? dados.labels : [];
             setPostosSelecionados(postosVinculados);
         }
-    }
+    }, [idParam, dados]);
 
     async function salvar() {
         const postoId = localStorage.getItem('postoSelecionadoId');
@@ -69,16 +68,16 @@ function CadastroGerente({ toggleMenu }) {
             bonusMeta: 1,
             labels: postosSelecionados
         };
-        if (idParam == null) { //se nulo pq estou incluindo e uso post
+        if (idParam == null) {
             await criarFuncionario(data, 'gerentes')
-                .then(function (response) { //se 200, redireciona para a lista de gerentes
+                .then(function (response) {
                     alert(`Gerente ${nome} cadastrado com sucesso!`);
                     navigate(`/empregados`);
                 })
-                .catch(function (error) { //se 400, mostra erro
+                .catch(function (error) {
                     alert('Erro ao cadastrar gerente: ' + (error.response?.data || error.message));
                 });
-        } else { //se nao esta nulo pq estou editando e uso put
+        } else {
             await atualizarFuncionario(idParam, data, 'gerentes')
                 .then(function (response) {
                     alert(`Gerente ${nome} alterado com sucesso!`);
@@ -90,7 +89,7 @@ function CadastroGerente({ toggleMenu }) {
         }
     }
 
-    async function buscar() {
+    const buscar = useCallback(async () => {
         if (idParam != null) {
             try {
                 const response = await buscarFuncionario(idParam);
@@ -106,7 +105,7 @@ function CadastroGerente({ toggleMenu }) {
                 console.error('Erro ao buscar gerente:', error);
             }
         }
-    }
+    }, [idParam]);
 
     useEffect(() => {
         if (idParam) {
@@ -114,9 +113,9 @@ function CadastroGerente({ toggleMenu }) {
         } else {
             inicializar();
         }
-    }, [idParam]);
+    }, [idParam, buscar, inicializar]);
 
-    if (!dados) return null; //se nao tem dado, retorna null e n renderiza a tela ate receber os dados
+    if (!dados) return null;
 
     const formStyles = {
         container: {
@@ -341,7 +340,7 @@ function CadastroGerente({ toggleMenu }) {
                                         id="nome"
                                         name="nome"
                                         value={nome}
-                                        onChange={(e) => setNome(e.target.value)} //quando o campo mudar, renderizo a tela novamente
+                                        onChange={(e) => setNome(e.target.value)}
                                         placeholder="Nome completo do gerente"
                                         required
                                         style={formStyles.input}
@@ -401,7 +400,7 @@ function CadastroGerente({ toggleMenu }) {
                                         value={senha}
                                         onChange={(e) => setSenha(e.target.value)}
                                         placeholder="Digite a senha"
-                                        required={idParam == null} //obrigatorio apenas no cadastro
+                                        required={idParam == null}
                                         style={formStyles.input}
                                         className="card-pdv-input"
                                     />

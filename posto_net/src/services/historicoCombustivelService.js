@@ -26,9 +26,6 @@ export async function listarHistoricoCombustivel({
 }
 
 export async function alterarPrecoCombustivel(payload) {
-    // Campos aceitos pelo HistoricoCombustivelDTO do backend:
-    // id, idPosto, idCombustivel, tipoCombustivelId, tipoCombustivel, nome,
-    // fornecedor, estoque, precoAnterior, novoPreco, dataVigencia, responsavel, motivo, dataAlteracao
     const { data } = await api.post('/historico-combustivel/alterar-preco', {
         idPosto: payload.idPosto || payload.id_posto || localStorage.getItem('postoSelecionadoId'),
         idCombustivel: payload.idCombustivel || payload.tipoCombustivelId,

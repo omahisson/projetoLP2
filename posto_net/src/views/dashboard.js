@@ -11,9 +11,6 @@ import rede from '../icones/rede.svg';
 import aumento from '../icones/aumento.svg';
 import cubo from '../icones/cubo.svg';
 
-/**
- * Converte um array de objetos para uma string CSV.
- */
 const convertArrayToCSV = (data) => {
   if (!data || data.length === 0) {
     return "";
@@ -37,9 +34,6 @@ const convertArrayToCSV = (data) => {
   return [headerRow, ...dataRows].join('\n');
 };
 
-/**
- * Inicia o download de um arquivo CSV.
- */
 const downloadCSV = (content, fileName, mimeType = 'text/csv;charset=utf-8;') => {
   const blob = new Blob([content], { type: mimeType });
   const link = document.createElement('a');

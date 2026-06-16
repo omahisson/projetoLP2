@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'; //redireciona rotas e guarda variaveis
-import { useNavigate, useParams } from 'react-router-dom'; //navega entre rotas e pega parametros na url
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Card from '../components/card';
 import iconeColuna from '../icones/coluna.svg';
@@ -8,7 +8,7 @@ import { listarPostos } from '../services/postoService';
 import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
 
 function CadastroAdministrador({ toggleMenu }) {
-    const { idParam } = useParams(); //pega o parametro da url
+    const { idParam } = useParams();
 
     const navigate = useNavigate();
 
@@ -28,7 +28,6 @@ function CadastroAdministrador({ toggleMenu }) {
         carregarPostos();
     }, []);
 
-    //criou um campo para cada campo que ta na tela
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
     const [cpf, setCpf] = useState('');
@@ -40,11 +39,11 @@ function CadastroAdministrador({ toggleMenu }) {
     const [gerenciarFuncionarios, setGerenciarFuncionarios] = useState(false);
     const [gerenciarProdutos, setGerenciarProdutos] = useState(false);
 
-    const [dados, setDados] = React.useState(null); //volta pro dado original
-    const [carregando, setCarregando] = React.useState(!!idParam); // Adiciona estado de loading
+    const [dados, setDados] = React.useState(null);
+    const [carregando, setCarregando] = React.useState(!!idParam);
 
-    function inicializar() {
-        if (idParam == null) { //se nulo pq estou incluindo
+    const inicializar = useCallback(() => {
+        if (idParam == null) {
             setId('');
             setNome('');
             setCpf('');
@@ -56,7 +55,7 @@ function CadastroAdministrador({ toggleMenu }) {
             setGerenciarFuncionarios(false);
             setGerenciarProdutos(false);
             setPostosSelecionados([]);
-            setDados({}); // Inicializa com objeto vazio para permitir renderização
+            setDados({});
         } else {
             setId(dados.id);
             setNome(dados.nome);
@@ -69,9 +68,9 @@ function CadastroAdministrador({ toggleMenu }) {
             setGerenciarFuncionarios(dados.gerenciarFuncionarios || false);
             setGerenciarProdutos(dados.gerenciarProdutos || false);
         }
-    }
+    }, [idParam, dados]);
 
-    async function buscar() {
+    const buscar = useCallback(async () => {
         if (idParam != null) {
             setCarregando(true);
             try {
@@ -104,7 +103,7 @@ function CadastroAdministrador({ toggleMenu }) {
                 setCarregando(false);
             }
         }
-    }
+    }, [idParam, navigate]);
 
     async function salvar() {
         const postoId = localStorage.getItem('postoSelecionadoId');
@@ -176,9 +175,9 @@ function CadastroAdministrador({ toggleMenu }) {
         } else {
             inicializar();
         }
-    }, [idParam]);
+    }, [idParam, buscar, inicializar]);
 
-    if (carregando) return null; // Só bloqueia renderização se estiver carregando
+    if (carregando) return null;
 
     const formStyles = {
         container: {
@@ -400,7 +399,7 @@ function CadastroAdministrador({ toggleMenu }) {
                                         id="nome"
                                         name="nome"
                                         value={nome}
-                                        onChange={(e) => setNome(e.target.value)} //quando o campo mudar, renderizo a tela novamente
+                                        onChange={(e) => setNome(e.target.value)}
                                         placeholder="Nome completo do administrador"
                                         required
                                         style={formStyles.input}
@@ -478,7 +477,7 @@ function CadastroAdministrador({ toggleMenu }) {
                                         value={senha}
                                         onChange={(e) => setSenha(e.target.value)}
                                         placeholder="Digite a senha"
-                                        required={idParam == null} //obrigatorio apenas no cadastro
+                                        required={idParam == null}
                                         style={formStyles.input}
                                         className="card-pdv-input"
                                     />

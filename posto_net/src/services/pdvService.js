@@ -49,6 +49,16 @@ export async function buscarTurno(id) {
     return fromApiTurno(data);
 }
 
+export async function listarTurnosAbertos(idPosto = localStorage.getItem('postoSelecionadoId')) {
+    const { data } = await api.get('/pdv/turnos', {
+        params: {
+            idPosto,
+            status: 'aberto'
+        }
+    });
+    return Array.isArray(data) ? data.map(fromApiTurno) : [];
+}
+
 export async function listarVendasTurno(idTurno) {
     const { data } = await api.get(`/pdv/turnos/${idTurno}/vendas`);
     return Array.isArray(data) ? data.map(fromApiVenda) : [];
@@ -66,7 +76,6 @@ export async function registrarVenda(payload) {
 }
 
 export async function cancelarVenda(id, motivoCancelamento = 'Cancelada no PDV') {
-    // O backend espera PdvVendaDTO com o campo motivoCancelamento
     const { data } = await api.put(`/pdv/vendas/${id}/cancelar`, { motivoCancelamento });
     return fromApiVenda(data);
 }

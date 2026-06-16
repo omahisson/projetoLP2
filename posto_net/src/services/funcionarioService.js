@@ -6,14 +6,12 @@ function cargoParaApi(tipo) {
     return 'COLABORADOR';
 }
 
-// Normaliza qualquer valor de cargo para o enum esperado pelo backend
 function normalizarCargo(valor) {
     if (!valor) return null;
     const v = String(valor).toUpperCase().trim();
     if (v === 'ADMINISTRADOR') return 'ADMINISTRADOR';
     if (v === 'GERENTE') return 'GERENTE';
     if (v === 'COLABORADOR') return 'COLABORADOR';
-    // Valores textuais vindos do formulário (ex: "Frentista", "Caixa") → COLABORADOR
     return 'COLABORADOR';
 }
 
@@ -32,7 +30,6 @@ function textoObrigatorio(value, fallback) {
 }
 
 function toApiFuncionario(funcionario, tipo = 'funcionarios') {
-    // Determina o cargo: prioriza cargoApi explícito, depois normaliza o valor atual, por último usa o tipo de rota
     const cargo = funcionario.cargoApi
         ? normalizarCargo(funcionario.cargoApi)
         : (normalizarCargo(funcionario.cargo) || cargoParaApi(tipo));
@@ -43,7 +40,6 @@ function toApiFuncionario(funcionario, tipo = 'funcionarios') {
     const cpf = somenteDigitos(funcionario.cpf) || '52998224725';
     const matricula = textoObrigatorio(funcionario.maticula || funcionario.matricula, `MAT${funcionario.id || Date.now()}`);
     const senha = textoObrigatorio(funcionario.senha, 'Senha1234');
-    // setor recebe o valor textual do cargo/setor informado no formulário
     const setor = textoObrigatorio(funcionario.setor || funcionario.labels?.[0], cargo === 'GERENTE' ? 'Gerencia' : cargo === 'ADMINISTRADOR' ? 'Administracao' : 'Operacao');
 
     return {

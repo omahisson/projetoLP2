@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Card from '../components/card';
@@ -17,7 +17,7 @@ function CadastroProdutos({ toggleMenu }) {
     const [dataValidade, setDataValidade] = useState('');
     const [labels, setLabels] = useState('');
 
-    function inicializar() {
+    const inicializar = useCallback(() => {
         setId('');
         setNome('');
         setPreco('');
@@ -25,7 +25,7 @@ function CadastroProdutos({ toggleMenu }) {
         setSku('');
         setDataValidade('');
         setLabels('');
-    }
+    }, []);
 
     async function salvar() {
         const postoId = localStorage.getItem('postoSelecionadoId');
@@ -56,7 +56,7 @@ function CadastroProdutos({ toggleMenu }) {
         }
     }
 
-    async function buscar() {
+    const buscar = useCallback(async () => {
         if (idParam != null) {
             try {
                 const data = await buscarProduto(idParam);
@@ -71,7 +71,7 @@ function CadastroProdutos({ toggleMenu }) {
                 console.error('Erro ao buscar produto:', error);
             }
         }
-    }
+    }, [idParam]);
 
     useEffect(() => {
         if (idParam) {
@@ -79,7 +79,7 @@ function CadastroProdutos({ toggleMenu }) {
         } else {
             inicializar();
         }
-    }, [idParam]);
+    }, [idParam, buscar, inicializar]);
 
     const formStyles = {
         container: {

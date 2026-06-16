@@ -20,6 +20,33 @@ function ListagemEstatisticas({ toggleMenu }) {
     });
 
     useEffect(() => {
+        const formatarDataHistorico = (dataStr) => {
+            if (!dataStr) return '';
+            const data = new Date(dataStr);
+            if (isNaN(data.getTime())) return '';
+            return `${String(data.getDate()).padStart(2, '0')}/${String(data.getMonth() + 1).padStart(2, '0')}`;
+        };
+
+        const processarHistoricoLocal = (dadosHistorico) => {
+            return dadosHistorico
+                .sort((a, b) => {
+                    const dataA = new Date(a.dataAlteracao || a.dataVigencia || 0);
+                    const dataB = new Date(b.dataAlteracao || b.dataVigencia || 0);
+                    return dataA - dataB;
+                })
+                .slice(-30)
+                .map(item => {
+                    let preco = item.novoPreco || item.preco;
+                    if (typeof preco === 'string') {
+                        preco = parseFloat(preco.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+                    }
+                    return {
+                        data: formatarDataHistorico(item.dataAlteracao || item.dataVigencia),
+                        preco: parseFloat(preco) || 0
+                    };
+                });
+        };
+
         const fetchData = async () => {
             if (!idParam) {
                 navigate('/combustiveis');
@@ -34,7 +61,7 @@ function ListagemEstatisticas({ toggleMenu }) {
                 const historicoDataArray = await listarHistoricoCombustivel({ idCombustivel: idParam, idPosto: postoId });
                 setHistoricoData(historicoDataArray); 
                 
-                const historicoProcessado = processarHistorico(historicoDataArray);
+                const historicoProcessado = processarHistoricoLocal(historicoDataArray);
                 setHistorico(historicoProcessado);
 
                 const stats = calcularEstatisticas(dadosCombustivel, historicoDataArray);
@@ -131,43 +158,9 @@ function ListagemEstatisticas({ toggleMenu }) {
         };
     };
 
-    const processarHistorico = (historicoData) => {
-        const historicoOrdenado = historicoData
-            .sort((a, b) => {
-                const dataA = new Date(a.dataAlteracao || a.dataVigencia || 0);
-                const dataB = new Date(b.dataAlteracao || b.dataVigencia || 0);
-                return dataA - dataB;
-            })
-            .slice(-30)
-            .map(item => {
-                let preco = item.novoPreco || item.preco;
-                if (typeof preco === 'string') {
-                    preco = parseFloat(preco.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
-                }
-                return {
-                    data: formatarData(item.dataAlteracao || item.dataVigencia),
-                    preco: parseFloat(preco) || 0
-                };
-            });
-
-        return historicoOrdenado;
-    };
-
-    const formatarData = (dataStr) => {
-        if (!dataStr) return '';
-        const data = new Date(dataStr);
-        if (isNaN(data.getTime())) return '';
-        return `${String(data.getDate()).padStart(2, '0')}/${String(data.getMonth() + 1).padStart(2, '0')}`;
-    };
-
     const formatarPreco = (valor) => {
         if (!valor) return 'R$ 0,00';
         return `R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}`;
-    };
-
-    const formatarPercentual = (valor) => {
-        const sinal = valor >= 0 ? '+' : '';
-        return `${sinal}${valor.toFixed(2).replace('.', ',')}%`;
     };
 
     const calcularDadosMensais = () => {
