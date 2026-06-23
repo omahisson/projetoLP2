@@ -58,6 +58,7 @@ function CadastroGerente({ toggleMenu }) {
             cargoApi: 'GERENTE',
             salario: 1,
             bonusMeta: 1,
+            postosVinculados: postosSelecionados,
             labels: postosSelecionados
         };
         try {
@@ -90,7 +91,9 @@ function CadastroGerente({ toggleMenu }) {
                 setTelefone(response.telefone || '');
                 setCpf(response.cpf || '');
                 setSenha(response.senha || '');
-                const postosVinculados = response.idPosto ? [response.idPosto] : [];
+                const postosVinculados = response.postosVinculados?.length
+                    ? response.postosVinculados
+                    : response.idPosto ? [response.idPosto] : [];
                 setPostosSelecionados(postosVinculados);
             } catch (error) {
                 console.error('Erro ao buscar gerente:', error);
