@@ -488,7 +488,7 @@ function CadastroAdministrador({ toggleMenu }) {
                                 </div>
                             </div>
 
-                            <div style={formStyles.fieldGroup}>
+                            {false && <div style={formStyles.fieldGroup}>
                                 <label style={formStyles.label}>Permissões de Gerenciamento</label>
                                 <div style={formStyles.checkboxGrid}>
                                     <div style={formStyles.checkboxContainer}>
@@ -545,9 +545,9 @@ function CadastroAdministrador({ toggleMenu }) {
                                         </label>
                                     </div>
                                 </div>
-                            </div>
+                            </div>}
 
-                            {!gerenciarTodosPostos && (
+                            {false && !gerenciarTodosPostos && (
                                 <div style={formStyles.fieldGroup}>
                                     <label style={formStyles.label}>Postos Permitidos</label>
                                     <div style={formStyles.checkboxGrid}>
