@@ -9,9 +9,17 @@ import iconeCombustiveis from '../icones/combustiveis.svg';
 import iconeProdutosServicos from '../icones/produtosServicos.svg';
 import iconePDV from '../icones/pdv.svg';
 import iconeTrocarPosto from '../icones/fecharTurno.svg';
+import iconeSair from '../icones/sair.svg';
+import { sair } from '../services/authService';
 
 function Navbar({ menuVisivel, currentPath }) {
   const nomePosto = localStorage.getItem('postoSelecionado');
+  const cargo = localStorage.getItem('cargo');
+  const podeGerenciar = cargo === 'ADMINISTRADOR' || cargo === 'GERENTE';
+
+  const deslogar = () => {
+    sair();
+  };
 
   return (
     <div className={`menu-lateral ${!menuVisivel && 'menu-oculto'}`}>
@@ -22,28 +30,28 @@ function Navbar({ menuVisivel, currentPath }) {
         </div>
         <div className='navbar-nav flex-column navIteem'>
           <NavbarItem
-            render='true'
+            render={podeGerenciar}
             href='/home'
             label='Home'
             icone={iconeHome}
             isActive={currentPath === '/home'}
           />
           <NavbarItem
-            render='true'
+            render={podeGerenciar}
             href='/empregados'
             label='Empregados'
             icone={iconeEmpregados}
             isActive={currentPath === '/empregados' || (currentPath.startsWith('/cadastro-') && (currentPath.includes('administradores') || currentPath.includes('gerentes') || currentPath.includes('funcionarios')))}
           />
           <NavbarItem
-            render='true'
+            render={podeGerenciar}
             href='/combustiveis'
             label='Combustiveis'
             icone={iconeCombustiveis}
             isActive={currentPath === '/combustiveis' || currentPath.startsWith('/cadastro-tipoCombustivel') || currentPath.startsWith('/cadastro-bombas') || currentPath.startsWith('/cadastro-abastecimento') || currentPath.startsWith('/cadastro-novoPreco')}
           />
           <NavbarItem
-            render='true'
+            render={podeGerenciar}
             href='/produtosServicos'
             label='Produtos e Serviços'
             icone={iconeProdutosServicos}
@@ -57,11 +65,19 @@ function Navbar({ menuVisivel, currentPath }) {
             isActive={currentPath === '/pdv' || currentPath === '/pdv-aberto'}
           />
           <NavbarItem
-            render='true'
+            render={podeGerenciar}
             href='/postos'
             label='Trocar posto'
             icone={iconeTrocarPosto}
             isActive={currentPath === '/postos'}
+          />
+          <NavbarItem
+            render='true'
+            href='/login'
+            label='Sair'
+            icone={iconeSair}
+            onClick={deslogar}
+            isActive={false}
           />
         </div>
     </div>

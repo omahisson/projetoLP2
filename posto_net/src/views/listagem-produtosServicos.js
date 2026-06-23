@@ -10,6 +10,7 @@ import { excluirServico, listarServicos } from '../services/servicoService';
 
 function ListagemServicosProdutos({ toggleMenu }) {
     const navigate = useNavigate();
+    const podeGerenciar = ['ADMINISTRADOR', 'GERENTE'].includes(localStorage.getItem('cargo'));
     const [dadosServicos, setDadosServicos] = React.useState([]);
     const [dadosProdutos, setDadosProdutos] = React.useState([]);
     const [tipoSelecionado, setTipoSelecionado] = React.useState('servicos');
@@ -78,12 +79,12 @@ function ListagemServicosProdutos({ toggleMenu }) {
                 <Card
                     title='Serviços'
                     iconeTitle={iconeServicos}
-                    botaoHeader={
+                    botaoHeader={podeGerenciar ? (
                         <button type='button' className='textoCadastro btn d-flex align-items-center' onClick={() => navigate('/cadastro-servicos')}>
                             <img src={iconeAdd} alt="" width="16" height="16" className='me-2' />
                             Cadastrar Serviço
                         </button>
-                    }
+                    ) : null}
                 >
                     <div className='row'>
                         <div className='col-md-12'>
@@ -191,12 +192,12 @@ function ListagemServicosProdutos({ toggleMenu }) {
                 <Card
                     title='Produtos'
                     iconeTitle={iconeProdutos}
-                    botaoHeader={
+                    botaoHeader={podeGerenciar ? (
                         <button type='button' className='textoCadastro btn d-flex align-items-center' onClick={() => navigate('/cadastro-produtos')}>
                             <img src={iconeAdd} alt="" width="16" height="16" className='me-2' />
                             Cadastrar Produto
                         </button>
-                    }
+                    ) : null}
                 >
                     <div className='row'>
                         <div className='col-md-12'>

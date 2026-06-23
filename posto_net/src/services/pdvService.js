@@ -49,6 +49,11 @@ export async function buscarTurno(id) {
     return fromApiTurno(data);
 }
 
+export async function buscarOperadorAtual() {
+    const { data } = await api.get('/pdv/operador-atual');
+    return data;
+}
+
 export async function listarTurnosAbertos(idPosto = localStorage.getItem('postoSelecionadoId')) {
     const { data } = await api.get('/pdv/turnos', {
         params: {

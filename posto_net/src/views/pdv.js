@@ -6,8 +6,7 @@ import iconeColuna from '../icones/coluna.svg';
 import CardPDV, { CardPDVSelect, CardPDVInput } from '../components/card-pdv';
 import iconeRelogio from '../icones/relogio.svg';
 
-import { listarFuncionarios } from '../services/funcionarioService';
-import { abrirTurno, listarTurnosAbertos } from '../services/pdvService';
+import { abrirTurno, listarTurnosAbertos, buscarOperadorAtual } from '../services/pdvService';
 
 function Pdv({ toggleMenu }) {
     const navigate = useNavigate();
@@ -42,10 +41,22 @@ function Pdv({ toggleMenu }) {
     React.useEffect(() => {
         const fetchFuncionarios = async () => {
             try {
-                const postoId = localStorage.getItem('postoSelecionadoId');
-                
+                const operador = await buscarOperadorAtual();
+                setFuncionarios([{
+                    value: operador.id,
+                    text: operador.nome,
+                    labels: operador.cargo ? [operador.cargo] : []
+                }]);
+                setOperadorSelecionado(String(operador.id));
+
+                let postoId = localStorage.getItem('postoSelecionadoId');
+                if (!postoId && operador.idPosto) {
+                    postoId = String(operador.idPosto);
+                    localStorage.setItem('postoSelecionadoId', postoId);
+                    localStorage.setItem('postoSelecionado', 'Posto vinculado');
+                }
+
                 if (!postoId) {
-                    setFuncionarios([]);
                     setLoading(false);
                     return;
                 }
@@ -60,13 +71,6 @@ function Pdv({ toggleMenu }) {
                     return;
                 }
                 
-                const funcionariosData = await listarFuncionarios(postoId);
-                const funcionariosFormatados = funcionariosData.map(funcionario => ({
-                    value: funcionario.id,
-                    text: funcionario.nome,
-                    labels: funcionario.labels || []
-                }));
-                setFuncionarios(funcionariosFormatados);
             } catch (error) {
                 console.error('Erro ao buscar funcionários:', error);
             } finally {
@@ -168,7 +172,8 @@ function Pdv({ toggleMenu }) {
                     selectOptions={funcionarios}
                     selectProps={{
                         value: operadorSelecionado,
-                        onChange: (e) => setOperadorSelecionado(e.target.value)
+                        onChange: () => {},
+                        disabled: true
                     }}
                 >
                     <div className='mt-0 align-self-stretch'>

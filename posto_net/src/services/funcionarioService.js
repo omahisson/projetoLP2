@@ -29,6 +29,10 @@ function textoObrigatorio(value, fallback) {
     return String(value || fallback || '').trim();
 }
 
+function texto(value) {
+    return String(value || '').trim();
+}
+
 function toApiFuncionario(funcionario, tipo = 'funcionarios') {
     const cargo = funcionario.cargoApi
         ? normalizarCargo(funcionario.cargoApi)
@@ -37,9 +41,9 @@ function toApiFuncionario(funcionario, tipo = 'funcionarios') {
     const postoId = funcionario.idPosto || funcionario.id_posto || funcionario.postoDeTrabalho || localStorage.getItem('postoSelecionadoId');
     const nome = textoObrigatorio(funcionario.nome, 'Funcionario');
     const telefone = textoObrigatorio(funcionario.telefone || funcionario.celular, '(32) 99999-9999');
-    const cpf = somenteDigitos(funcionario.cpf) || '52998224725';
+    const cpf = somenteDigitos(funcionario.cpf);
     const matricula = textoObrigatorio(funcionario.maticula || funcionario.matricula, `MAT${funcionario.id || Date.now()}`);
-    const senha = textoObrigatorio(funcionario.senha, 'Senha1234');
+    const senha = texto(funcionario.senha);
     const setor = textoObrigatorio(funcionario.setor || funcionario.labels?.[0], cargo === 'GERENTE' ? 'Gerencia' : cargo === 'ADMINISTRADOR' ? 'Administracao' : 'Operacao');
 
     return {
@@ -58,7 +62,9 @@ function toApiFuncionario(funcionario, tipo = 'funcionarios') {
         estado: textoObrigatorio(funcionario.estado, 'MG'),
         cep: textoObrigatorio(funcionario.cep, '36000000'),
         maticula: matricula,
-        salario: Number(funcionario.salario) > 0 ? Number(funcionario.salario) : 1,
+        salario: funcionario.salario === '' || funcionario.salario === null || funcionario.salario === undefined
+            ? (cargo === 'ADMINISTRADOR' ? 1 : null)
+            : Number(funcionario.salario),
         dataAdmissao: funcionario.dataAdmissao || new Date().toISOString().slice(0, 10),
         senha,
         setor,

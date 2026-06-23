@@ -6,6 +6,7 @@ import iconeColuna from '../icones/coluna.svg';
 
 import { listarPostos } from '../services/postoService';
 import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
+import CampoMatricula from '../components/campo-matricula';
 
 function CadastroAdministrador({ toggleMenu }) {
     const { idParam } = useParams();
@@ -30,45 +31,19 @@ function CadastroAdministrador({ toggleMenu }) {
 
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
+    const [matricula, setMatricula] = useState('');
+    const [matriculaDisponivel, setMatriculaDisponivel] = useState(null);
     const [cpf, setCpf] = useState('');
     const [email, setEmail] = useState('');
     const [celular, setCelular] = useState('');
     const [senha, setSenha] = useState('');
+    const [erroFormulario, setErroFormulario] = useState('');
     const [gerenciarTodosPostos, setGerenciarTodosPostos] = useState(false);
     const [gerenciarGerentes, setGerenciarGerentes] = useState(false);
     const [gerenciarFuncionarios, setGerenciarFuncionarios] = useState(false);
     const [gerenciarProdutos, setGerenciarProdutos] = useState(false);
 
-    const [dados, setDados] = React.useState(null);
     const [carregando, setCarregando] = React.useState(!!idParam);
-
-    const inicializar = useCallback(() => {
-        if (idParam == null) {
-            setId('');
-            setNome('');
-            setCpf('');
-            setEmail('');
-            setCelular('');
-            setSenha('');
-            setGerenciarTodosPostos(false);
-            setGerenciarGerentes(false);
-            setGerenciarFuncionarios(false);
-            setGerenciarProdutos(false);
-            setPostosSelecionados([]);
-            setDados({});
-        } else {
-            setId(dados.id);
-            setNome(dados.nome);
-            setCpf(dados.cpf);
-            setEmail(dados.email);
-            setCelular(dados.celular);
-            setSenha(dados.senha || '');
-            setGerenciarTodosPostos(dados.gerenciarTodosPostos || false);
-            setGerenciarGerentes(dados.gerenciarGerentes || false);
-            setGerenciarFuncionarios(dados.gerenciarFuncionarios || false);
-            setGerenciarProdutos(dados.gerenciarProdutos || false);
-        }
-    }, [idParam, dados]);
 
     const buscar = useCallback(async () => {
         if (idParam != null) {
@@ -82,9 +57,9 @@ function CadastroAdministrador({ toggleMenu }) {
                     return;
                 }
 
-                setDados(dadosResp);
                 setId(dadosResp.id);
                 setNome(dadosResp.nome || '');
+                setMatricula(dadosResp.maticula || '');
                 setCpf(dadosResp.cpf || '');
                 setEmail(dadosResp.email || '');
                 setCelular(dadosResp.telefone || dadosResp.celular || '');
@@ -106,6 +81,11 @@ function CadastroAdministrador({ toggleMenu }) {
     }, [idParam, navigate]);
 
     async function salvar() {
+        setErroFormulario('');
+        if (idParam == null && matriculaDisponivel !== true) {
+            setErroFormulario('Informe uma matrícula disponível antes de salvar.');
+            return;
+        }
         const postoId = localStorage.getItem('postoSelecionadoId');
         const postosPermitidos = gerenciarTodosPostos ? [] : postosSelecionados;
 
@@ -132,6 +112,7 @@ function CadastroAdministrador({ toggleMenu }) {
 
         const data = {
             id,
+            matricula,
             idPosto: postosPermitidos[0] || postoId,
             nome,
             cpf,
@@ -148,24 +129,22 @@ function CadastroAdministrador({ toggleMenu }) {
             postosPermitidos,
             labels 
         };
-        if (idParam == null) {
-            await criarFuncionario(data, 'administradores')
-                .then(function (response) {
-                    alert(`Administrador ${nome} cadastrado com sucesso!`);
-                    navigate(`/empregados`);
-                })
-                .catch(function (error) {
-                    alert('Erro ao cadastrar administrador: ' + (error.response?.data || error.message));
-                });
-        } else {
-            await atualizarFuncionario(idParam, data, 'administradores')
-                .then(function (response) {
-                    alert(`Administrador ${nome} alterado com sucesso!`);
-                    navigate(`/empregados`);
-                })
-                .catch(function (error) {
-                    alert('Erro ao alterar administrador: ' + (error.response?.data || error.message));
-                });
+        try {
+            if (idParam == null) {
+                await criarFuncionario(data, 'administradores');
+                alert(`Administrador ${nome} cadastrado com sucesso!`);
+            } else {
+                await atualizarFuncionario(idParam, data, 'administradores');
+                alert(`Administrador ${nome} alterado com sucesso!`);
+            }
+            navigate('/empregados');
+        } catch (error) {
+            const resposta = error.response?.data;
+            setErroFormulario(
+                typeof resposta === 'string'
+                    ? resposta
+                    : resposta?.mensagem || resposta?.message || 'Não foi possível salvar o administrador.'
+            );
         }
     }
 
@@ -173,9 +152,20 @@ function CadastroAdministrador({ toggleMenu }) {
         if (idParam) {
             buscar();
         } else {
-            inicializar();
+            setId('');
+            setNome('');
+            setCpf('');
+            setEmail('');
+            setCelular('');
+            setSenha('');
+            setGerenciarTodosPostos(false);
+            setGerenciarGerentes(false);
+            setGerenciarFuncionarios(false);
+            setGerenciarProdutos(false);
+            setPostosSelecionados([]);
+            setCarregando(false);
         }
-    }, [idParam, buscar, inicializar]);
+    }, [idParam, buscar]);
 
     if (carregando) return null;
 
@@ -389,6 +379,20 @@ function CadastroAdministrador({ toggleMenu }) {
                 <Card title='Dados do Administrador'>
                     <form onSubmit={(e) => { e.preventDefault(); salvar(); }}>
                         <div style={formStyles.form}>
+                            {erroFormulario && (
+                                <p role="alert" style={{
+                                    margin: 0,
+                                    padding: '10px 12px',
+                                    borderRadius: '8px',
+                                    backgroundColor: '#fef2f2',
+                                    color: '#b91c1c',
+                                    fontSize: '14px',
+                                    fontFamily: 'system-ui'
+                                }}>
+                                    {erroFormulario}
+                                </p>
+                            )}
+                            <CampoMatricula value={matricula} onChange={setMatricula} onDisponibilidade={setMatriculaDisponivel} labelStyle={formStyles.label} wrapperStyle={formStyles.inputWrapper} style={formStyles.input} />
                             <div style={formStyles.fieldGroup}>
                                 <label htmlFor="nome" style={formStyles.label}>
                                     Nome Completo

@@ -6,6 +6,7 @@ import iconeColuna from '../icones/coluna.svg';
 
 import { listarPostos } from '../services/postoService';
 import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
+import CampoMatricula from '../components/campo-matricula';
 
 function CadastroFuncionario({ toggleMenu }) {
     const { idParam } = useParams();
@@ -14,13 +15,17 @@ function CadastroFuncionario({ toggleMenu }) {
 
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
+    const [matricula, setMatricula] = useState('');
+    const [matriculaDisponivel, setMatriculaDisponivel] = useState(null);
     const [sobrenome, setSobrenome] = useState('');
     const [cpf, setCpf] = useState('');
+    const [email, setEmail] = useState('');
+    const [telefone, setTelefone] = useState('');
+    const [senha, setSenha] = useState('');
+    const [erroFormulario, setErroFormulario] = useState('');
     const [cargo, setCargo] = useState('');
     const [postoDeTrabalho, setPostoDeTrabalho] = useState('');
     const [postos, setPostos] = useState([]);
-
-    const [dados, setDados] = React.useState([]);
 
     useEffect(() => {
         async function carregarPostos() {
@@ -35,38 +40,50 @@ function CadastroFuncionario({ toggleMenu }) {
         carregarPostos();
     }, []);
 
-    const inicializar = useCallback(() => {
-        if (idParam == null) {
-            setId('');
-            setNome('');
-            setSobrenome('');
-            setCpf('');
-            setCargo('');
-            setPostoDeTrabalho('');
-        } else {
-            setId(dados.id);
-            setNome(dados.nome ? dados.nome.split(' ')[0] : '');
-            setSobrenome(dados.nome ? dados.nome.split(' ').slice(1).join(' ') : '');
-            setCpf(dados.cpf || '');
-            setCargo(dados.labels && dados.labels.length > 0 ? dados.labels[0] : '');
-            setPostoDeTrabalho(dados.postoDeTrabalho || '');
-        }
-    }, [idParam, dados]);
-
     async function salvar() {
+        setErroFormulario('');
+        if (idParam == null && matriculaDisponivel !== true) {
+            setErroFormulario('Informe uma matrícula disponível antes de salvar.');
+            return;
+        }
         const postoId = localStorage.getItem('postoSelecionadoId');
         const nomeCompleto = `${nome} ${sobrenome}`.trim();
         const labels = cargo ? [cargo] : [];
 
         const data = {
             id, 
+            matricula,
             idPosto: postoDeTrabalho || postoId,
             nome: nomeCompleto,
             cpf,
+            email,
+            telefone,
+            senha,
+            salario: 1,
             setor: cargo,
             cargoApi: 'COLABORADOR',
             labels
         };
+        try {
+            if (idParam == null) {
+                await criarFuncionario(data, 'funcionarios');
+                alert(`Funcionário ${nomeCompleto} cadastrado com sucesso!`);
+            } else {
+                await atualizarFuncionario(idParam, data, 'funcionarios');
+                alert(`Funcionário ${nomeCompleto} alterado com sucesso!`);
+            }
+            navigate('/empregados');
+        } catch (error) {
+            const resposta = error.response?.data;
+            setErroFormulario(
+                typeof resposta === 'string'
+                    ? resposta
+                    : resposta?.mensagem || resposta?.message || 'Não foi possível salvar o funcionário.'
+            );
+        }
+        /* eslint-disable no-unreachable */
+        return;
+
         if (idParam == null) {
             await criarFuncionario(data, 'funcionarios')
                 .then(function (response) {
@@ -88,16 +105,21 @@ function CadastroFuncionario({ toggleMenu }) {
         }
     }
 
+    /* eslint-enable no-unreachable */
+
     const buscar = useCallback(async () => {
         if (idParam != null) {
             try {
                 const response = await buscarFuncionario(idParam);
-                setDados(response);
                 setId(response.id);
+                setMatricula(response.maticula || '');
                 const nomeParts = response.nome ? response.nome.split(' ') : [];
                 setNome(nomeParts[0] || '');
                 setSobrenome(nomeParts.slice(1).join(' ') || '');
                 setCpf(response.cpf || '');
+                setEmail(response.email || '');
+                setTelefone(response.telefone || '');
+                setSenha('');
                 setCargo(response.setor || (response.labels && response.labels.length > 0 ? response.labels[0] : ''));
                 setPostoDeTrabalho(response.idPosto || '');
             } catch (error) {
@@ -110,11 +132,18 @@ function CadastroFuncionario({ toggleMenu }) {
         if (idParam) {
             buscar();
         } else {
-            inicializar();
+            setId('');
+            setNome('');
+            setMatricula('');
+            setSobrenome('');
+            setCpf('');
+            setEmail('');
+            setTelefone('');
+            setSenha('');
+            setCargo('');
+            setPostoDeTrabalho('');
         }
-    }, [idParam, buscar, inicializar]);
-
-    if (!dados) return null;
+    }, [idParam, buscar]);
 
     const formStyles = {
         container: {
@@ -337,6 +366,12 @@ function CadastroFuncionario({ toggleMenu }) {
                     </div>
                     <form onSubmit={(e) => { e.preventDefault(); salvar(); }}>
                         <div style={formStyles.form}>
+                            {erroFormulario && (
+                                <p role="alert" style={{ margin: 0, padding: '10px 12px', borderRadius: '8px', backgroundColor: '#fef2f2', color: '#b91c1c', fontSize: '14px', fontFamily: 'system-ui' }}>
+                                    {erroFormulario}
+                                </p>
+                            )}
+                            <CampoMatricula value={matricula} onChange={setMatricula} onDisponibilidade={setMatriculaDisponivel} labelStyle={formStyles.label} wrapperStyle={formStyles.inputWrapper} style={formStyles.input} />
                             <div style={formStyles.gridRow}>
                                 <div style={formStyles.fieldGroup}>
                                     <label htmlFor="nome" style={formStyles.label}>
@@ -373,6 +408,28 @@ function CadastroFuncionario({ toggleMenu }) {
                                             className="card-pdv-input"
                                         />
                                     </div>
+                                </div>
+                            </div>
+
+                            <div style={formStyles.gridRow}>
+                                <div style={formStyles.fieldGroup}>
+                                    <label htmlFor="email" style={formStyles.label}>E-mail</label>
+                                    <div style={formStyles.inputWrapper}>
+                                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="funcionario@posto.com" required style={formStyles.input} className="card-pdv-input" />
+                                    </div>
+                                </div>
+                                <div style={formStyles.fieldGroup}>
+                                    <label htmlFor="telefone" style={formStyles.label}>Telefone</label>
+                                    <div style={formStyles.inputWrapper}>
+                                        <input type="tel" id="telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" required style={formStyles.input} className="card-pdv-input" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={formStyles.fieldGroup}>
+                                <label htmlFor="senha" style={formStyles.label}>Senha</label>
+                                <div style={formStyles.inputWrapper}>
+                                    <input type="password" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Mínimo de 8 caracteres" minLength="8" required={idParam == null} style={formStyles.input} className="card-pdv-input" />
                                 </div>
                             </div>
 

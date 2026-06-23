@@ -7,6 +7,7 @@ function Postos() {
     const [postos, setPostos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modoExclusao, setModoExclusao] = useState(false);
+    const ehAdministrador = localStorage.getItem('cargo') === 'ADMINISTRADOR';
 
     useEffect(() => {
         const fetchPostos = async () => {
@@ -74,7 +75,7 @@ function Postos() {
                 width: '100%',
                 maxWidth: '1024px'
             }}>
-                <div style={{
+                {ehAdministrador && <div style={{ 
                     marginBottom: '32px',
                     textAlign: 'center'
                 }}>
@@ -86,7 +87,7 @@ function Postos() {
                     }}>
                         {modoExclusao ? 'Clique em um posto para excluí-lo' : 'Escolha o posto que deseja acessar'}
                     </p>
-                </div>
+                </div>}
 
                 {loading ? (
                     <div style={{
@@ -213,7 +214,7 @@ function Postos() {
                     >
                         Cadastrar novo posto
                     </button>
-                    <button
+                    {ehAdministrador && <button
                         onClick={handleToggleModoExclusao}
                         style={{
                             display: 'inline-flex',
@@ -245,7 +246,7 @@ function Postos() {
                         }}
                     >
                         {modoExclusao ? 'Cancelar exclusão' : 'Excluir'}
-                    </button>
+                    </button>}
                 </div>
             </div>
         </div>

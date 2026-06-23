@@ -6,6 +6,7 @@ import iconeColuna from '../icones/coluna.svg';
 
 import { listarPostos } from '../services/postoService';
 import { buscarFuncionario, criarFuncionario, atualizarFuncionario } from '../services/funcionarioService';
+import CampoMatricula from '../components/campo-matricula';
 
 function CadastroGerente({ toggleMenu }) {
     const { idParam } = useParams();
@@ -14,13 +15,15 @@ function CadastroGerente({ toggleMenu }) {
 
     const [id, setId] = useState('');
     const [nome, setNome] = useState('');
+    const [matricula, setMatricula] = useState('');
+    const [matriculaDisponivel, setMatriculaDisponivel] = useState(null);
     const [email, setEmail] = useState('');
     const [telefone, setTelefone] = useState('');
+    const [cpf, setCpf] = useState('');
     const [senha, setSenha] = useState('');
+    const [erroFormulario, setErroFormulario] = useState('');
     const [postos, setPostos] = useState([]);
     const [postosSelecionados, setPostosSelecionados] = useState([]);
-
-    const [dados, setDados] = React.useState([]);
 
     useEffect(() => {
         async function carregarPostos() {
@@ -35,57 +38,44 @@ function CadastroGerente({ toggleMenu }) {
         carregarPostos();
     }, []);
 
-    const inicializar = useCallback(() => {
-        if (idParam == null) {
-            setId('');
-            setNome('');
-            setEmail('');
-            setTelefone('');
-            setSenha('');
-            setPostosSelecionados([]);
-        } else {
-            setId(dados.id);
-            setNome(dados.nome);
-            setEmail(dados.email);
-            setTelefone(dados.telefone || '');
-            setSenha(dados.senha || '');
-            const postosVinculados = Array.isArray(dados.labels) ? dados.labels : [];
-            setPostosSelecionados(postosVinculados);
-        }
-    }, [idParam, dados]);
-
     async function salvar() {
+        setErroFormulario('');
+        if (idParam == null && matriculaDisponivel !== true) {
+            setErroFormulario('Informe uma matrícula disponível antes de salvar.');
+            return;
+        }
         const postoId = localStorage.getItem('postoSelecionadoId');
         const data = {
             id, 
+            matricula,
             idPosto: postosSelecionados[0] || postoId,
             nome, 
             email, 
             telefone, 
+            cpf,
             senha,
             setor: 'Gerencia',
             cargoApi: 'GERENTE',
+            salario: 1,
             bonusMeta: 1,
             labels: postosSelecionados
         };
-        if (idParam == null) {
-            await criarFuncionario(data, 'gerentes')
-                .then(function (response) {
-                    alert(`Gerente ${nome} cadastrado com sucesso!`);
-                    navigate(`/empregados`);
-                })
-                .catch(function (error) {
-                    alert('Erro ao cadastrar gerente: ' + (error.response?.data || error.message));
-                });
-        } else {
-            await atualizarFuncionario(idParam, data, 'gerentes')
-                .then(function (response) {
-                    alert(`Gerente ${nome} alterado com sucesso!`);
-                    navigate(`/empregados`);
-                })
-                .catch(function (error) {
-                    alert('Erro ao alterar gerente: ' + (error.response?.data || error.message));
-                });
+        try {
+            if (idParam == null) {
+                await criarFuncionario(data, 'gerentes');
+                alert(`Gerente ${nome} cadastrado com sucesso!`);
+            } else {
+                await atualizarFuncionario(idParam, data, 'gerentes');
+                alert(`Gerente ${nome} alterado com sucesso!`);
+            }
+            navigate('/empregados');
+        } catch (error) {
+            const resposta = error.response?.data;
+            setErroFormulario(
+                typeof resposta === 'string'
+                    ? resposta
+                    : resposta?.mensagem || resposta?.message || 'Não foi possível salvar o gerente.'
+            );
         }
     }
 
@@ -93,11 +83,12 @@ function CadastroGerente({ toggleMenu }) {
         if (idParam != null) {
             try {
                 const response = await buscarFuncionario(idParam);
-                setDados(response);
                 setId(response.id);
                 setNome(response.nome || '');
+                setMatricula(response.maticula || '');
                 setEmail(response.email || '');
                 setTelefone(response.telefone || '');
+                setCpf(response.cpf || '');
                 setSenha(response.senha || '');
                 const postosVinculados = response.idPosto ? [response.idPosto] : [];
                 setPostosSelecionados(postosVinculados);
@@ -111,11 +102,16 @@ function CadastroGerente({ toggleMenu }) {
         if (idParam) {
             buscar();
         } else {
-            inicializar();
+            setId('');
+            setNome('');
+            setMatricula('');
+            setEmail('');
+            setTelefone('');
+            setCpf('');
+            setSenha('');
+            setPostosSelecionados([]);
         }
-    }, [idParam, buscar, inicializar]);
-
-    if (!dados) return null;
+    }, [idParam, buscar]);
 
     const formStyles = {
         container: {
@@ -330,6 +326,12 @@ function CadastroGerente({ toggleMenu }) {
                     </div>
                     <form onSubmit={(e) => { e.preventDefault(); salvar(); }}>
                         <div style={formStyles.form}>
+                            {erroFormulario && (
+                                <p role="alert" style={{ margin: 0, padding: '10px 12px', borderRadius: '8px', backgroundColor: '#fef2f2', color: '#b91c1c', fontSize: '14px', fontFamily: 'system-ui' }}>
+                                    {erroFormulario}
+                                </p>
+                            )}
+                            <CampoMatricula value={matricula} onChange={setMatricula} onDisponibilidade={setMatriculaDisponivel} labelStyle={formStyles.label} wrapperStyle={formStyles.inputWrapper} style={formStyles.input} />
                             <div style={formStyles.fieldGroup}>
                                 <label htmlFor="nome" style={formStyles.label}>
                                     Nome Completo
@@ -385,6 +387,23 @@ function CadastroGerente({ toggleMenu }) {
                                             className="card-pdv-input"
                                         />
                                     </div>
+                                </div>
+                            </div>
+
+                            <div style={formStyles.fieldGroup}>
+                                <label htmlFor="cpf" style={formStyles.label}>CPF</label>
+                                <div style={formStyles.inputWrapper}>
+                                    <input
+                                        type="text"
+                                        id="cpf"
+                                        name="cpf"
+                                        value={cpf}
+                                        onChange={(e) => setCpf(e.target.value)}
+                                        placeholder="000.000.000-00"
+                                        required
+                                        style={formStyles.input}
+                                        className="card-pdv-input"
+                                    />
                                 </div>
                             </div>
 

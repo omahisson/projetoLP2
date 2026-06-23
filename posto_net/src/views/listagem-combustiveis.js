@@ -132,19 +132,20 @@ const ListagemCombustiveis = ({toggleMenu}) => {
 // Substituir o componente Header (linhas 110-121):
 const Header = () => {
   const navigate = useNavigate();
+  const podeGerenciar = ['ADMINISTRADOR', 'GERENTE'].includes(localStorage.getItem('cargo'));
   return (
     <header style={styles.header}>
       <div>
         <h1 style={styles.headerTitle}>Gerenciamento de Combustíveis</h1>
         <p style={styles.headerSubtitle}>Gerencie abastecimentos, bombas e tipos de combustível</p>
       </div>
-      <button 
+      {podeGerenciar && <button 
         style={styles.primaryButton} 
         onClick={() => navigate('/cadastro-abastecimento')}
       >
         <FiPlus size={16} style={{ marginRight: '8px' }} />
         Cadastrar Abastecimento
-      </button>
+      </button>}
     </header>
   );
 };
@@ -155,22 +156,23 @@ const SectionHeader = ({ icon, title, buttonText, onButtonClick }) => (
       {icon}
       <h2 style={styles.sectionTitle}>{title}</h2>
     </div>
-    <button style={styles.secondaryButton} onClick={onButtonClick}>
+    {onButtonClick && <button style={styles.secondaryButton} onClick={onButtonClick}>
       <FiPlus size={16} style={{ marginRight: '8px' }} />
       {buttonText}
-    </button>
+    </button>}
   </div>
 );
 
 const SectionTiposCombustivel = ({ tiposCombustivelData, onExcluir }) => {
   const navigate = useNavigate();
+  const podeGerenciar = ['ADMINISTRADOR', 'GERENTE'].includes(localStorage.getItem('cargo'));
   return (
     <section>
       <SectionHeader
         icon={<FiTag size={20} style={{ marginRight: '12px' }} />}
         title="Tipos de Combustível"
-        buttonText="Novo Tipo"
-        onButtonClick={() => navigate('/cadastro-tipoCombustivel')}
+        buttonText={podeGerenciar ? "Novo Tipo" : null}
+        onButtonClick={podeGerenciar ? () => navigate('/cadastro-tipoCombustivel') : null}
       />
       <div style={styles.listContainer}>
         {tiposCombustivelData.map(tipo => (

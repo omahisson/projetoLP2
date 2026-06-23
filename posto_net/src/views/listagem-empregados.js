@@ -14,10 +14,12 @@ import { listarFuncionariosPorTipo, excluirFuncionario } from '../services/funci
 
 function ListagemEmpregados({ toggleMenu }) {
     const navigate = useNavigate();
+    const ehAdministrador = localStorage.getItem('cargo') === 'ADMINISTRADOR';
+    const ehGerente = localStorage.getItem('cargo') === 'GERENTE';
     const [dadosAdministradores, setDadosAdministradores] = React.useState([]);
     const [dadosGerentes, setDadosGerentes] = React.useState([]);
     const [dadosFuncionarios, setDadosFuncionarios] = React.useState([]);
-    const [tipoSelecionado, setTipoSelecionado] = React.useState('administradores');
+    const [tipoSelecionado, setTipoSelecionado] = React.useState(ehGerente ? 'funcionarios' : 'administradores');
 
     const formatarCPF = (cpf) => {
         if (!cpf) return '';
@@ -62,20 +64,24 @@ function ListagemEmpregados({ toggleMenu }) {
         async function carregarEmpregados() {
             try {
                 const postoId = localStorage.getItem('postoSelecionadoId');
-                const [administradores, gerentes, funcionarios] = await Promise.all([
-                    listarFuncionariosPorTipo('administradores', postoId),
-                    listarFuncionariosPorTipo('gerentes', postoId),
-                    listarFuncionariosPorTipo('funcionarios', postoId)
-                ]);
-                setDadosAdministradores(administradores);
-                setDadosGerentes(gerentes);
-                setDadosFuncionarios(funcionarios);
+                if (ehGerente) {
+                    setDadosFuncionarios(await listarFuncionariosPorTipo('funcionarios', postoId));
+                } else {
+                    const [administradores, gerentes, funcionarios] = await Promise.all([
+                        listarFuncionariosPorTipo('administradores', postoId),
+                        listarFuncionariosPorTipo('gerentes', postoId),
+                        listarFuncionariosPorTipo('funcionarios', postoId)
+                    ]);
+                    setDadosAdministradores(administradores);
+                    setDadosGerentes(gerentes);
+                    setDadosFuncionarios(funcionarios);
+                }
             } catch (error) {
                 console.error('Erro ao buscar empregados:', error);
             }
         }
         carregarEmpregados();
-    }, []);
+    }, [ehGerente]);
 
     const renderizarCard = () => {
         if (tipoSelecionado === 'administradores') {
@@ -83,12 +89,12 @@ function ListagemEmpregados({ toggleMenu }) {
                 <Card
                     title='Administradores'
                     iconeTitle={iconeADM}
-                    botaoHeader={
+                    botaoHeader={ehAdministrador ? (
                         <button type='button' className='textoCadastro btn d-flex align-items-center' onClick={() => navigate('/cadastro-administradores')}>
                             <img src={iconeAdd} alt="" width="16" height="16" className='me-2' />
                             Cadastrar Administrador
                         </button>
-                    }
+                    ) : null}
                 >
                     <div className='row'>
                         <div className='col-md-12'>
@@ -106,6 +112,8 @@ function ListagemEmpregados({ toggleMenu }) {
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                                                             <span style={{ fontWeight: 500 }}>{dado.nome}</span>
                                                             <span style={{ fontSize: '14px', color: '#666' }}>{dado.email}</span>
+                                                            <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                            <span style={{ fontSize: '14px', color: '#666' }}>{dado.maticula || dado.matricula}</span>
                                                         </div>
                                                     </td>
                                                     <td className='text-end' style={{ border: 'none', padding: '12px' }}>
@@ -185,12 +193,12 @@ function ListagemEmpregados({ toggleMenu }) {
                 <Card
                     title='Gerentes'
                     iconeTitle={iconeGerentes}
-                    botaoHeader={
+                    botaoHeader={ehAdministrador ? (
                         <button type='button' className='textoCadastro btn d-flex align-items-center' onClick={() => navigate('/cadastro-gerentes')}>
                             <img src={iconeAdd} alt="" width="16" height="16" className='me-2' />
                             Cadastrar Gerente
                         </button>
-                    }
+                    ) : null}
                 >
                     <div className='row'>
                         <div className='col-md-12'>
@@ -208,12 +216,8 @@ function ListagemEmpregados({ toggleMenu }) {
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                                                             <span style={{ fontWeight: 500 }}>{dado.nome}</span>
                                                             <span style={{ fontSize: '14px', color: '#666' }}>{dado.email}</span>
-                                                            {dado.telefone && (
-                                                                <>
-                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
-                                                                    <span style={{ fontSize: '14px', color: '#666' }}>{dado.telefone}</span>
-                                                                </>
-                                                            )}
+                                                            <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                            <span style={{ fontSize: '14px', color: '#666' }}>{dado.maticula || dado.matricula}</span>
                                                             {dado.labels && dado.labels.length > 0 && (
                                                                 <>
                                                                     <span style={{ fontSize: '14px', color: '#999' }}>•</span>
@@ -318,23 +322,10 @@ function ListagemEmpregados({ toggleMenu }) {
                                                     <td style={{ border: 'none', padding: '12px' }}>
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                                                             <span style={{ fontWeight: 500 }}>{dado.nome}</span>
-                                                            {dado.cpf ? (
-                                                                <>
-                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
-                                                                    <span style={{ fontSize: '14px', color: '#666' }}>CPF: {formatarCPF(dado.cpf)}</span>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
-                                                                    <span style={{ fontSize: '14px', color: '#999' }}>CPF não informado</span>
-                                                                </>
-                                                            )}
-                                                            {dado.postoDeTrabalho && (
-                                                                <>
-                                                                    <span style={{ fontSize: '14px', color: '#999' }}>•</span>
-                                                                    <span style={{ fontSize: '14px', color: '#666' }}>{dado.postoDeTrabalho}</span>
-                                                                </>
-                                                            )}
+                                                            <span style={{ fontSize: '14px', color: '#666' }}>{dado.email}</span>
+                                                            <span style={{ fontSize: '14px', color: '#999' }}>•</span>
+                                                            <span style={{ fontSize: '14px', color: '#666' }}>{dado.maticula || dado.matricula}</span>
+                                                            
                                                             {dado.labels && dado.labels.length > 0 && (
                                                                 <>
                                                                     <span style={{ fontSize: '14px', color: '#999' }}>•</span>
@@ -435,7 +426,7 @@ function ListagemEmpregados({ toggleMenu }) {
                     padding: '3px',
                     gap: '3px'
                 }}>
-                    <button
+                    {!ehGerente && <button
                         type='button'
                         onClick={() => setTipoSelecionado('administradores')}
                         style={{
@@ -458,8 +449,8 @@ function ListagemEmpregados({ toggleMenu }) {
                     >
                         <img src={iconeADM} alt="" width="16" height="16" />
                         Administradores
-                    </button>
-                    <button
+                    </button>}
+                    {!ehGerente && <button
                         type='button'
                         onClick={() => setTipoSelecionado('gerentes')}
                         style={{
@@ -482,7 +473,7 @@ function ListagemEmpregados({ toggleMenu }) {
                     >
                         <img src={iconeGerentes} alt="" width="16" height="16" />
                         Gerentes
-                    </button>
+                    </button>}
                     <button
                         type='button'
                         onClick={() => setTipoSelecionado('funcionarios')}
