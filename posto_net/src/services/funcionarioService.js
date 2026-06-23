@@ -104,8 +104,12 @@ export async function listarFuncionarios(idPosto = localStorage.getItem('postoSe
 
 export async function listarFuncionariosPorTipo(tipo, idPosto = localStorage.getItem('postoSelecionadoId')) {
     const cargo = cargoParaApi(tipo);
-    const funcionarios = await listarFuncionarios(idPosto);
-    return funcionarios.filter(item => item.cargo === cargo);
+    const funcionarios = await listarFuncionarios(tipo === 'administradores' ? null : idPosto);
+    return funcionarios.filter(item => {
+        if (item.cargo !== cargo) return false;
+        if (tipo !== 'administradores' || !idPosto) return true;
+        return !item.idPosto || String(item.idPosto) === String(idPosto);
+    });
 }
 
 export async function buscarFuncionario(id) {
